@@ -42,7 +42,6 @@ public class login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LOGIN");
-        setPreferredSize(new java.awt.Dimension(800, 500));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
@@ -52,7 +51,6 @@ public class login extends javax.swing.JFrame {
         PanelKiri.setPreferredSize(new java.awt.Dimension(400, 500));
 
         logodesa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        logodesa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logo/logorandom.png"))); // NOI18N
 
         judul.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         judul.setForeground(new java.awt.Color(255, 255, 255));
