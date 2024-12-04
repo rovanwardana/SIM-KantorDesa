@@ -18,6 +18,7 @@ public class login extends javax.swing.JFrame {
      */
     public login() {
         initComponents();
+        showpass.setVisible(false);
     }
 
     /**
@@ -38,10 +39,12 @@ public class login extends javax.swing.JFrame {
         username = new javax.swing.JLabel();
         text_username = new javax.swing.JTextField();
         password = new javax.swing.JLabel();
+        showpass = new javax.swing.JLabel();
+        hidepass = new javax.swing.JLabel();
+        text_password = new javax.swing.JPasswordField();
         login = new javax.swing.JButton();
         registertext = new javax.swing.JLabel();
         register = new javax.swing.JButton();
-        text_password = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LOGIN");
@@ -87,18 +90,42 @@ public class login extends javax.swing.JFrame {
 
         PanelKanan.setBackground(new java.awt.Color(255, 255, 255));
         PanelKanan.setPreferredSize(new java.awt.Dimension(400, 500));
+        PanelKanan.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         LOGIN.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         LOGIN.setForeground(new java.awt.Color(29, 78, 216));
         LOGIN.setText("LOGIN");
+        PanelKanan.add(LOGIN, new org.netbeans.lib.awtextra.AbsoluteConstraints(148, 49, -1, -1));
 
         username.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         username.setText("Username");
+        PanelKanan.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 149, -1, -1));
 
         text_username.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        PanelKanan.add(text_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 172, 300, 35));
 
         password.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         password.setText("Password");
+        PanelKanan.add(password, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 225, -1, -1));
+
+        showpass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/auth/icon/eye_opened.png"))); // NOI18N
+        showpass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                showpassMouseClicked(evt);
+            }
+        });
+        PanelKanan.add(showpass, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 260, -1, -1));
+
+        hidepass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/auth/icon/eye_closed.png"))); // NOI18N
+        hidepass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                hidepassMouseClicked(evt);
+            }
+        });
+        PanelKanan.add(hidepass, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 260, -1, -1));
+
+        text_password.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        PanelKanan.add(text_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 251, 260, 35));
 
         login.setBackground(new java.awt.Color(29, 78, 216));
         login.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -109,9 +136,11 @@ public class login extends javax.swing.JFrame {
                 loginActionPerformed(evt);
             }
         });
+        PanelKanan.add(login, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 313, 100, 34));
 
         registertext.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         registertext.setText("Saya belum memiliki akun");
+        PanelKanan.add(registertext, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 379, -1, -1));
 
         register.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         register.setForeground(new java.awt.Color(29, 78, 216));
@@ -121,53 +150,7 @@ public class login extends javax.swing.JFrame {
                 registerActionPerformed(evt);
             }
         });
-
-        text_password.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-
-        javax.swing.GroupLayout PanelKananLayout = new javax.swing.GroupLayout(PanelKanan);
-        PanelKanan.setLayout(PanelKananLayout);
-        PanelKananLayout.setHorizontalGroup(
-            PanelKananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelKananLayout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addGroup(PanelKananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelKananLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(LOGIN)
-                        .addGap(90, 90, 90))
-                    .addGroup(PanelKananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(text_password)
-                        .addGroup(PanelKananLayout.createSequentialGroup()
-                            .addComponent(registertext)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(password)
-                        .addComponent(username)
-                        .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(text_username, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(51, Short.MAX_VALUE))
-        );
-        PanelKananLayout.setVerticalGroup(
-            PanelKananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelKananLayout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addComponent(LOGIN)
-                .addGap(52, 52, 52)
-                .addComponent(username)
-                .addGap(3, 3, 3)
-                .addComponent(text_username, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(password)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(text_password, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addGroup(PanelKananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(registertext))
-                .addContainerGap(93, Short.MAX_VALUE))
-        );
+        PanelKanan.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(226, 373, 100, 34));
 
         jPanel1.add(PanelKanan);
         PanelKanan.setBounds(400, 0, 400, 500);
@@ -219,6 +202,7 @@ public class login extends javax.swing.JFrame {
                 String storedPassword = rs.getString("password");
                 if (storedPassword.equals(passwordIn)) {
                     javax.swing.JOptionPane.showMessageDialog(this, "Login Berhasil!", "Sukses", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                    
                 } else {
                     javax.swing.JOptionPane.showMessageDialog(this, "Password Salah!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 }
@@ -233,6 +217,19 @@ public class login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_loginActionPerformed
 
+    private void hidepassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hidepassMouseClicked
+        hidepass.setVisible(false);
+        showpass.setVisible(true);
+        text_password.setEchoChar ((char)0);
+        
+    }//GEN-LAST:event_hidepassMouseClicked
+
+    private void showpassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showpassMouseClicked
+        hidepass.setVisible(true);
+        showpass.setVisible(false);
+        text_password.setEchoChar ('*');
+    }//GEN-LAST:event_showpassMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -241,6 +238,7 @@ public class login extends javax.swing.JFrame {
     private javax.swing.JLabel LOGIN;
     private javax.swing.JPanel PanelKanan;
     private javax.swing.JPanel PanelKiri;
+    private javax.swing.JLabel hidepass;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel judul;
     private javax.swing.JButton login;
@@ -248,6 +246,7 @@ public class login extends javax.swing.JFrame {
     private javax.swing.JLabel password;
     private javax.swing.JButton register;
     private javax.swing.JLabel registertext;
+    private javax.swing.JLabel showpass;
     private javax.swing.JPasswordField text_password;
     private javax.swing.JTextField text_username;
     private javax.swing.JLabel username;
