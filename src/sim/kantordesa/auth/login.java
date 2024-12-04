@@ -4,6 +4,9 @@
  */
 package sim.kantordesa.auth;
 
+import sim.kantordesa.SIMKantorDesa;
+import java.sql.*;
+
 /**
  *
  * @author manii
@@ -197,6 +200,38 @@ public class login extends javax.swing.JFrame {
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
         // TODO add your handling code here:
+        String usernameIn = text_username.getText().trim();
+        String passwordIn = new String(text_password.getPassword());
+        
+        if (usernameIn.isEmpty() || passwordIn.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Username atau Password Kosong!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        try {
+            Connection conn = SIMKantorDesa.getKoneksi();
+            String query = "Select password FROM users WHERE username = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, usernameIn);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                String storedPassword = rs.getString("password");
+                if (storedPassword.equals(passwordIn)) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Login Berhasil!", "Sukses", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Password Salah!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Username tidak ditemukan!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+            rs.close();
+            ps.close();
+            conn.close();
+        } catch (SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Sistem Error!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_loginActionPerformed
 
     /**
