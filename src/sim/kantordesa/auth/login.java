@@ -230,7 +230,6 @@ public class login extends javax.swing.JFrame {
             conn.close();
         } catch (SQLException ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Sistem Error!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
         }
     }//GEN-LAST:event_loginActionPerformed
 
