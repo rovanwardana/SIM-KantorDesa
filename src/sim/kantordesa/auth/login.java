@@ -53,7 +53,7 @@ public class login extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
         jPanel1.setLayout(null);
 
-        PanelKiri.setBackground(new java.awt.Color(29, 78, 216));
+        PanelKiri.setBackground(new java.awt.Color(19, 128, 97));
         PanelKiri.setPreferredSize(new java.awt.Dimension(400, 500));
 
         logodesa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -79,7 +79,7 @@ public class login extends javax.swing.JFrame {
             PanelKiriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelKiriLayout.createSequentialGroup()
                 .addGap(101, 101, 101)
-                .addComponent(logodesa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logodesa, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(judul)
                 .addGap(133, 133, 133))
@@ -127,7 +127,7 @@ public class login extends javax.swing.JFrame {
         text_password.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         PanelKanan.add(text_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 251, 260, 35));
 
-        login.setBackground(new java.awt.Color(29, 78, 216));
+        login.setBackground(new java.awt.Color(19, 128, 97));
         login.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         login.setForeground(new java.awt.Color(255, 255, 255));
         login.setText("Login");
@@ -136,14 +136,14 @@ public class login extends javax.swing.JFrame {
                 loginActionPerformed(evt);
             }
         });
-        PanelKanan.add(login, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 313, 100, 34));
+        PanelKanan.add(login, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 313, 100, 35));
 
         registertext.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         registertext.setText("Saya belum memiliki akun");
         PanelKanan.add(registertext, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 379, -1, -1));
 
         register.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        register.setForeground(new java.awt.Color(29, 78, 216));
+        register.setForeground(new java.awt.Color(19, 128, 97));
         register.setText("Register");
         register.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
