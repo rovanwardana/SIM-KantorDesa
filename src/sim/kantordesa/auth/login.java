@@ -31,7 +31,7 @@ public class login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        body = new javax.swing.JPanel();
         PanelKiri = new javax.swing.JPanel();
         logodesa = new javax.swing.JLabel();
         judul = new javax.swing.JLabel();
@@ -50,14 +50,15 @@ public class login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LOGIN");
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
-        jPanel1.setLayout(null);
+        body.setBackground(new java.awt.Color(255, 255, 255));
+        body.setPreferredSize(new java.awt.Dimension(800, 500));
+        body.setLayout(null);
 
         PanelKiri.setBackground(new java.awt.Color(19, 128, 97));
         PanelKiri.setPreferredSize(new java.awt.Dimension(400, 500));
 
         logodesa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        logodesa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/auth/icon/logorandom.png"))); // NOI18N
 
         judul.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         judul.setForeground(new java.awt.Color(255, 255, 255));
@@ -80,13 +81,13 @@ public class login extends javax.swing.JFrame {
             PanelKiriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelKiriLayout.createSequentialGroup()
                 .addGap(101, 101, 101)
-                .addComponent(logodesa, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                .addComponent(logodesa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(judul)
                 .addGap(133, 133, 133))
         );
 
-        jPanel1.add(PanelKiri);
+        body.add(PanelKiri);
         PanelKiri.setBounds(0, 0, 400, 500);
 
         PanelKanan.setBackground(new java.awt.Color(255, 255, 255));
@@ -153,10 +154,10 @@ public class login extends javax.swing.JFrame {
         });
         PanelKanan.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(226, 373, 100, 34));
 
-        jPanel1.add(PanelKanan);
+        body.add(PanelKanan);
         PanelKanan.setBounds(400, 0, 400, 500);
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(body, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -170,7 +171,6 @@ public class login extends javax.swing.JFrame {
     }//GEN-LAST:event_registerActionPerformed
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
-        // TODO add your handling code here:
         String usernameIn = text_username.getText().trim();
         String passwordIn = new String(text_password.getPassword());
         
@@ -205,7 +205,6 @@ public class login extends javax.swing.JFrame {
             }
             rs.close();
             ps.close();
-            conn.close();
         } catch (SQLException ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Sistem Error!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
@@ -232,8 +231,8 @@ public class login extends javax.swing.JFrame {
     private javax.swing.JLabel LOGIN;
     private javax.swing.JPanel PanelKanan;
     private javax.swing.JPanel PanelKiri;
+    private javax.swing.JPanel body;
     private javax.swing.JLabel hidepass;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel judul;
     private javax.swing.JButton login;
     private javax.swing.JLabel logodesa;

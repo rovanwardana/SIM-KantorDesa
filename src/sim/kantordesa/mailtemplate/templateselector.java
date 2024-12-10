@@ -149,26 +149,10 @@ public class templateselector extends javax.swing.JFrame {
         
         if (applicantName.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Nama Pengaju tidak boleh kosong!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
         }
-
         if (templateName == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Silakan pilih template surat!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
         }
-        
-        int mailTypeId = getMailTypeId(templateName);
-        if (mailTypeId == 0) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Template Surat tidak valid!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-    saveApplicantData(applicantName, mailTypeId);
-    javax.swing.JOptionPane.showMessageDialog(this, "Data berhasil disimpan!", "Informasi", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-
-    mailform nextForm = new mailform(templateName);
-    nextForm.setVisible(true);
-    this.dispose();
     }//GEN-LAST:event_btn_nextActionPerformed
 
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_backActionPerformed
