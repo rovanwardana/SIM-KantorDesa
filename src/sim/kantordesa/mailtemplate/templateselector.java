@@ -219,9 +219,10 @@ public class templateselector extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void saveApplicantData(String applicantName, int mailTypeId) {
-        String query = "INSERT INTO mail_content (applicant_name, mail_type_id) VALUES (?, ?)";
-        try (Connection conn = koneksi.getConnection();
-        PreparedStatement ps = conn.prepareStatement(query)) {
+        try {
+            Connection conn = koneksi.getConnection();
+            String query = "INSERT INTO mail_content (applicant_name, mail_type_id) VALUES (?, ?)";
+            PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, applicantName);
             ps.setInt(2, mailTypeId);
             ps.executeUpdate();
@@ -233,35 +234,36 @@ public class templateselector extends javax.swing.JFrame {
 
  
     private int getMailTypeId(String templateName) {
-        String query = "SELECT mail_type_id FROM mail_type WHERE type_name = ?";
-        try (Connection conn = koneksi.getConnection();
-        PreparedStatement ps = conn.prepareStatement(query)) {
+        try {
+            Connection conn = koneksi.getConnection();
+            String query = "SELECT mail_type_id FROM mail_type WHERE type_name = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, templateName);
-            try (ResultSet rs = ps.executeQuery()) {
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt("mail_type_id");
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this, "Template Surat tidak ditemukan!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
             }
-            }
         } catch (SQLException ex) {
         javax.swing.JOptionPane.showMessageDialog(this, "Kesalahan sistem saat mengambil ID Template!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         ex.printStackTrace();
         }
-        return 0;
+    return 0;
     }
 
     private void loadTemplateSurat() {
-        String query = "SELECT type_name FROM mail_type";
-        try (Connection conn = koneksi.getConnection();
-        PreparedStatement ps = conn.prepareStatement(query);
-        ResultSet rs = ps.executeQuery()) {
+        try {
+            Connection conn = koneksi.getConnection();
+            String query = "SELECT type_name FROM mail_type";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
             box_template_surat.removeAllItems();
             while (rs.next()) {
                 box_template_surat.addItem(rs.getString("type_name"));
             }
-            } catch (SQLException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Gagal memuat template surat!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
+        } catch (SQLException ex) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Gagal memuat template surat!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
