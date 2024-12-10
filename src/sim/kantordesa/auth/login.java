@@ -4,8 +4,8 @@
  */
 package sim.kantordesa.auth;
 
-import sim.kantordesa.SIMKantorDesa;
 import java.sql.*;
+import sim.kantordesa.config.koneksi;
 
 /**
  *
@@ -155,20 +155,7 @@ public class login extends javax.swing.JFrame {
         jPanel1.add(PanelKanan);
         PanelKanan.setBounds(400, 0, 400, 500);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -192,7 +179,7 @@ public class login extends javax.swing.JFrame {
         }
         
         try {
-            Connection conn = SIMKantorDesa.getKoneksi();
+            Connection conn = koneksi.getConnection();
             String query = "Select password FROM users WHERE username = ?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, usernameIn);
