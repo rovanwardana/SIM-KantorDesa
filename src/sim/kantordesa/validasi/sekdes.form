@@ -306,7 +306,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="574" max="32767" attributes="0"/>
-                  <Component id="jButton1" min="-2" pref="95" max="-2" attributes="0"/>
+                  <Component id="historybtn" min="-2" pref="95" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
@@ -324,7 +324,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton1" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
+                      <Component id="historybtn" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="533" max="32767" attributes="0"/>
               </Group>
@@ -424,7 +424,7 @@
             <Property name="text" type="java.lang.String" value="Validasi Surat Masuk"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JButton" name="historybtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="61" green="80" red="13" type="rgb"/>
@@ -438,7 +438,7 @@
             <Property name="text" type="java.lang.String" value="History"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="historybtnActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
