@@ -43,7 +43,7 @@
                   <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="btn_next" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="btn_next" min="-2" pref="120" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                           <Component id="btn_back" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
@@ -69,7 +69,7 @@
                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="template_surat" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="box_template_surat" pref="34" max="32767" attributes="0"/>
+                  <Component id="box_template_surat" pref="35" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btn_next" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
@@ -154,15 +154,7 @@
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="7">
-                <StringItem index="0" value="Surat Izin Keramaian"/>
-                <StringItem index="1" value="Surat Keterangan Kehilangan"/>
-                <StringItem index="2" value="Surat Keterangan Kelahiran"/>
-                <StringItem index="3" value="Surat Keterangan Kematian"/>
-                <StringItem index="4" value="Surat Keterangan Kurang Mampu"/>
-                <StringItem index="5" value="Surat Keterangan Usaha"/>
-                <StringItem index="6" value="Surat Permohonan Cerai"/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
           <AuxValues>
