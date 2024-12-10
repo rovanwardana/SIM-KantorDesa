@@ -70,6 +70,7 @@ public class templateselector extends javax.swing.JFrame {
         template_surat.setText("Template Surat");
 
         box_template_surat.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        box_template_surat.setToolTipText("");
 
         btn_next.setBackground(new java.awt.Color(19, 128, 97));
         btn_next.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -144,7 +145,7 @@ public class templateselector extends javax.swing.JFrame {
 
     private void btn_nextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nextActionPerformed
         String applicantName = text_namapengaju.getText().trim();
-        String templateName = (String) box_template_surat.getSelectedItem();
+        String templateName = box_template_surat.getSelectedItem().toString();
         
         if (applicantName.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Nama Pengaju tidak boleh kosong!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
@@ -155,7 +156,7 @@ public class templateselector extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Silakan pilih template surat!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+        
         int mailTypeId = getMailTypeId(templateName);
         if (mailTypeId == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Template Surat tidak valid!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
@@ -228,7 +229,6 @@ public class templateselector extends javax.swing.JFrame {
             ps.executeUpdate();
         } catch (SQLException ex) {
         javax.swing.JOptionPane.showMessageDialog(this, "Gagal menyimpan data ke database!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        ex.printStackTrace();
         }
     }
 
@@ -247,7 +247,6 @@ public class templateselector extends javax.swing.JFrame {
             }
         } catch (SQLException ex) {
         javax.swing.JOptionPane.showMessageDialog(this, "Kesalahan sistem saat mengambil ID Template!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        ex.printStackTrace();
         }
     return 0;
     }
