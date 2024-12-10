@@ -6,6 +6,7 @@ package sim.kantordesa.auth;
 
 import java.sql.*;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.mailtemplate.templateselector;
 
 /**
  *
@@ -93,7 +94,7 @@ public class login extends javax.swing.JFrame {
         PanelKanan.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         LOGIN.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        LOGIN.setForeground(new java.awt.Color(29, 78, 216));
+        LOGIN.setForeground(new java.awt.Color(19, 128, 97));
         LOGIN.setText("LOGIN");
         PanelKanan.add(LOGIN, new org.netbeans.lib.awtextra.AbsoluteConstraints(148, 49, -1, -1));
 
@@ -189,12 +190,18 @@ public class login extends javax.swing.JFrame {
                 String storedPassword = rs.getString("password");
                 if (storedPassword.equals(passwordIn)) {
                     javax.swing.JOptionPane.showMessageDialog(this, "Login Berhasil!", "Sukses", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                    
+                    templateselector DashboardFrame = new templateselector();
+                    DashboardFrame.setVisible(true);
+                    DashboardFrame.pack();
+                    DashboardFrame.setLocationRelativeTo(null);
+                    this.dispose();
                 } else {
                     javax.swing.JOptionPane.showMessageDialog(this, "Password Salah!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this, "Username tidak ditemukan!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
             }
             rs.close();
             ps.close();
