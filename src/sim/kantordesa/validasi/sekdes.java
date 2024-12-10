@@ -378,6 +378,10 @@ public class sekdes extends javax.swing.JFrame {
 
     private void historybtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historybtnActionPerformed
         // TODO add your handling code here:
+        HistoryPage historyPage = new HistoryPage();
+        
+        historyPage.setVisible(true);
+        dispose();
     }//GEN-LAST:event_historybtnActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
