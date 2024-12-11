@@ -10,15 +10,10 @@ package sim.kantordesa.mailtemplate;
  */
 public class mailform extends javax.swing.JFrame {
 
-    /**
-     * Creates new form mailform
-     * @param title
-     */
-    
     public mailform(String title) {
-        initComponents(); // Inisialisasi komponen GUI
+        initComponents();
         updateTitle(title);
-    }
+    }   
 
     public mailform() {
         initComponents();
@@ -32,70 +27,243 @@ public class mailform extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        body = new javax.swing.JPanel();
+        header = new javax.swing.JPanel();
         form_title = new javax.swing.JLabel();
+        btn_next = new javax.swing.JButton();
+        btn_back = new javax.swing.JButton();
+        nama = new javax.swing.JLabel();
+        text_nama = new javax.swing.JTextField();
+        tgl_lahir = new javax.swing.JLabel();
+        text_tgl_lahir = new javax.swing.JTextField();
+        umur = new javax.swing.JLabel();
+        jUmur = new javax.swing.JSpinner();
+        warganegara = new javax.swing.JLabel();
+        wni = new javax.swing.JRadioButton();
+        wna = new javax.swing.JRadioButton();
+        gender = new javax.swing.JLabel();
+        lakilaki = new javax.swing.JRadioButton();
+        perempuan = new javax.swing.JRadioButton();
+        ttinggal = new javax.swing.JLabel();
+        text_ttinggal = new javax.swing.JTextField();
+        goldar = new javax.swing.JLabel();
+        box_goldar = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1200, 800));
 
-        jPanel1.setPreferredSize(new java.awt.Dimension(1200, 800));
+        body.setPreferredSize(new java.awt.Dimension(1200, 800));
 
-        jPanel2.setBackground(new java.awt.Color(19, 128, 97));
+        header.setBackground(new java.awt.Color(19, 128, 97));
+        header.setPreferredSize(new java.awt.Dimension(1200, 80));
 
         form_title.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         form_title.setForeground(new java.awt.Color(255, 255, 255));
         form_title.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         form_title.setText("MAIL FORM");
+        form_title.setPreferredSize(new java.awt.Dimension(200, 48));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
+        header.setLayout(headerLayout);
+        headerLayout.setHorizontalGroup(
+            headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(headerLayout.createSequentialGroup()
                 .addGap(60, 60, 60)
-                .addComponent(form_title, javax.swing.GroupLayout.PREFERRED_SIZE, 1200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(form_title, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(240, Short.MAX_VALUE))
+        );
+        headerLayout.setVerticalGroup(
+            headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(headerLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(form_title, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+
+        btn_next.setBackground(new java.awt.Color(19, 128, 97));
+        btn_next.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_next.setForeground(new java.awt.Color(255, 255, 255));
+        btn_next.setText("Lanjutkan");
+        btn_next.setPreferredSize(new java.awt.Dimension(100, 35));
+        btn_next.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_nextActionPerformed(evt);
+            }
+        });
+
+        btn_back.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_back.setForeground(new java.awt.Color(19, 128, 97));
+        btn_back.setText("Kembali");
+        btn_back.setPreferredSize(new java.awt.Dimension(100, 35));
+        btn_back.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_backActionPerformed(evt);
+            }
+        });
+
+        nama.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        nama.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        nama.setText("Nama");
+
+        text_nama.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        text_nama.setPreferredSize(new java.awt.Dimension(500, 35));
+
+        tgl_lahir.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        tgl_lahir.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        tgl_lahir.setText("Tempat / Tanggal Lahir");
+
+        text_tgl_lahir.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        text_tgl_lahir.setPreferredSize(new java.awt.Dimension(500, 35));
+
+        umur.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        umur.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        umur.setText("Umur");
+
+        jUmur.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jUmur.setPreferredSize(new java.awt.Dimension(64, 35));
+
+        warganegara.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        warganegara.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        warganegara.setText("Warga Negara");
+
+        wni.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        wni.setText("WNI");
+        wni.setPreferredSize(new java.awt.Dimension(64, 35));
+
+        wna.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        wna.setText("WNA");
+        wna.setPreferredSize(new java.awt.Dimension(64, 35));
+
+        gender.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        gender.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        gender.setText("Jenis Kelamin");
+
+        lakilaki.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lakilaki.setText("Laki - laki");
+        lakilaki.setPreferredSize(new java.awt.Dimension(64, 35));
+
+        perempuan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        perempuan.setText("Perempuan");
+        perempuan.setPreferredSize(new java.awt.Dimension(120, 35));
+
+        ttinggal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ttinggal.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        ttinggal.setText("Tempat Tinggal");
+
+        text_ttinggal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        text_ttinggal.setPreferredSize(new java.awt.Dimension(500, 35));
+
+        goldar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        goldar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        goldar.setText("Golongan Darah");
+
+        box_goldar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        box_goldar.setMaximumRowCount(7);
+        box_goldar.setToolTipText("");
+        box_goldar.setMinimumSize(new java.awt.Dimension(64, 35));
+        box_goldar.setPreferredSize(new java.awt.Dimension(64, 35));
+
+        javax.swing.GroupLayout bodyLayout = new javax.swing.GroupLayout(body);
+        body.setLayout(bodyLayout);
+        bodyLayout.setHorizontalGroup(
+            bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(header, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(bodyLayout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(box_goldar, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(goldar))
+                    .addComponent(text_ttinggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ttinggal)
+                    .addComponent(gender)
+                    .addGroup(bodyLayout.createSequentialGroup()
+                        .addComponent(lakilaki, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(perempuan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(warganegara)
+                    .addComponent(jUmur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(umur)
+                    .addComponent(text_nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(text_tgl_lahir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nama)
+                    .addComponent(tgl_lahir)
+                    .addGroup(bodyLayout.createSequentialGroup()
+                        .addComponent(btn_next, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(39, 39, 39)
+                        .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(bodyLayout.createSequentialGroup()
+                        .addComponent(wni, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wna, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(form_title)
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 720, Short.MAX_VALUE))
+        bodyLayout.setVerticalGroup(
+            bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bodyLayout.createSequentialGroup()
+                .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41)
+                .addComponent(nama)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(text_tgl_lahir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tgl_lahir)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(text_nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(umur)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jUmur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(warganegara)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(wni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(wna, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(gender)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lakilaki, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(perempuan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ttinggal)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(text_ttinggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(goldar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(box_goldar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(102, 102, 102)
+                .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_next, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(60, 60, 60))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(body, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_nextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nextActionPerformed
+        
+    }//GEN-LAST:event_btn_nextActionPerformed
+    
+    private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_backActionPerformed
+        
+    }//GEN-LAST:event_btn_backActionPerformed
 
     /**
      * @param args the command line arguments
@@ -113,15 +281,11 @@ public class mailform extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(mailform.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(mailform.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(mailform.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(mailform.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */
@@ -131,13 +295,31 @@ public class mailform extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel body;
+    private javax.swing.JComboBox<String> box_goldar;
+    private javax.swing.JButton btn_back;
+    private javax.swing.JButton btn_next;
     private javax.swing.JLabel form_title;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel gender;
+    private javax.swing.JLabel goldar;
+    private javax.swing.JPanel header;
+    private javax.swing.JSpinner jUmur;
+    private javax.swing.JRadioButton lakilaki;
+    private javax.swing.JLabel nama;
+    private javax.swing.JRadioButton perempuan;
+    private javax.swing.JTextField text_nama;
+    private javax.swing.JTextField text_tgl_lahir;
+    private javax.swing.JTextField text_ttinggal;
+    private javax.swing.JLabel tgl_lahir;
+    private javax.swing.JLabel ttinggal;
+    private javax.swing.JLabel umur;
+    private javax.swing.JLabel warganegara;
+    private javax.swing.JRadioButton wna;
+    private javax.swing.JRadioButton wni;
     // End of variables declaration//GEN-END:variables
+    
     public final void updateTitle(String title) {
-    this.setTitle(title); // Mengatur title JFrame
-    form_title.setText(title); // Mengatur title pada JLabel (jika ada)
+    this.setTitle(title);
+    form_title.setText(title);
     }
-
 }

@@ -70,12 +70,15 @@ public class templateselector extends javax.swing.JFrame {
         template_surat.setText("Template Surat");
 
         box_template_surat.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        box_template_surat.setMaximumRowCount(7);
         box_template_surat.setToolTipText("");
+        box_template_surat.setPreferredSize(new java.awt.Dimension(640, 35));
 
         btn_next.setBackground(new java.awt.Color(19, 128, 97));
         btn_next.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btn_next.setForeground(new java.awt.Color(255, 255, 255));
         btn_next.setText("Lanjutkan");
+        btn_next.setPreferredSize(new java.awt.Dimension(120, 35));
         btn_next.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_nextActionPerformed(evt);
@@ -85,6 +88,7 @@ public class templateselector extends javax.swing.JFrame {
         btn_back.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btn_back.setForeground(new java.awt.Color(19, 128, 97));
         btn_back.setText("Kembali");
+        btn_back.setPreferredSize(new java.awt.Dimension(100, 35));
         btn_back.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_backActionPerformed(evt);
@@ -100,11 +104,11 @@ public class templateselector extends javax.swing.JFrame {
                 .addGap(60, 60, 60)
                 .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(bodyLayout.createSequentialGroup()
-                        .addComponent(btn_next, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_next, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)
-                        .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(box_template_surat, 0, 640, Short.MAX_VALUE)
+                        .addComponent(box_template_surat, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(template_surat)
                         .addComponent(nama_pengaju)
                         .addComponent(text_namapengaju)))
@@ -121,11 +125,11 @@ public class templateselector extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addComponent(template_surat)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(box_template_surat, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                .addComponent(box_template_surat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(40, 40, 40)
                 .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_next, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_next, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 42, Short.MAX_VALUE))
         );
 
@@ -145,14 +149,30 @@ public class templateselector extends javax.swing.JFrame {
 
     private void btn_nextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nextActionPerformed
         String applicantName = text_namapengaju.getText().trim();
-        String templateName = box_template_surat.getSelectedItem().toString();
+        String templateName = (String) box_template_surat.getSelectedItem();
         
         if (applicantName.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Nama Pengaju tidak boleh kosong!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
         }
+
         if (templateName == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Silakan pilih template surat!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
         }
+
+        int mailTypeId = getMailTypeId(templateName);
+        if (mailTypeId == 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Template Surat tidak valid!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        saveApplicantData(applicantName, mailTypeId);
+        javax.swing.JOptionPane.showMessageDialog(this, "Data berhasil disimpan!", "Informasi", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+        mailform nextForm = new mailform(templateName);
+        nextForm.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btn_nextActionPerformed
 
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_backActionPerformed

@@ -49,12 +49,16 @@ public class login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LOGIN");
+        setMaximumSize(new java.awt.Dimension(1920, 1080));
 
         body.setBackground(new java.awt.Color(255, 255, 255));
+        body.setMaximumSize(new java.awt.Dimension(1920, 1080));
         body.setPreferredSize(new java.awt.Dimension(800, 500));
         body.setLayout(null);
 
         PanelKiri.setBackground(new java.awt.Color(19, 128, 97));
+        PanelKiri.setMaximumSize(new java.awt.Dimension(1920, 1080));
+        PanelKiri.setMinimumSize(new java.awt.Dimension(0, 0));
         PanelKiri.setPreferredSize(new java.awt.Dimension(400, 500));
 
         logodesa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -91,6 +95,8 @@ public class login extends javax.swing.JFrame {
         PanelKiri.setBounds(0, 0, 400, 500);
 
         PanelKanan.setBackground(new java.awt.Color(255, 255, 255));
+        PanelKanan.setMaximumSize(new java.awt.Dimension(1920, 1080));
+        PanelKanan.setMinimumSize(new java.awt.Dimension(0, 0));
         PanelKanan.setPreferredSize(new java.awt.Dimension(400, 500));
         PanelKanan.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -133,12 +139,13 @@ public class login extends javax.swing.JFrame {
         login.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         login.setForeground(new java.awt.Color(255, 255, 255));
         login.setText("Login");
+        login.setPreferredSize(new java.awt.Dimension(100, 35));
         login.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginActionPerformed(evt);
             }
         });
-        PanelKanan.add(login, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 313, 100, 35));
+        PanelKanan.add(login, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 313, -1, -1));
 
         registertext.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         registertext.setText("Saya belum memiliki akun");
@@ -147,12 +154,13 @@ public class login extends javax.swing.JFrame {
         register.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         register.setForeground(new java.awt.Color(19, 128, 97));
         register.setText("Register");
+        register.setPreferredSize(new java.awt.Dimension(100, 35));
         register.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registerActionPerformed(evt);
             }
         });
-        PanelKanan.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(226, 373, 100, 34));
+        PanelKanan.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(226, 373, -1, -1));
 
         body.add(PanelKanan);
         PanelKanan.setBounds(400, 0, 400, 500);
@@ -181,7 +189,7 @@ public class login extends javax.swing.JFrame {
         
         try {
             Connection conn = koneksi.getConnection();
-            String query = "Select password FROM users WHERE username = ?";
+            String query = "SELECT password FROM users WHERE username = ?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, usernameIn);
             ResultSet rs = ps.executeQuery();
