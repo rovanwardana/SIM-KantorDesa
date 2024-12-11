@@ -252,8 +252,6 @@ public class HistoryPage extends javax.swing.JFrame {
         });
         jTable1.setRowHeight(30);
         jTable1.setShowGrid(true);
-        jTable1.setShowHorizontalLines(true);
-        jTable1.setShowVerticalLines(true);
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setMinWidth(50);
@@ -355,6 +353,7 @@ public class HistoryPage extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
