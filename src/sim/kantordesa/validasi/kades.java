@@ -199,10 +199,27 @@ public class kades extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "No", "Status", "Diterima tgl.", "Instansi", "Perihal", "Val. Sekdes", "Val. Kades", "Aksi"
+                "No", "Status", "Diterima tgl.", "Nama Pemohon", "Perihal", "Val. Sekdes", "Val. Kades", "Aksi"
             }
         ) {
             Class[] types = new Class [] {
@@ -213,6 +230,9 @@ public class kades extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        jTable1.setShowGrid(true);
+        jTable1.setShowHorizontalLines(true);
+        jTable1.setShowVerticalLines(true);
         jScrollPane1.setViewportView(jTable1);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
