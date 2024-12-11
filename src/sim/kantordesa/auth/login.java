@@ -160,7 +160,7 @@ public class login extends javax.swing.JFrame {
                 registerActionPerformed(evt);
             }
         });
-        PanelKanan.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(226, 373, -1, -1));
+        PanelKanan.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 370, -1, -1));
 
         body.add(PanelKanan);
         PanelKanan.setBounds(400, 0, 400, 500);
