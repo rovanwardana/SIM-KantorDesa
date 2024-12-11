@@ -17,7 +17,7 @@ public class SIMKantorDesa {
      */
     public static void main(String[] args) {
         System.out.println("Hello World");
-        new kades().setVisible(true);
+        kades.main(null);
     }
     
 }
