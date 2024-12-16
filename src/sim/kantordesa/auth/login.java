@@ -197,7 +197,6 @@ public class login extends javax.swing.JFrame {
             if (rs.next()) {
                 String storedPassword = rs.getString("password");
                 if (storedPassword.equals(passwordIn)) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "Login Berhasil!", "Sukses", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                     templateselector DashboardFrame = new templateselector();
                     DashboardFrame.setVisible(true);
                     DashboardFrame.pack();

@@ -168,8 +168,6 @@ public class templateselector extends javax.swing.JFrame {
         }
         
         saveApplicantData(applicantName, mailTypeId);
-        javax.swing.JOptionPane.showMessageDialog(this, "Data berhasil disimpan!", "Informasi", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-        
         mailform nextForm = new mailform(templateName);
         nextForm.setVisible(true);
         this.dispose();
