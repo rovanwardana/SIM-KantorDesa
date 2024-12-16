@@ -684,7 +684,7 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
 //            }
             javax.swing.UIManager.setLookAndFeel(new FlatIntelliJLaf());
         } catch (UnsupportedLookAndFeelException  ex) {
-            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex); }
+            java.util.logging.Logger.getLogger(PagesValidasi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex); }
 //        } catch (InstantiationException ex) {
 //            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (IllegalAccessException ex) {
