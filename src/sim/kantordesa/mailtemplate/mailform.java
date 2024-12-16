@@ -527,7 +527,6 @@ public class mailform extends javax.swing.JFrame {
                 stmt.setString(1, noKtp);
                 stmt.setString(2, mulaiBerlaku);
                 stmt.setString(3, tglAkhir);
-
                 stmt.executeUpdate();
             }
 

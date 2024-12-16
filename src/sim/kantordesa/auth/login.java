@@ -205,14 +205,10 @@ public class login extends javax.swing.JFrame {
                     this.dispose();
                 } else {
                     javax.swing.JOptionPane.showMessageDialog(this, "Password Salah!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                    return;
                 }
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this, "Username tidak ditemukan!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                return;
             }
-            rs.close();
-            ps.close();
         } catch (SQLException ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Sistem Error!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
