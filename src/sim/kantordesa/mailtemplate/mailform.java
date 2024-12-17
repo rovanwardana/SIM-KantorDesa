@@ -517,20 +517,20 @@ public class mailform extends javax.swing.JFrame {
                 stmt.setString(8, pekerjaan);
                 stmt.setString(9, alamat);
                 stmt.setString(10, golDarah);
-
                 stmt.executeUpdate();
             }
 
-            // Save to mail_content table
-            String queryMailContent = "INSERT INTO mail_content (no_ktp, mulai_berlaku, tgl_akhir) VALUES (?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(queryMailContent)) {
+            // Update the most recent row in mail_content table
+            String queryUpdateMailContent = "UPDATE mail_content SET no_ktp = ?, mulai_berlaku = ?, tgl_akhir = ? " +
+                                            "WHERE mail_id = (SELECT mail_id FROM mail_content ORDER BY mail_id DESC LIMIT 1)";
+            try (PreparedStatement stmt = conn.prepareStatement(queryUpdateMailContent)) {
                 stmt.setString(1, noKtp);
                 stmt.setString(2, mulaiBerlaku);
                 stmt.setString(3, tglAkhir);
                 stmt.executeUpdate();
             }
 
-            JOptionPane.showMessageDialog(this, "Data berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Data berhasil disimpan dan diperbarui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error saving data: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
