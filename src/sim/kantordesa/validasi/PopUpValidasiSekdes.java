@@ -10,26 +10,40 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import sim.kantordesa.config.koneksi;
 
 /**
  *
  * @author Krisna
  */
-public class PopUpValidasiSekdes extends javax.swing.JFrame {
+public final class PopUpValidasiSekdes extends javax.swing.JFrame {
     JDialog popup;
     boolean allChecked = false;
     JCheckBox[] checkboxes = {
         new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox()
     };
+
+    @Override
+    public void setDefaultCloseOperation(int op) {
+        super.setDefaultCloseOperation(op); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+    
     /**
      * Creates new form PopUpValidasiSekdes
      */
-    public PopUpValidasiSekdes() {
+    public PopUpValidasiSekdes(String value) {
         initComponents();
+        
+        setDefaultCloseOperation(HIDE_ON_CLOSE);
         
         Validasi.setEnabled(false);
         
@@ -76,6 +90,39 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
                 Validasi.setEnabled(allChecked);
             });
         }
+        
+        try {
+            Connection c = koneksi.getConnection();
+            Statement s = c.createStatement();
+            String sql = "SELECT m.applicant_name, m.mail_number, t.type_name, m.mail_date, m.status_validation, m.status_lead, m.created_at, m.no_ktp, c.nama, c.tempat_tanggal_lahir, c.warga_negara, c.agama, c.jenis_kelamin, c.pekerjaan, c.alamat, c.gol_darah FROM mail_content AS m JOIN civil_registry AS c ON m.no_ktp = c.no_ktp JOIN mail_type AS t ON m.mail_type_id = t.mail_type_id WHERE mail_number = " + value + ";";
+            ResultSet r = s.executeQuery(sql);
+            
+            while (r.next()) {
+                NamaPemohon.setText(r.getString("applicant_name"));
+                NomorSurat.setText(r.getString("mail_number"));
+                Perihal.setText(r.getString("type_name"));
+                TanggalSurat.setText(r.getString("mail_date"));
+                StatusSekdes.setText(r.getString("status_validation"));
+                StatusKades.setText(r.getString("status_lead"));
+                TanggalPengajuan.setText(r.getString("created_at"));
+                DataNik.setText(r.getString("no_ktp"));
+                DataNama.setText(r.getString("nama"));
+                DataTTL.setText(r.getString("tempat_tanggal_lahir"));
+                DataKewarganegaraan.setText(r.getString("warga_negara"));
+                DataAgama.setText(r.getString("agama"));
+                DataJK.setText(r.getString("jenis_kelamin"));
+                DataPekerjaan.setText(r.getString("pekerjaan"));
+                DataALamat.setText(r.getString("alamat"));
+                DataGD.setText(r.getString("gol_darah"));
+            }
+            
+            r.close();
+            s.close();
+            
+        } catch (SQLException e) {
+            System.out.println("Error, " + e);
+        }
+        
         
     }
     
@@ -779,7 +826,7 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PopUpValidasiSekdes().setVisible(true);
+                new PopUpValidasiSekdes(args[0]).setVisible(true);
             }
         });
     }

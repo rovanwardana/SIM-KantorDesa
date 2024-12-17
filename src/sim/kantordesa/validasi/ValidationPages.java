@@ -64,7 +64,7 @@ public class ValidationPages extends javax.swing.JFrame {
                 i++;
                 model.addRow(tableContent);
             }
-            c.close();
+            r.close();
             s.close();
         } catch (SQLException e) {
             System.out.println("Error, " + e);

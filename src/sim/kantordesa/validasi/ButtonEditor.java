@@ -63,7 +63,6 @@ public class ButtonEditor extends javax.swing.AbstractCellEditor implements java
             int columnToCheck = 1;
             Object value = table.getValueAt(row, columnToCheck);
             PopUpValidasiSekdes.main(new String[] { value.toString() });
-            
         }
     }
     
