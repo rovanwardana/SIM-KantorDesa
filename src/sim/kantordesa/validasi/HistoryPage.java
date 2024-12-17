@@ -14,80 +14,89 @@ import javax.swing.LayoutStyle;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
+import sim.kantordesa.config.koneksi;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
 
 /**
  *
  * @author krisna
  */
 public class HistoryPage extends javax.swing.JFrame {
-    
+
     public HistoryPage() {
         initComponents();
-        
-        
+
+        loadHistori();
         setTableAction();
     }
-    
-    private void setTableAction(){
+
+    private void setTableAction() {
         TableColumnModel columnModel = tbHistory.getColumnModel();
         columnModel.getColumn(6).setCellRenderer(new ButtonPanelRenderer());
         columnModel.getColumn(6).setCellEditor(new ButtonPanelEditor(
-           new JButton ("Edit"),
-           new JButton ("Delete"),
-           new JButton("Download")
-        ));        
+                new JButton("Edit"),
+                new JButton("Delete"),
+                new JButton("Download")));
     }
-    
-    static class ButtonPanelRenderer extends JPanel implements TableCellRenderer{
-        //ImageIcon EditIcon = new ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/edit.png"));
-        //ImageIcon DeleteIcon = new ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/delete.png"));
-        //ImageIcon DownloadIcon = new ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/download.png"));
+
+    static class ButtonPanelRenderer extends JPanel implements TableCellRenderer {
+        // ImageIcon EditIcon = new
+        // ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/edit.png"));
+        // ImageIcon DeleteIcon = new
+        // ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/delete.png"));
+        // ImageIcon DownloadIcon = new
+        // ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/download.png"));
         public ButtonPanelRenderer() {
             setBackground(Color.white);
         }
-        
+
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-           removeAll();
-           
-           JButton editButton = new JButton ("Edit");
-           JButton deleteButton = new JButton ("Delete");
-           JButton downloadButton = new JButton("Download");
-           
-           GroupLayout layout = new GroupLayout(this);
-           setLayout(layout);
-           layout.setAutoCreateGaps(true);
-           layout.setAutoCreateContainerGaps(true);
-           layout.setHorizontalGroup(
-                   layout.createSequentialGroup()
-                           .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-                                   GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                           .addComponent(editButton)
-                           .addGap(10).addComponent(deleteButton)
-                           .addGap(10).addComponent(downloadButton)
-                           .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-                                   GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-           );  
-           layout.setVerticalGroup(
-                   layout.createParallelGroup(
-                           GroupLayout.Alignment.CENTER)
-                           .addComponent(editButton)
-                           .addComponent(deleteButton)
-                           .addComponent(downloadButton)
-           );
-           
-           return this;
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                int row, int column) {
+            removeAll();
+
+            JButton editButton = new JButton("Edit");
+            JButton deleteButton = new JButton("Delete");
+            JButton downloadButton = new JButton("Download");
+
+            GroupLayout layout = new GroupLayout(this);
+            setLayout(layout);
+            layout.setAutoCreateGaps(true);
+            layout.setAutoCreateContainerGaps(true);
+            layout.setHorizontalGroup(
+                    layout.createSequentialGroup()
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
+                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editButton)
+                            .addGap(10).addComponent(deleteButton)
+                            .addGap(10).addComponent(downloadButton)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
+                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+            layout.setVerticalGroup(
+                    layout.createParallelGroup(
+                            GroupLayout.Alignment.CENTER)
+                            .addComponent(editButton)
+                            .addComponent(deleteButton)
+                            .addComponent(downloadButton));
+
+            return this;
         }
-        
+
     }
-    
-    static class ButtonPanelEditor extends AbstractCellEditor implements TableCellEditor, ActionListener{
+
+    static class ButtonPanelEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
         JPanel panel;
         JButton editButton;
         JButton deleteButton;
         JButton downloadButton;
-      
-        public ButtonPanelEditor (JButton editButton, JButton deleteButton, JButton downloadButton){
+
+        public ButtonPanelEditor(JButton editButton, JButton deleteButton, JButton downloadButton) {
             this.editButton = editButton;
             this.editButton.addActionListener(this);
             this.deleteButton = deleteButton;
@@ -95,29 +104,27 @@ public class HistoryPage extends javax.swing.JFrame {
             this.downloadButton = downloadButton;
             this.downloadButton.addActionListener(this);
             panel = new JPanel();
-            
+
             GroupLayout layout = new GroupLayout(panel);
             panel.setLayout(layout);
-            
+
             layout.setAutoCreateGaps(true);
-           layout.setAutoCreateContainerGaps(true);
-           layout.setHorizontalGroup(
-                   layout.createSequentialGroup()
-                           .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-                                   GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                           .addComponent(editButton)
-                           .addGap(10).addComponent(deleteButton)
-                           .addGap(10).addComponent(downloadButton)
-                           .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-                                   GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-           );  
-           layout.setVerticalGroup(
-                   layout.createParallelGroup(
-                           GroupLayout.Alignment.CENTER)
-                           .addComponent(editButton)
-                           .addComponent(deleteButton)
-                           .addComponent(downloadButton)
-           );
+            layout.setAutoCreateContainerGaps(true);
+            layout.setHorizontalGroup(
+                    layout.createSequentialGroup()
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
+                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editButton)
+                            .addGap(10).addComponent(deleteButton)
+                            .addGap(10).addComponent(downloadButton)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
+                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+            layout.setVerticalGroup(
+                    layout.createParallelGroup(
+                            GroupLayout.Alignment.CENTER)
+                            .addComponent(editButton)
+                            .addComponent(deleteButton)
+                            .addComponent(downloadButton));
         }
 
         @Override
@@ -126,20 +133,54 @@ public class HistoryPage extends javax.swing.JFrame {
         }
 
         @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
+                int column) {
             return panel;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(e.getSource() == editButton){
+            if (e.getSource() == editButton) {
                 System.out.println("Edit Button diklik");
-            } else if (e.getSource() == deleteButton){
+            } else if (e.getSource() == deleteButton) {
                 System.out.println("Delete Button diklik");
-            } else if (e.getSource() == downloadButton){
+            } else if (e.getSource() == downloadButton) {
                 System.out.println("Download Button diklik");
             }
             fireEditingStopped();
+        }
+    }
+
+    public void loadHistori() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+
+        try {
+            Connection c = koneksi.getConnection();
+            Statement s = c.createStatement();
+            String sql = "select mail_number, created_at, applicant_name, status_validation, status_lead, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            ResultSet r = s.executeQuery(sql);
+            int no = 1;
+            while (r.next()) {
+                model.addRow(new Object[] {
+                        no++,
+                        r.getString("mail_number"),
+                        r.getString("created_at"),
+                        r.getString("applicant_name"),
+                        r.getBoolean("status_validation") == false ? "Reject" : "Accept",
+                        r.getBoolean("status_lead") == false ? "Reject" : "Accept",
+                        r.getString("type_name"),
+                        "",
+                });
+
+            }
+            r.close();
+            s.close();
+            c.close();
+
+        } catch (SQLException e) {
+            System.out.println("Terjadi error");
+            e.printStackTrace();
         }
     }
 
@@ -178,6 +219,7 @@ public class HistoryPage extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1445, 780));
 
         sideBarHistory.setBackground(new java.awt.Color(255, 255, 255));
         sideBarHistory.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -348,58 +390,53 @@ public class HistoryPage extends javax.swing.JFrame {
 
         panelTb.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        tbHistory.setForeground(new java.awt.Color(255, 255, 255));
-        tbHistory.setModel(new javax.swing.table.DefaultTableModel(
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "No.", "No. Surat", "Tanggal Surat Masuk", "Tanggal Validasi Sekdes", "Tanggal Validasi Kades", "Perihal", "Aksi"
+                "No", "No Surat", "Nama Pemohon", "Tanggal Surat Masuk", "Tanggal Validasi Sekdes", "Tanggal Validasi Kades", "Perihal", "Aksi"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
-        tbHistory.setRowHeight(30);
-        tbHistory.setShowGrid(true);
-        panelScrollTb.setViewportView(tbHistory);
-        if (tbHistory.getColumnModel().getColumnCount() > 0) {
-            tbHistory.getColumnModel().getColumn(0).setMinWidth(30);
-            tbHistory.getColumnModel().getColumn(0).setMaxWidth(40);
-            tbHistory.getColumnModel().getColumn(1).setMinWidth(120);
-            tbHistory.getColumnModel().getColumn(1).setMaxWidth(130);
-            tbHistory.getColumnModel().getColumn(2).setMinWidth(140);
-            tbHistory.getColumnModel().getColumn(2).setMaxWidth(150);
-            tbHistory.getColumnModel().getColumn(3).setMinWidth(140);
-            tbHistory.getColumnModel().getColumn(3).setMaxWidth(150);
-            tbHistory.getColumnModel().getColumn(4).setMinWidth(140);
-            tbHistory.getColumnModel().getColumn(4).setMaxWidth(150);
-            tbHistory.getColumnModel().getColumn(5).setMinWidth(120);
-            tbHistory.getColumnModel().getColumn(5).setMaxWidth(130);
+        jTable1.setRowHeight(30);
+        jTable1.setShowGrid(true);
+        jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMinWidth(50);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(60);
+            jTable1.getColumnModel().getColumn(1).setMinWidth(120);
+            jTable1.getColumnModel().getColumn(1).setMaxWidth(130);
+            jTable1.getColumnModel().getColumn(2).setMinWidth(140);
+            jTable1.getColumnModel().getColumn(2).setMaxWidth(150);
+            jTable1.getColumnModel().getColumn(3).setMinWidth(140);
+            jTable1.getColumnModel().getColumn(3).setMaxWidth(150);
+            jTable1.getColumnModel().getColumn(4).setMinWidth(140);
+            jTable1.getColumnModel().getColumn(4).setMaxWidth(150);
+            jTable1.getColumnModel().getColumn(5).setMinWidth(140);
+            jTable1.getColumnModel().getColumn(5).setMaxWidth(150);
+            jTable1.getColumnModel().getColumn(6).setMinWidth(120);
+            jTable1.getColumnModel().getColumn(6).setMaxWidth(130);
+            jTable1.getColumnModel().getColumn(7).setMinWidth(130);
+            jTable1.getColumnModel().getColumn(7).setMaxWidth(140);
         }
 
         labelHistory.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -411,38 +448,28 @@ public class HistoryPage extends javax.swing.JFrame {
             panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTbLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelTbLayout.createSequentialGroup()
-                        .addComponent(labelHistory)
-                        .addGap(0, 742, Short.MAX_VALUE))
-                    .addComponent(panelScrollTb))
-                .addContainerGap())
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 943, Short.MAX_VALUE)))
         );
         panelTbLayout.setVerticalGroup(
             panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTbLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(labelHistory)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelScrollTb, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
-                .addGap(31, 31, 31))
-        );
-
-        usernameBar.setBackground(new java.awt.Color(19, 128, 97));
-        usernameBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Username");
 
-        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/iconamoon_profile-circle-fillnew.png"))); // NOI18N
 
-        javax.swing.GroupLayout usernameBarLayout = new javax.swing.GroupLayout(usernameBar);
-        usernameBar.setLayout(usernameBarLayout);
-        usernameBarLayout.setHorizontalGroup(
-            usernameBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, usernameBarLayout.createSequentialGroup()
-                .addContainerGap(776, Short.MAX_VALUE)
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
@@ -456,21 +483,12 @@ public class HistoryPage extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(jLabel14))
                 .addContainerGap(18, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(sideBarHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(administrasiBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(usernameBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelTb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-        );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -488,27 +506,26 @@ public class HistoryPage extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }// GEN-LAST:event_jButton6ActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }// GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }// GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }// GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }// GEN-LAST:event_jButton2ActionPerformed
 
-    
     /**
      * @param args the command line arguments
      */
