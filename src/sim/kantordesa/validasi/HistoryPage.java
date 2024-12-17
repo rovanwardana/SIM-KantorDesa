@@ -1,7 +1,6 @@
 package sim.kantordesa.validasi;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -34,14 +33,16 @@ public class HistoryPage extends javax.swing.JFrame {
         TableColumnModel columnModel = tbHistory.getColumnModel();
         columnModel.getColumn(6).setCellRenderer(new ButtonPanelRenderer());
         columnModel.getColumn(6).setCellEditor(new ButtonPanelEditor(
-                new JButton(), 
-                new JButton(), 
-                new JButton()
+           new JButton ("Edit"),
+           new JButton ("Delete"),
+           new JButton("Download")
         ));        
     }
     
     static class ButtonPanelRenderer extends JPanel implements TableCellRenderer{
-        ImageIcon img = new ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/lets-icons_check-fill.png"));
+        //ImageIcon EditIcon = new ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/edit.png"));
+        //ImageIcon DeleteIcon = new ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/delete.png"));
+        //ImageIcon DownloadIcon = new ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/download.png"));
         public ButtonPanelRenderer() {
             setBackground(Color.white);
         }
@@ -50,9 +51,9 @@ public class HistoryPage extends javax.swing.JFrame {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
            removeAll();
            
-           JButton editButton = new JButton ();
-           JButton deleteButton = new JButton ();
-           JButton downloadButton = new JButton();
+           JButton editButton = new JButton ("Edit");
+           JButton deleteButton = new JButton ("Delete");
+           JButton downloadButton = new JButton("Download");
            
            GroupLayout layout = new GroupLayout(this);
            setLayout(layout);
@@ -142,6 +143,7 @@ public class HistoryPage extends javax.swing.JFrame {
             fireEditingStopped();
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
