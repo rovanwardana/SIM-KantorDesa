@@ -160,7 +160,7 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(973, 633));
+        setPreferredSize(new java.awt.Dimension(973, 750));
 
         jLabel1.setBackground(new java.awt.Color(19, 128, 97));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -766,7 +766,7 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
 //            }
             javax.swing.UIManager.setLookAndFeel(new FlatIntelliJLaf());
         } catch (UnsupportedLookAndFeelException  ex) {
-            java.util.logging.Logger.getLogger(PagesValidasi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex); }
+            java.util.logging.Logger.getLogger(PopUpValidasiSekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex); }
 //        } catch (InstantiationException ex) {
 //            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (IllegalAccessException ex) {
