@@ -6,6 +6,11 @@ package sim.kantordesa.validasi;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -16,16 +21,64 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class PopUpValidasiSekdes extends javax.swing.JFrame {
     JDialog popup;
+    boolean allChecked = false;
+    JCheckBox[] checkboxes = {
+        new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox()
+    };
     /**
      * Creates new form PopUpValidasiSekdes
      */
     public PopUpValidasiSekdes() {
         initComponents();
         
+        Validasi.setEnabled(false);
+        
         popup = new JDialog(this, "Pop-up Validasi", true);
         popup.setSize(300, 200);
         popup.setLayout(new FlowLayout());
+        
+        checkboxes[0] = cb1;
+        checkboxes[1] = cb2;
+        checkboxes[2] = cb3;
+        checkboxes[3] = cb4;
+        checkboxes[4] = cb5;
+        checkboxes[5] = cb6;
+        checkboxes[6] = cb7;
+        checkboxes[7] = cb8;
+        checkboxes[8] = cb9;
+        
+        ItemListener checkboxListener = new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                boolean allChecked = true;
+                for (JCheckBox cb : checkboxes) {
+                    if (!cb.isSelected()) {
+                        allChecked = false;
+                        break;
+                    }
+                }
+                Validasi.setEnabled(allChecked);
+            }
+        };
+        
+        for (JCheckBox cb : checkboxes) {
+            cb.addItemListener(checkboxListener);
+        }
+        
+        for (JCheckBox cb : checkboxes) {
+            cb.addItemListener(e -> {
+                boolean allChecked = true;
+                for (JCheckBox checkbox : checkboxes) {
+                    if (!checkbox.isSelected()) {
+                        allChecked = false;
+                        break;
+                    }
+                }
+                Validasi.setEnabled(allChecked);
+            });
+        }
+        
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -91,19 +144,19 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         DataPekerjaan = new javax.swing.JTextField();
         DataALamat = new javax.swing.JTextField();
         DataGD = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox4 = new javax.swing.JCheckBox();
-        jCheckBox5 = new javax.swing.JCheckBox();
-        jCheckBox6 = new javax.swing.JCheckBox();
-        jCheckBox7 = new javax.swing.JCheckBox();
-        jCheckBox8 = new javax.swing.JCheckBox();
-        jCheckBox9 = new javax.swing.JCheckBox();
-        jCheckBox10 = new javax.swing.JCheckBox();
-        jCheckBox11 = new javax.swing.JCheckBox();
+        cb1 = new javax.swing.JCheckBox();
+        cb3 = new javax.swing.JCheckBox();
+        cb2 = new javax.swing.JCheckBox();
+        cb4 = new javax.swing.JCheckBox();
+        cb5 = new javax.swing.JCheckBox();
+        cb6 = new javax.swing.JCheckBox();
+        cb7 = new javax.swing.JCheckBox();
+        cb8 = new javax.swing.JCheckBox();
+        cb9 = new javax.swing.JCheckBox();
         jLabel34 = new javax.swing.JLabel();
         Catatan = new javax.swing.JTextField();
         TolakPengajuan = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        Validasi = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -147,7 +200,6 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         jLabel15.setText(":");
 
         NamaPemohon.setEditable(false);
-        NamaPemohon.setText("Nama Pemohon");
         NamaPemohon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 NamaPemohonActionPerformed(evt);
@@ -155,16 +207,17 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         });
 
         NomorSurat.setEditable(false);
-        NomorSurat.setText("Nomor Surat");
+        NomorSurat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NomorSuratActionPerformed(evt);
+            }
+        });
 
         Perihal.setEditable(false);
-        Perihal.setText("Perihal");
 
         TanggalSurat.setEditable(false);
-        TanggalSurat.setText("Tanggal Surat");
 
         StatusSekdes.setEditable(false);
-        StatusSekdes.setText("Status Sekdes");
         StatusSekdes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 StatusSekdesActionPerformed(evt);
@@ -172,10 +225,8 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         });
 
         StatusKades.setEditable(false);
-        StatusKades.setText("Status Kades");
 
         TanggalPengajuan.setEditable(false);
-        TanggalPengajuan.setText("Tanggal Pengajuan");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -310,7 +361,6 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         jLabel33.setText(":");
 
         DataNik.setEditable(false);
-        DataNik.setText("NIK");
         DataNik.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 DataNikActionPerformed(evt);
@@ -318,80 +368,72 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         });
 
         DataNama.setEditable(false);
-        DataNama.setText("Nama");
 
         DataTTL.setEditable(false);
-        DataTTL.setText("Tempat, Tanggal Lahir");
 
         DataKewarganegaraan.setEditable(false);
-        DataKewarganegaraan.setText("Kewarganegaraan");
 
         DataAgama.setEditable(false);
-        DataAgama.setText("Agama");
 
         DataJK.setEditable(false);
-        DataJK.setText("Jenis Kelamin");
 
         DataPekerjaan.setEditable(false);
-        DataPekerjaan.setText("Pekerjaan");
 
         DataALamat.setEditable(false);
-        DataALamat.setText("Alamat");
 
         DataGD.setEditable(false);
-        DataGD.setText("Golongan Darah");
 
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        cb1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                cb1ActionPerformed(evt);
             }
         });
 
-        jCheckBox4.addActionListener(new java.awt.event.ActionListener() {
+        cb3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox4ActionPerformed(evt);
+                cb3ActionPerformed(evt);
             }
         });
 
-        jCheckBox5.addActionListener(new java.awt.event.ActionListener() {
+        cb2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox5ActionPerformed(evt);
+                cb2ActionPerformed(evt);
             }
         });
 
-        jCheckBox6.addActionListener(new java.awt.event.ActionListener() {
+        cb4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox6ActionPerformed(evt);
+                cb4ActionPerformed(evt);
             }
         });
 
-        jCheckBox7.addActionListener(new java.awt.event.ActionListener() {
+        cb5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox7ActionPerformed(evt);
+                cb5ActionPerformed(evt);
             }
         });
 
-        jCheckBox8.addActionListener(new java.awt.event.ActionListener() {
+        cb6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox8ActionPerformed(evt);
+                cb6ActionPerformed(evt);
             }
         });
 
-        jCheckBox9.addActionListener(new java.awt.event.ActionListener() {
+        cb7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox9ActionPerformed(evt);
+                cb7ActionPerformed(evt);
             }
         });
 
-        jCheckBox10.addActionListener(new java.awt.event.ActionListener() {
+        cb8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox10ActionPerformed(evt);
+                cb8ActionPerformed(evt);
             }
         });
 
-        jCheckBox11.addActionListener(new java.awt.event.ActionListener() {
+        cb9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox11ActionPerformed(evt);
+                cb9ActionPerformed(evt);
             }
         });
 
@@ -435,15 +477,15 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
                     .addComponent(DataKewarganegaraan, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jCheckBox4)
-                    .addComponent(jCheckBox6)
-                    .addComponent(jCheckBox7)
-                    .addComponent(jCheckBox8)
-                    .addComponent(jCheckBox9)
-                    .addComponent(jCheckBox10)
-                    .addComponent(jCheckBox11)
-                    .addComponent(jCheckBox5))
+                    .addComponent(cb1)
+                    .addComponent(cb3)
+                    .addComponent(cb4)
+                    .addComponent(cb5)
+                    .addComponent(cb6)
+                    .addComponent(cb7)
+                    .addComponent(cb8)
+                    .addComponent(cb9)
+                    .addComponent(cb2))
                 .addGap(31, 31, 31))
         );
         jPanel3Layout.setVerticalGroup(
@@ -451,7 +493,7 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox1)
+                    .addComponent(cb1)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel16)
                         .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -463,7 +505,7 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
                         .addComponent(jLabel26, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(DataNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jCheckBox5)
+                        .addComponent(cb2)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -471,10 +513,10 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
                         .addComponent(jLabel18)
                         .addComponent(DataTTL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel27))
-                    .addComponent(jCheckBox4))
+                    .addComponent(cb3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox6)
+                    .addComponent(cb4)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel19)
                         .addComponent(jLabel28)
@@ -488,31 +530,31 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
                             .addComponent(DataAgama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jCheckBox7)
+                        .addComponent(cb5)
                         .addGap(15, 15, 15)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox8)
+                    .addComponent(cb6)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel21)
                         .addComponent(jLabel30)
                         .addComponent(DataJK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox9)
+                    .addComponent(cb7)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel22)
                         .addComponent(jLabel31)
                         .addComponent(DataPekerjaan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox10)
+                    .addComponent(cb8)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel23)
                         .addComponent(jLabel32)
                         .addComponent(DataALamat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox11)
+                    .addComponent(cb9)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel24)
                         .addComponent(jLabel33)
@@ -523,7 +565,6 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         jLabel34.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel34.setText("Catatan:");
 
-        Catatan.setForeground(new java.awt.Color(153, 153, 153));
         Catatan.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         Catatan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -541,13 +582,13 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(0, 153, 51));
-        jButton2.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Validasi");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        Validasi.setBackground(new java.awt.Color(0, 153, 51));
+        Validasi.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        Validasi.setForeground(new java.awt.Color(255, 255, 255));
+        Validasi.setText("Validasi");
+        Validasi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                ValidasiActionPerformed(evt);
             }
         });
 
@@ -567,7 +608,7 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
                                 .addComponent(TolakPengajuan, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(567, 567, 567)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(Validasi, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -585,7 +626,7 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(TolakPengajuan, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Validasi, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 4, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -632,49 +673,64 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_CatatanActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void ValidasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ValidasiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        
+        Validasi.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+                for (JCheckBox cb : checkboxes) {
+                    if(cb.isSelected()){
+                        allChecked = true;
+                    }
+                    break;
+                }
+                if (allChecked) {
+                    JOptionPane.showMessageDialog(popup, "Validasi surat berhasil dilakukan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                } 
+            }  
+        });
+    }//GEN-LAST:event_ValidasiActionPerformed
 
     private void NamaPemohonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NamaPemohonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_NamaPemohonActionPerformed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void cb1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }//GEN-LAST:event_cb1ActionPerformed
 
-    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
+    private void cb3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox4ActionPerformed
+    }//GEN-LAST:event_cb3ActionPerformed
 
-    private void jCheckBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox5ActionPerformed
+    private void cb2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox5ActionPerformed
+    }//GEN-LAST:event_cb2ActionPerformed
 
-    private void jCheckBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox6ActionPerformed
+    private void cb4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb4ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox6ActionPerformed
+    }//GEN-LAST:event_cb4ActionPerformed
 
-    private void jCheckBox7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox7ActionPerformed
+    private void cb5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb5ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox7ActionPerformed
+    }//GEN-LAST:event_cb5ActionPerformed
 
-    private void jCheckBox8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox8ActionPerformed
+    private void cb6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb6ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox8ActionPerformed
+    }//GEN-LAST:event_cb6ActionPerformed
 
-    private void jCheckBox9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox9ActionPerformed
+    private void cb7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb7ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox9ActionPerformed
+    }//GEN-LAST:event_cb7ActionPerformed
 
-    private void jCheckBox10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox10ActionPerformed
+    private void cb8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb8ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox10ActionPerformed
+    }//GEN-LAST:event_cb8ActionPerformed
 
-    private void jCheckBox11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox11ActionPerformed
+    private void cb9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb9ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox11ActionPerformed
+    }//GEN-LAST:event_cb9ActionPerformed
 
     private void TolakPengajuanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TolakPengajuanActionPerformed
         // TODO add your handling code here:
@@ -686,6 +742,10 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(popup, "Catatan tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
             }
     }//GEN-LAST:event_TolakPengajuanActionPerformed
+
+    private void NomorSuratActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NomorSuratActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_NomorSuratActionPerformed
 
     /**
      * @param args the command line arguments
@@ -742,16 +802,16 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
     private javax.swing.JTextField TanggalPengajuan;
     private javax.swing.JTextField TanggalSurat;
     private javax.swing.JButton TolakPengajuan;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox10;
-    private javax.swing.JCheckBox jCheckBox11;
-    private javax.swing.JCheckBox jCheckBox4;
-    private javax.swing.JCheckBox jCheckBox5;
-    private javax.swing.JCheckBox jCheckBox6;
-    private javax.swing.JCheckBox jCheckBox7;
-    private javax.swing.JCheckBox jCheckBox8;
-    private javax.swing.JCheckBox jCheckBox9;
+    private javax.swing.JButton Validasi;
+    private javax.swing.JCheckBox cb1;
+    private javax.swing.JCheckBox cb2;
+    private javax.swing.JCheckBox cb3;
+    private javax.swing.JCheckBox cb4;
+    private javax.swing.JCheckBox cb5;
+    private javax.swing.JCheckBox cb6;
+    private javax.swing.JCheckBox cb7;
+    private javax.swing.JCheckBox cb8;
+    private javax.swing.JCheckBox cb9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
