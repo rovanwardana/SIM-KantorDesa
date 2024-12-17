@@ -4,7 +4,7 @@
  */
 package sim.kantordesa;
 
-import sim.kantordesa.validasi.kades;
+import sim.kantordesa.validasi.PagesValidasi;
 
 /**
  *
@@ -17,7 +17,7 @@ public class SIMKantorDesa {
      */
     public static void main(String[] args) {
         System.out.println("Hello World");
-        kades.main(null);
+        PagesValidasi.main(null);
     }
     
 }
