@@ -16,14 +16,15 @@ import sim.kantordesa.config.koneksi;
  *
  * @author rika
  */
-public class PagesValidasi extends javax.swing.JFrame {
+public lass PagesValidasi extends javax.swing.JFrame {
+
     Object[] tableContent = new Object[9];
     private final javax.swing.table.DefaultTableModel model;
-    /**
-     * Creates new form sekdes
-     */
-    public PagesValidasi() {
-        initComponents();
+    /**     * 
+
+         */
+
+               initComponents();
         
         model = new javax.swing.table.DefaultTableModel();
         
@@ -261,127 +262,55 @@ public class PagesValidasi extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jTable1.setRowHeight(30);
-        jTable1.setShowGrid(true);
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(20);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
-            jTable1.getColumnModel().getColumn(7).setMinWidth(80);
-            jTable1.getColumnModel().getColumn(7).setMaxWidth(80);
-        }
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel3.setText("Validasi Surat Masuk");
+        le1.setShowGrid(true);
+            ane1.setViewortView(jTable
+        j
+           jTable1.getColumnMode    jTable1.getColumnModel    jTable1.getColumnModel().getColumn}
 
-        historybtn.setBackground(new java.awt.Color(19, 128, 97));
-        historybtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        historybtn.setForeground(new java.awt.Color(255, 255, 255));
-        historybtn.setText("History");
-        historybtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                historybtnActionPerformed(evt);
-            }
-        });
+    
+        
+        el3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // 
+        el3.setText("Validasi Surat Masuk");
+        
+    h
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 574, Short.MAX_VALUE)
-                .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 785, Short.MAX_VALUE)
-                    .addContainerGap()))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(533, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addGap(45, 45, 45)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-        );
+    historybtn.setForeground(new java.awt.Color(25,255, 255));
+    historybtn.setText("History");
 
-        jPanel5.setBackground(new java.awt.Color(19, 128, 97));
-        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        public void actionPerformed(java.awt.event.ctioEvent        historybtnActionPerformed(evt);
+        }});
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Username");
+    x.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayo
+        setLayout(jPanel3Layout);
+    e   
 
-        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/iconamoon_profile-circle-fillnew.png"))); // NOI18N
+            .addContainerGap()
+                    .addComponent(jLabel3)        .addPreferredGap(javax.sw    .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, ja    .addContainerGap())Group(jPanel3Layou.addGroup(jPanel3Layou    .addContainerGap()    .addComponent(jScrollane1, javax.swing.GroupLayout.DEFAULT_SZE,785, Short.MAX_VALUE)    .addContainerGaayout.setVerticalGroup(ayout.createParallp(jPanel3Layout.createSequetialGroup()ContainerGap()              .addComponent(jLabe        .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34    .addContainerGap(533, Short.MAX_VALUE))Group(jPanel3Layou.addGroup(jPanel3Layout.createSequentialGroup().addGap(45, 45, 45).addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZ, 52, javax.swing.GroupLayout.PREFERRED_SIZ    .addContainerGap(avax.swing.GroupLackground(nw jva.order(javax.swing.BorderFacory.createLineBorder(new java.awt.Color204,204, 204)));jL
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel9)
-                .addGap(14, 14, 14))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel14))
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
+    jLabel9.setText("Username");
 
-        jPanel4.setBackground(new java.awt.Color(19, 128, 97));
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+    
+    javax.swing.GroupLayout jPanel5Layout = new jvax.wing.GjPanel5.setLayout(jPanel5Lay
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Administrasi");
+        jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/akar-icons_three-line-horizontal3.png"))); // NOI18N
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short
+            .MAX_VALU        .addComponent(jLabel14)        .addPreferredGap(javax.sw    .addComponent(jLabel9)    .addGap(14, 14, 14))ayout.setVerticalGroup(el5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADGroup(jPanel5Layout.cr.addGap(16,16,16)              .addComponent(jLabe        .addComponent(jLabel14))    .addContainerGap(18, Short.MAX_VALUE))ackground(new java.awtorder(javax.swing.BorderjL
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel7)
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel7))
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
+    jLabel1.setText("Administrasi");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    
+    javax.swing.GroupLayout jPanel4Layout = new jvax.wing.GjPanel4.setLayout(jPanel4Layout)
+
+        jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+
+            .addContainerGap()
+                    .addComponent(jLabel1)        .addPreferredGap(javax.sw    .addComponent(jLabel7)    .addContainerGap())ayout.setVerticalGroupel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADNG)Group(jPanel4Layout.cr.addContainerGap()              .addComponent(jLabe        .addComponent(jLabel7))    .addContainerGap(19, Short.MAX_VALUE))GroupLayout layout = nne().setLayout(layout);etHorizontalGroup(  
+
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.
+
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -414,27 +343,27 @@ public class PagesValidasi extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
-
+ 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
-
+ 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
-
+ 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
-
+ 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton6ActionPerformed
-
+ 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    pub lic static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -449,7 +378,23 @@ public class PagesValidasi extends javax.swing.JFrame {
 //            }
             javax.swing.UIManager.setLookAndFeel(new FlatIntelliJLaf());
         } catch (UnsupportedLookAndFeelException  ex) {
-            java.util.logging.Logger.getLogger(PagesValidasi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex); }
+            java.util.logging.Logger.getLogger(ValidationPages.class.getName()).log(java.util.logging.Level.SEVERE, null, ex); }
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+        //</editor-fold>
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+        //</editor-fold>
 //        } catch (InstantiationException ex) {
 //            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (IllegalAccessException ex) {
@@ -470,7 +415,7 @@ public class PagesValidasi extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PagesValidasi().setVisible(true);
+                new ValidationPages().setVisible(true);
             }
         });
     }
