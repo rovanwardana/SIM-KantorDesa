@@ -12,12 +12,12 @@ import sim.kantordesa.validasi.ValidationPages;
  */
 public class SIMKantorDesa {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        System.out.println("Hello World");
-        ValidationPages.main(null);
-    }
-    
+        /**
+         * @param args the command line arguments
+         */
+        public static void main(String[] args) {
+                System.out.println("Hello World");
+                ValidationPages.main(null);
+        }
+
 }
