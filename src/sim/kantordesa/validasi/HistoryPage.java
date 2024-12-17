@@ -3,8 +3,13 @@ package sim.kantordesa.validasi;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.AbstractCellEditor;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -15,29 +20,101 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.ImageIcon;
+import javax.swing.table.TableColumn;
+import sim.kantordesa.config.koneksi;
 
 /**
  *
  * @author krisna
  */
 public class HistoryPage extends javax.swing.JFrame {
-
+    private final javax.swing.table.DefaultTableModel model;
+    
     public HistoryPage() {
         initComponents();
+        
+        model = new javax.swing.table.DefaultTableModel();
+
+        tbHistory.setModel(model);
+        
+        model.addColumn("No");
+        model.addColumn("No. Surat");
+        model.addColumn("Nama Pemohon");
+        model.addColumn("Tgl Surat Masuk");
+        model.addColumn("Tgl Validasi Sekdes");
+        model.addColumn("Tgl Validasi Kades");
+        model.addColumn("Perihal");
+        model.addColumn("Aksi");
+        
 
         setTableAction();
+        adjustColumnWidths(tbHistory);
     }
 
     private void setTableAction() {
-        TableColumnModel columnModel = tbHistory.getColumnModel();
-        columnModel.getColumn(6).setCellRenderer(new ButtonPanelRenderer());
-        columnModel.getColumn(6).setCellEditor(new ButtonPanelEditor(
-                new JButton("Edit"),
-                new JButton("Delete"),
-                new JButton("Download")));
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        
+        try {
+            Connection c = koneksi.getConnection();
+            Statement s = c.createStatement();
+            String sql = "select mail_number, created_at, applicant_name, status_validation, status_lead, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            ResultSet r = s.executeQuery(sql);
+            int i = 1;
+            while (r.next()){
+              model.addRow(new Object[]{
+                i++,
+                r.getString("mail_number"),
+                r.getString("applicant_name"),
+                r.getString("created_at"),
+                r.getBoolean("status_validation") == false ? "Reject" : "Accept",
+                r.getBoolean("status_lead") == false ? "Reject" : "Accept",
+                r.getString("type_name"),
+              });
+              tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
+              tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
+            }
+            r.close();
+            s.close();
+        } catch (SQLException e) {
+            System.out.println("Error, " + e);
+        }
+//        TableColumnModel columnModel = tbHistory.getColumnModel();
+        
+//        columnModel.getColumn(6).setCellEditor(new ButtonPanelEditor(
+//                new JButton("Edit"),
+//                new JButton("Delete"),
+//                new JButton("Download")));
+    }
+    
+    public static void adjustColumnWidths(JTable table) {
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            TableColumn tableColumn = table.getColumnModel().getColumn(column);
+            int preferredWidth = getMaxPreferredWidth(table, column);
+            tableColumn.setPreferredWidth(preferredWidth);
+        }
     }
 
-    static class ButtonPanelRenderer extends JPanel implements TableCellRenderer {
+    private static int getMaxPreferredWidth(JTable table, int column) {
+        int maxWidth = 0;
+        TableColumn tableColumn = table.getColumnModel().getColumn(column);
+
+        // Get the width of the column header
+        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+        Component comp = headerRenderer.getTableCellRendererComponent(table, tableColumn.getHeaderValue(), false, false, 0, column);
+        maxWidth = Math.max(comp.getPreferredSize().width, maxWidth);
+
+        // Get the width of the column content
+        for (int row = 0; row < table.getRowCount(); row++) {
+            TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
+            comp = cellRenderer.getTableCellRendererComponent(table, table.getValueAt(row, column), false, false, row, column);
+            maxWidth = Math.max(comp.getPreferredSize().width, maxWidth);
+        }
+
+        return maxWidth + 10; // Add some margin
+    }
+
+    static class ButtonPanelRenderer extends ButtonPanel implements TableCellRenderer {
         // ImageIcon EditIcon = new
         // ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/edit.png"));
         // ImageIcon DeleteIcon = new
@@ -46,77 +123,103 @@ public class HistoryPage extends javax.swing.JFrame {
         // ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/download.png"));
         public ButtonPanelRenderer() {
             setBackground(Color.white);
+                setOpaque(true);
         }
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
                 int row, int column) {
-            removeAll();
+//            removeAll();
+//
+//            JButton editButton = new JButton("Edit");
+//            JButton deleteButton = new JButton("Delete");
+//            JButton downloadButton = new JButton("Download");
+//
+//            GroupLayout layout = new GroupLayout(this);
+//            setLayout(layout);
+//            layout.setAutoCreateGaps(true);
+//            layout.setAutoCreateContainerGaps(true);
+//            layout.setHorizontalGroup(
+//                    layout.createSequentialGroup()
+//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
+//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                            .addComponent(editButton)
+//                            .addGap(10).addComponent(deleteButton)
+//                            .addGap(10).addComponent(downloadButton)
+//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
+//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+//            layout.setVerticalGroup(
+//                    layout.createParallelGroup(
+//                            GroupLayout.Alignment.CENTER)
+//                            .addComponent(editButton)
+//                            .addComponent(deleteButton)
+//                            .addComponent(downloadButton));
+//
+//            return this;
 
-            JButton editButton = new JButton("Edit");
-            JButton deleteButton = new JButton("Delete");
-            JButton downloadButton = new JButton("Download");
-
-            GroupLayout layout = new GroupLayout(this);
-            setLayout(layout);
-            layout.setAutoCreateGaps(true);
-            layout.setAutoCreateContainerGaps(true);
-            layout.setHorizontalGroup(
-                    layout.createSequentialGroup()
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(editButton)
-                            .addGap(10).addComponent(deleteButton)
-                            .addGap(10).addComponent(downloadButton)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-            layout.setVerticalGroup(
-                    layout.createParallelGroup(
-                            GroupLayout.Alignment.CENTER)
-                            .addComponent(editButton)
-                            .addComponent(deleteButton)
-                            .addComponent(downloadButton));
-
-            return this;
+                if (isSelected) {
+                    setBackground(table.getSelectionBackground());
+                    setForeground(table.getSelectionForeground());
+                } else {
+                    setBackground(table.getBackground());
+                    setForeground(table.getForeground());
+                }
+                return this;
         }
 
     }
 
     static class ButtonPanelEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
-        JPanel panel;
-        JButton editButton;
-        JButton deleteButton;
-        JButton downloadButton;
+        ButtonPanel panel;
+        JTable table;
 
-        public ButtonPanelEditor(JButton editButton, JButton deleteButton, JButton downloadButton) {
-            this.editButton = editButton;
-            this.editButton.addActionListener(this);
-            this.deleteButton = deleteButton;
-            this.deleteButton.addActionListener(this);
-            this.downloadButton = downloadButton;
-            this.downloadButton.addActionListener(this);
-            panel = new JPanel();
-
-            GroupLayout layout = new GroupLayout(panel);
-            panel.setLayout(layout);
-
-            layout.setAutoCreateGaps(true);
-            layout.setAutoCreateContainerGaps(true);
-            layout.setHorizontalGroup(
-                    layout.createSequentialGroup()
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(editButton)
-                            .addGap(10).addComponent(deleteButton)
-                            .addGap(10).addComponent(downloadButton)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-            layout.setVerticalGroup(
-                    layout.createParallelGroup(
-                            GroupLayout.Alignment.CENTER)
-                            .addComponent(editButton)
-                            .addComponent(deleteButton)
-                            .addComponent(downloadButton));
+//        public ButtonPanelEditor(JButton editButton, JButton deleteButton, JButton downloadButton) {
+        public ButtonPanelEditor(JTable table) {
+              this.table = table;
+              panel = new ButtonPanel();
+              
+              panel.editButton.addActionListener(e -> handleEditButtonAction());
+              panel.deleteButton.addActionListener(e -> handleDeleteButtonAction());
+              panel.downloadButton.addActionListener(e -> handleDownloadButtonAction());
+            
+//            this.editButton = editButton;
+//            this.editButton.addActionListener(this);
+//            this.deleteButton = deleteButton;
+//            this.deleteButton.addActionListener(this);
+//            this.downloadButton = downloadButton;
+//            this.downloadButton.addActionListener(this);
+//            panel = new JPanel();
+//
+//            GroupLayout layout = new GroupLayout(panel);
+//            panel.setLayout(layout);
+//
+//            layout.setAutoCreateGaps(true);
+//            layout.setAutoCreateContainerGaps(true);
+//            layout.setHorizontalGroup(
+//                    layout.createSequentialGroup()
+//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
+//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                            .addComponent(editButton)
+//                            .addGap(10).addComponent(deleteButton)
+//                            .addGap(10).addComponent(downloadButton)
+//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
+//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+//            layout.setVerticalGroup(
+//                    layout.createParallelGroup(
+//                            GroupLayout.Alignment.CENTER)
+//                            .addComponent(editButton)
+//                            .addComponent(deleteButton)
+//                            .addComponent(downloadButton));
+        }
+        
+        private void handleEditButtonAction() {
+            System.out.println("Edit Button diklik");
+        }
+        private void handleDeleteButtonAction() {
+            System.out.println("Delete Button diklik");
+        }
+        private void handleDownloadButtonAction() {
+            System.out.println("Download Button diklik");
         }
 
         @Override
@@ -130,16 +233,58 @@ public class HistoryPage extends javax.swing.JFrame {
             return panel;
         }
 
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            if (e.getSource() == panel.editButton) {
+//                System.out.println("Edit Button diklik");
+//            } else if (e.getSource() == panel.deleteButton) {
+//                System.out.println("Delete Button diklik");
+//            } else if (e.getSource() == panel.downloadButton) {
+//                System.out.println("Download Button diklik");
+//            }
+//            fireEditingStopped();
+//        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == editButton) {
-                System.out.println("Edit Button diklik");
-            } else if (e.getSource() == deleteButton) {
-                System.out.println("Delete Button diklik");
-            } else if (e.getSource() == downloadButton) {
-                System.out.println("Download Button diklik");
-            }
-            fireEditingStopped();
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+    }
+    
+    static class ButtonPanel extends javax.swing.JPanel {
+        public javax.swing.JButton editButton;
+        public javax.swing.JButton deleteButton;
+        public javax.swing.JButton downloadButton;
+        
+        public ButtonPanel() {
+//            GroupLayout layout = new GroupLayout(this);
+            FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
+            setLayout(layout);
+            editButton = new JButton("Edit");
+            deleteButton = new JButton("Delete");
+            downloadButton = new JButton("Download");
+            
+//            layout.setAutoCreateGaps(true);
+//            layout.setAutoCreateContainerGaps(true);
+//            layout.setHorizontalGroup(
+//                    layout.createSequentialGroup()
+//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
+//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                            .addComponent(editButton)
+//                            .addGap(10).addComponent(deleteButton)
+//                            .addGap(10).addComponent(downloadButton)
+//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
+//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+//            layout.setVerticalGroup(
+//                    layout.createParallelGroup(
+//                            GroupLayout.Alignment.CENTER)
+//                            .addComponent(editButton)
+//                            .addComponent(deleteButton)
+//                            .addComponent(downloadButton));
+            add(editButton);
+            add(deleteButton);
+            add(downloadButton);
+            
         }
     }
 
@@ -150,7 +295,7 @@ public class HistoryPage extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         sideBarHistory = new javax.swing.JPanel();
@@ -204,8 +349,7 @@ public class HistoryPage extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(102, 102, 102));
         jLabel6.setText("Menu Utama");
 
-        jLabel8.setIcon(new javax.swing.ImageIcon(
-                getClass().getResource("/sim/kantordesa/validasi/gambar/iconamoon_profile-circle-fill.png"))); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/iconamoon_profile-circle-fill.png"))); // NOI18N
 
         jButton3.setText("Disposisi");
         jButton3.setBorder(null);
@@ -231,14 +375,11 @@ public class HistoryPage extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass()
-                .getResource("/sim/kantordesa/validasi/gambar/streamline_chat-bubble-square-write-solid.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/streamline_chat-bubble-square-write-solid.png"))); // NOI18N
 
-        jLabel11.setIcon(new javax.swing.ImageIcon(
-                getClass().getResource("/sim/kantordesa/validasi/gambar/pepicons-pop_paper-plane-circle-filled.png"))); // NOI18N
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/pepicons-pop_paper-plane-circle-filled.png"))); // NOI18N
 
-        jLabel10.setIcon(
-                new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/el_off.png"))); // NOI18N
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/el_off.png"))); // NOI18N
 
         jButton6.setText("Validasi");
         jButton6.setBorder(null);
@@ -248,91 +389,78 @@ public class HistoryPage extends javax.swing.JFrame {
             }
         });
 
-        jLabel13.setIcon(new javax.swing.ImageIcon(
-                getClass().getResource("/sim/kantordesa/validasi/gambar/lets-icons_check-fill.png"))); // NOI18N
+        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/lets-icons_check-fill.png"))); // NOI18N
 
         javax.swing.GroupLayout sideBarHistoryLayout = new javax.swing.GroupLayout(sideBarHistory);
         sideBarHistory.setLayout(sideBarHistoryLayout);
         sideBarHistoryLayout.setHorizontalGroup(
-                sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(sideBarHistoryLayout.createSequentialGroup()
-                                .addContainerGap(12, Short.MAX_VALUE)
-                                .addComponent(jLabel8)
-                                .addGap(12, 12, 12)
-                                .addGroup(sideBarHistoryLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel5)
-                                        .addComponent(jLabel4))
-                                .addGap(18, 18, 18))
-                        .addGroup(sideBarHistoryLayout.createSequentialGroup()
-                                .addGroup(sideBarHistoryLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 133,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(sideBarHistoryLayout.createSequentialGroup()
-                                                .addGap(12, 12, 12)
-                                                .addGroup(sideBarHistoryLayout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(sideBarHistoryLayout.createSequentialGroup()
-                                                                .addComponent(jLabel11)
-                                                                .addGap(5, 5, 5)
-                                                                .addComponent(jButton4))
-                                                        .addComponent(jLabel6)
-                                                        .addGroup(sideBarHistoryLayout.createSequentialGroup()
-                                                                .addComponent(jLabel2)
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jButton3))
-                                                        .addGroup(sideBarHistoryLayout.createSequentialGroup()
-                                                                .addGroup(sideBarHistoryLayout.createParallelGroup(
-                                                                        javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                        .addComponent(jLabel10)
-                                                                        .addComponent(jLabel13))
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addGroup(sideBarHistoryLayout.createParallelGroup(
-                                                                        javax.swing.GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(jButton6)
-                                                                        .addComponent(jButton5))))))
-                                .addGap(0, 0, Short.MAX_VALUE)));
+            sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sideBarHistoryLayout.createSequentialGroup()
+                .addContainerGap(12, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addGap(12, 12, 12)
+                .addGroup(sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel4))
+                .addGap(18, 18, 18))
+            .addGroup(sideBarHistoryLayout.createSequentialGroup()
+                .addGroup(sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(sideBarHistoryLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(sideBarHistoryLayout.createSequentialGroup()
+                                .addComponent(jLabel11)
+                                .addGap(5, 5, 5)
+                                .addComponent(jButton4))
+                            .addComponent(jLabel6)
+                            .addGroup(sideBarHistoryLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton3))
+                            .addGroup(sideBarHistoryLayout.createSequentialGroup()
+                                .addGroup(sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel13))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton6)
+                                    .addComponent(jButton5))))))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
         sideBarHistoryLayout.setVerticalGroup(
-                sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(sideBarHistoryLayout.createSequentialGroup()
-                                .addGap(7, 7, 7)
-                                .addGroup(sideBarHistoryLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(sideBarHistoryLayout.createSequentialGroup()
-                                                .addGroup(sideBarHistoryLayout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(sideBarHistoryLayout.createSequentialGroup()
-                                                                .addComponent(jLabel5)
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jLabel4))
-                                                        .addComponent(jLabel8))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jButton2)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jLabel6)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(sideBarHistoryLayout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(jButton4)
-                                                        .addComponent(jLabel11))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(sideBarHistoryLayout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jButton3)
-                                                        .addComponent(jLabel2))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jLabel13))
-                                        .addComponent(jButton6))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(sideBarHistoryLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel10)
-                                        .addComponent(jButton5))
-                                .addContainerGap(530, Short.MAX_VALUE)));
+            sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sideBarHistoryLayout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addGroup(sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(sideBarHistoryLayout.createSequentialGroup()
+                        .addGroup(sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(sideBarHistoryLayout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4))
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton4)
+                            .addComponent(jLabel11))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel13))
+                    .addComponent(jButton6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(sideBarHistoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel10)
+                    .addComponent(jButton5))
+                .addContainerGap(530, Short.MAX_VALUE))
+        );
 
         administrasiBar.setBackground(new java.awt.Color(19, 128, 97));
         administrasiBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -341,67 +469,64 @@ public class HistoryPage extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Administrasi");
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(
-                getClass().getResource("/sim/kantordesa/validasi/gambar/akar-icons_three-line-horizontal3.png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/akar-icons_three-line-horizontal3.png"))); // NOI18N
 
         javax.swing.GroupLayout administrasiBarLayout = new javax.swing.GroupLayout(administrasiBar);
         administrasiBar.setLayout(administrasiBarLayout);
         administrasiBarLayout.setHorizontalGroup(
-                administrasiBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(administrasiBarLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel7)
-                                .addContainerGap()));
+            administrasiBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(administrasiBarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addContainerGap())
+        );
         administrasiBarLayout.setVerticalGroup(
-                administrasiBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(administrasiBarLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(administrasiBarLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel1)
-                                        .addComponent(jLabel7))
-                                .addContainerGap(19, Short.MAX_VALUE)));
+            administrasiBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(administrasiBarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(administrasiBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel7))
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
 
         panelTb.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        tbHistory.setForeground(new java.awt.Color(255, 255, 255));
         tbHistory.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null },
-                        { null, null, null, null, null, null, null }
-                },
-                new String[] {
-                        "No.", "No. Surat", "Tanggal Surat Masuk", "Tanggal Validasi Sekdes", "Tanggal Validasi Kades",
-                        "Perihal", "Aksi"
-                }) {
-            Class[] types = new Class[] {
-                    java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,
-                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "No.", "No. Surat", "Tanggal Surat Masuk", "Tanggal Validasi Sekdes", "Tanggal Validasi Kades", "Perihal", "Aksi"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
+                return types [columnIndex];
             }
         });
         tbHistory.setRowHeight(30);
@@ -428,23 +553,25 @@ public class HistoryPage extends javax.swing.JFrame {
         javax.swing.GroupLayout panelTbLayout = new javax.swing.GroupLayout(panelTb);
         panelTb.setLayout(panelTbLayout);
         panelTbLayout.setHorizontalGroup(
-                panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(panelTbLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(panelTbLayout.createSequentialGroup()
-                                                .addComponent(labelHistory)
-                                                .addGap(0, 742, Short.MAX_VALUE))
-                                        .addComponent(panelScrollTb))
-                                .addContainerGap()));
+            panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTbLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTbLayout.createSequentialGroup()
+                        .addComponent(labelHistory)
+                        .addGap(0, 742, Short.MAX_VALUE))
+                    .addComponent(panelScrollTb))
+                .addContainerGap())
+        );
         panelTbLayout.setVerticalGroup(
-                panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(panelTbLayout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(labelHistory)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(panelScrollTb, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
-                                .addGap(31, 31, 31)));
+            panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTbLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(labelHistory)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelScrollTb, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+                .addGap(31, 31, 31))
+        );
 
         usernameBar.setBackground(new java.awt.Color(19, 128, 97));
         usernameBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -453,63 +580,54 @@ public class HistoryPage extends javax.swing.JFrame {
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Username");
 
-        jLabel14.setIcon(new javax.swing.ImageIcon(
-                getClass().getResource("/sim/kantordesa/validasi/gambar/iconamoon_profile-circle-fillnew.png"))); // NOI18N
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/iconamoon_profile-circle-fillnew.png"))); // NOI18N
 
         javax.swing.GroupLayout usernameBarLayout = new javax.swing.GroupLayout(usernameBar);
         usernameBar.setLayout(usernameBarLayout);
         usernameBarLayout.setHorizontalGroup(
-                usernameBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, usernameBarLayout.createSequentialGroup()
-                                .addContainerGap(776, Short.MAX_VALUE)
-                                .addComponent(jLabel14)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel9)
-                                .addGap(14, 14, 14)));
+            usernameBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, usernameBarLayout.createSequentialGroup()
+                .addContainerGap(776, Short.MAX_VALUE)
+                .addComponent(jLabel14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9)
+                .addGap(14, 14, 14))
+        );
         usernameBarLayout.setVerticalGroup(
-                usernameBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(usernameBarLayout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addGroup(usernameBarLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel9)
-                                        .addComponent(jLabel14))
-                                .addContainerGap(18, Short.MAX_VALUE)));
+            usernameBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(usernameBarLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(usernameBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel14))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(sideBarHistory, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(administrasiBar, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(0, 0, 0)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(usernameBar, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(panelTb, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(sideBarHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(administrasiBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(usernameBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelTb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, 0)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(usernameBar, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(administrasiBar, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(sideBarHistory, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(panelTb, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(usernameBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(administrasiBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sideBarHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelTb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
 
         pack();
         setLocationRelativeTo(null);
