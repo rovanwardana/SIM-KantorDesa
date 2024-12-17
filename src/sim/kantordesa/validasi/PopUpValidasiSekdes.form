@@ -344,9 +344,9 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jTextField17" min="-2" pref="540" max="-2" attributes="0"/>
+                                  <Component id="Catatan" min="-2" pref="540" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                  <Component id="jButton1" min="-2" pref="171" max="-2" attributes="0"/>
+                                  <Component id="TolakPengajuan" min="-2" pref="171" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="567" pref="567" max="-2" attributes="0"/>
@@ -370,9 +370,9 @@
                   <Component id="jLabel34" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jTextField17" max="32767" attributes="0"/>
+                      <Component id="Catatan" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
-                          <Component id="jButton1" min="-2" pref="42" max="-2" attributes="0"/>
+                          <Component id="TolakPengajuan" min="-2" pref="42" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jButton2" min="-2" pref="42" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="4" max="32767" attributes="0"/>
@@ -750,19 +750,18 @@
             <Property name="text" type="java.lang.String" value="Catatan:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField17">
+        <Component class="javax.swing.JTextField" name="Catatan">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="99" green="99" red="99" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Tambahkan Catatan Disini..."/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField17ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CatatanActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JButton" name="TolakPengajuan">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" red="cc" type="rgb"/>
@@ -775,6 +774,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Tolak Pengajuan"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TolakPengajuanActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton2">
           <Properties>

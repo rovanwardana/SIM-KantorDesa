@@ -5,6 +5,9 @@
 package sim.kantordesa.validasi;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import java.awt.FlowLayout;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
@@ -12,12 +15,16 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author Krisna
  */
 public class PopUpValidasiSekdes extends javax.swing.JFrame {
-
+    JDialog popup;
     /**
      * Creates new form PopUpValidasiSekdes
      */
     public PopUpValidasiSekdes() {
         initComponents();
+        
+        popup = new JDialog(this, "Pop-up Validasi", true);
+        popup.setSize(300, 200);
+        popup.setLayout(new FlowLayout());
     }
 
     /**
@@ -94,8 +101,8 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         jCheckBox10 = new javax.swing.JCheckBox();
         jCheckBox11 = new javax.swing.JCheckBox();
         jLabel34 = new javax.swing.JLabel();
-        jTextField17 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        Catatan = new javax.swing.JTextField();
+        TolakPengajuan = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -516,19 +523,23 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         jLabel34.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel34.setText("Catatan:");
 
-        jTextField17.setForeground(new java.awt.Color(153, 153, 153));
-        jTextField17.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField17.setText("Tambahkan Catatan Disini...");
-        jTextField17.addActionListener(new java.awt.event.ActionListener() {
+        Catatan.setForeground(new java.awt.Color(153, 153, 153));
+        Catatan.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        Catatan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField17ActionPerformed(evt);
+                CatatanActionPerformed(evt);
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(204, 0, 0));
-        jButton1.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Tolak Pengajuan");
+        TolakPengajuan.setBackground(new java.awt.Color(204, 0, 0));
+        TolakPengajuan.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        TolakPengajuan.setForeground(new java.awt.Color(255, 255, 255));
+        TolakPengajuan.setText("Tolak Pengajuan");
+        TolakPengajuan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TolakPengajuanActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(0, 153, 51));
         jButton2.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
@@ -551,9 +562,9 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Catatan, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(27, 27, 27)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(TolakPengajuan, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(567, 567, 567)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -570,9 +581,9 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
                 .addComponent(jLabel34)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField17)
+                    .addComponent(Catatan)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(TolakPengajuan, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 4, Short.MAX_VALUE)))
@@ -617,9 +628,9 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_DataNikActionPerformed
 
-    private void jTextField17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField17ActionPerformed
+    private void CatatanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CatatanActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField17ActionPerformed
+    }//GEN-LAST:event_CatatanActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -665,6 +676,17 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox11ActionPerformed
 
+    private void TolakPengajuanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TolakPengajuanActionPerformed
+        // TODO add your handling code here:
+        String note = Catatan.getText();
+            if (!note.isEmpty()) {
+
+                JOptionPane.showMessageDialog(popup, "Catatan berhasil disimpan! " );
+            } else {
+                JOptionPane.showMessageDialog(popup, "Catatan tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            }
+    }//GEN-LAST:event_TolakPengajuanActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -702,6 +724,7 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField Catatan;
     private javax.swing.JTextField DataALamat;
     private javax.swing.JTextField DataAgama;
     private javax.swing.JTextField DataGD;
@@ -718,7 +741,7 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
     private javax.swing.JTextField StatusSekdes;
     private javax.swing.JTextField TanggalPengajuan;
     private javax.swing.JTextField TanggalSurat;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton TolakPengajuan;
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox10;
@@ -769,6 +792,5 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JTextField jTextField17;
     // End of variables declaration//GEN-END:variables
 }

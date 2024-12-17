@@ -11,12 +11,12 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author rika
  */
-public class PagesValidasi extends javax.swing.JFrame {
+public class ValidationPages extends javax.swing.JFrame {
 
     /**
      * Creates new form sekdes
      */
-    public PagesValidasi() {
+    public ValidationPages() {
         initComponents();
     }
 
@@ -424,7 +424,23 @@ public class PagesValidasi extends javax.swing.JFrame {
 //            }
             javax.swing.UIManager.setLookAndFeel(new FlatIntelliJLaf());
         } catch (UnsupportedLookAndFeelException  ex) {
-            java.util.logging.Logger.getLogger(PagesValidasi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex); }
+            java.util.logging.Logger.getLogger(ValidationPages.class.getName()).log(java.util.logging.Level.SEVERE, null, ex); }
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+        //</editor-fold>
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+        //</editor-fold>
 //        } catch (InstantiationException ex) {
 //            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (IllegalAccessException ex) {
@@ -445,7 +461,7 @@ public class PagesValidasi extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PagesValidasi().setVisible(true);
+                new ValidationPages().setVisible(true);
             }
         });
     }
