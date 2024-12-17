@@ -694,6 +694,7 @@ public class PopUpValidasiSekdes extends javax.swing.JFrame {
 
     private void NamaPemohonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NamaPemohonActionPerformed
         // TODO add your handling code here:
+
     }//GEN-LAST:event_NamaPemohonActionPerformed
 
     private void cb1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb1ActionPerformed
