@@ -4,6 +4,8 @@
  */
 package sim.kantordesa;
 
+import sim.kantordesa.validasi.PagesValidasi;
+
 /**
  *
  * @author Krisna
@@ -15,6 +17,7 @@ public class SIMKantorDesa {
      */
     public static void main(String[] args) {
         System.out.println("Hello World");
+        PagesValidasi.main(null);
     }
     
 }
