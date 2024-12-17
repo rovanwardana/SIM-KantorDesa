@@ -6,20 +6,58 @@ package sim.kantordesa.validasi;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
+import sim.kantordesa.config.koneksi;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
 
 /**
  *
  * @author lenov
  */
 public class HistoryPage extends javax.swing.JFrame {
-
+    
+  
     /**
      * Creates new form HistoryPage
      */
     public HistoryPage() {
         initComponents();
+        loadHistori();
     }
-
+    public void loadHistori(){
+        DefaultTableModel model= (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        
+        try {
+            Connection c = koneksi.getConnection();
+            Statement s = c.createStatement();
+            String sql = "SELECT mail_number, created_at, status_validation, status_lead, mail_type.mail_type FROM mail_content inner join mail_type ON mail_content.mail_type_id=mail_type.mail_type_id";
+            ResultSet r= s.executeQuery(sql);
+            int no= 1;
+            while (r.next()){
+              model.addRow(new Object[]{
+                no++,
+                r.getString("mail_number"),
+                r.getString("created_at"),
+                r.getBoolean("status_validation") == false ? "Reject" : "Accept",
+                r.getBoolean("status_lead") == false ? "Reject" : "Accept",
+                r.getString("mail_type"),
+                "",   
+              });
+              
+            }
+            r.close();
+            s.close();
+            c.close();
+           
+        } catch (SQLException e) {
+            System.out.println("Terjadi error");
+            e.printStackTrace();
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -225,7 +263,6 @@ public class HistoryPage extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        jTable1.setForeground(new java.awt.Color(255, 255, 255));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
@@ -377,6 +414,8 @@ public class HistoryPage extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
+        PagesValidasi.main (null);
+                dispose();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
