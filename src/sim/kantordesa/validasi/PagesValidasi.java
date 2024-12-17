@@ -33,7 +33,6 @@ public class PagesValidasi extends javax.swing.JFrame {
         
         model.addColumn("No");
         model.addColumn("Nomor Surat");
-        model.addColumn("Status");
         model.addColumn("Diterima tgl.");
         model.addColumn("Nama Pemohon");
         model.addColumn("Perihal");
@@ -47,18 +46,17 @@ public class PagesValidasi extends javax.swing.JFrame {
         try {
             Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
-            String sql = "select mail_number, status, created_at, applicant_name, status_validation, status_lead, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            String sql = "select mail_number, created_at, applicant_name, status_validation, status_lead, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()) {
                 tableContent[0] = i;
                 tableContent[1] = r.getInt("mail_number");
-                tableContent[2] = r.getString("status");
-                tableContent[3] = r.getString("created_at");
-                tableContent[4] = r.getString("applicant_name");
-                tableContent[5] = r.getString("type_name");
-                tableContent[6] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
-                tableContent[7] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
+                tableContent[2]= r.getString("created_at");
+                tableContent[3] = r.getString("applicant_name");
+                tableContent[4] = r.getString("type_name");
+                tableContent[5] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
+                tableContent[6] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
                 jTable1.getColumn("Aksi").setCellRenderer(new ButtonRenderer());
                 jTable1.getColumn("Aksi").setCellEditor(new ButtonEditor(jTable1));
                 i++;
