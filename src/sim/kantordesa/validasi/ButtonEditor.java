@@ -60,9 +60,9 @@ public class ButtonEditor extends javax.swing.AbstractCellEditor implements java
         public void actionPerformed(java.awt.event.ActionEvent e) {
             fireEditingStopped();
             int row = table.getSelectedRow();
-            int columnToCheck = 0;
+            int columnToCheck = 1;
             Object value = table.getValueAt(row, columnToCheck);
-            JOptionPane.showMessageDialog(table, value.toString());
+            PopUpValidasiSekdes.main(new String[] { value.toString() });
             
         }
     }
