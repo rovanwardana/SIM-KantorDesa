@@ -348,20 +348,8 @@
           <SubComponents>
             <Component class="javax.swing.JTable" name="jTable1">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
-                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="8" rowCount="24">
-                    <Column editable="true" title="No" type="java.lang.Integer"/>
-                    <Column editable="true" title="Status" type="java.lang.Object"/>
-                    <Column editable="true" title="Diterima tgl." type="java.lang.Object"/>
-                    <Column editable="true" title="Nama Pemohon" type="java.lang.Object"/>
-                    <Column editable="true" title="Perihal" type="java.lang.Object"/>
-                    <Column editable="true" title="Val. Sekdes" type="java.lang.Object"/>
-                    <Column editable="true" title="Val. Kades" type="java.lang.Object"/>
-                    <Column editable="true" title="Aksi" type="java.lang.Object"/>
-                  </Table>
+                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object[][] {&#xa;        {null, null, null, null, null, null, null, null}&#xa;    },&#xa;    new String [] {&#xa;        &quot;No&quot;, &quot;Status&quot;, &quot;Diterima tgl.&quot;, &quot;Nama Pemohon&quot;, &quot;Perihal&quot;, &quot;Val. Sekdes&quot;, &quot;Val. Kades&quot;, &quot;Aksi&quot;&#xa;    }&#xa;) {&#xa;    Class[] types = new Class [] {&#xa;        java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class&#xa;    };&#xa;&#xa;    public Class getColumnClass(int columnIndex) {&#xa;        return types [columnIndex];&#xa;    }&#xa;}" type="code"/>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                   <TableColumnModel selectionModel="0">

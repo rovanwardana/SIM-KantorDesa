@@ -6,18 +6,69 @@ package sim.kantordesa.validasi;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import sim.kantordesa.config.koneksi;
 
 /**
  *
  * @author rika
  */
 public class PagesValidasi extends javax.swing.JFrame {
-
+    Object[] tableContent = new Object[9];
+    private final javax.swing.table.DefaultTableModel model;
     /**
      * Creates new form sekdes
      */
     public PagesValidasi() {
         initComponents();
+        
+        model = new javax.swing.table.DefaultTableModel();
+        
+        jTable1.setModel(model);
+        
+        // "No", "Status", "Diterima tgl.", "Nama Pemohon", "Perihal", "Val. Sekdes", "Val. Kades", "Aksi"
+        
+        model.addColumn("No");
+        model.addColumn("Nomor Surat");
+        model.addColumn("Status");
+        model.addColumn("Diterima tgl.");
+        model.addColumn("Nama Pemohon");
+        model.addColumn("Perihal");
+        model.addColumn("Val. Sekdes");
+        model.addColumn("Val. Kades");
+        model.addColumn("Aksi");
+        
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        
+        try {
+            Connection c = koneksi.getConnection();
+            Statement s = c.createStatement();
+            String sql = "select mail_number, status, created_at, applicant_name, status_validation, status_lead, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            ResultSet r = s.executeQuery(sql);
+            int i = 1;
+            while (r.next()) {
+                tableContent[0] = i;
+                tableContent[1] = r.getInt("mail_number");
+                tableContent[2] = r.getString("status");
+                tableContent[3] = r.getString("created_at");
+                tableContent[4] = r.getString("applicant_name");
+                tableContent[5] = r.getString("type_name");
+                tableContent[6] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
+                tableContent[7] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
+                jTable1.getColumn("Aksi").setCellRenderer(new ButtonRenderer());
+                jTable1.getColumn("Aksi").setCellEditor(new ButtonEditor(jTable1));
+                i++;
+                model.addRow(tableContent);
+            }
+            c.close();
+            s.close();
+        } catch (SQLException e) {
+            System.out.println("Error, " + e);
+        }
     }
 
     /**
@@ -196,32 +247,8 @@ public class PagesValidasi extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        jTable1.setForeground(new java.awt.Color(255, 255, 255));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
+            new Object[][] {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
