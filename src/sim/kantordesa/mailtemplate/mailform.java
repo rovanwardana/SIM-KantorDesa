@@ -32,7 +32,6 @@ import org.apache.tika.parser.microsoft.rtf.RTFParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 import sim.kantordesa.config.koneksi;
-import sim.kantordesa.mailtemplate.templateselector;
 
 /**
  *
