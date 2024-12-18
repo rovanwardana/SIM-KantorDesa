@@ -182,48 +182,31 @@ public class login extends javax.swing.JFrame {
         String usernameIn = text_username.getText().trim();
         String passwordIn = new String(text_password.getPassword());
 
-        // Check if username or password is empty
         if (usernameIn.isEmpty() || passwordIn.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Username atau password kosong!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         try {
-            // Get database connection
             Connection conn = koneksi.getConnection();
-
-            // Prepare query to retrieve password from database
             String query = "SELECT password FROM users WHERE username = ?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, usernameIn);
-
-            // Execute query and retrieve result
             ResultSet rs = ps.executeQuery();
-
-            // Check if username exists in database
             if (rs.next()) {
-                // Retrieve stored password from database
                 String storedPassword = rs.getString("password");
-
-                // Check if input password matches stored password
                 if (storedPassword.equals(passwordIn)) {
-                    // Login successful, open dashboard
                     templateselector DashboardFrame = new templateselector();
                     DashboardFrame.setVisible(true);
                     DashboardFrame.pack();
                     DashboardFrame.setLocationRelativeTo(null);
                     this.dispose();
                 } else {
-                    // Password incorrect, display error message
                     javax.swing.JOptionPane.showMessageDialog(this, "Password salah!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                // Username not found, display error message
                 javax.swing.JOptionPane.showMessageDialog(this, "Username tidak ditemukan!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
-
-            // Close database connection
-            conn.close();
         } catch (SQLException ex) {
             // Display error message if database connection fails
             javax.swing.JOptionPane.showMessageDialog(this, "Sistem error!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);

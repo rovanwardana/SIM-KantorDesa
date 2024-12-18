@@ -169,10 +169,9 @@ public class templateselector extends javax.swing.JFrame {
             return;
         }
         
-        // Simpan data pengaju
-        Connection conn = koneksi.getConnection();
+        // Simpan data ke database
         try {
-            saveApplicantData(conn, applicantName, mailTypeId);
+            saveApplicantData(applicantName, mailTypeId);
         } catch (SQLException ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Gagal menyimpan data ke database!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
@@ -231,12 +230,17 @@ public class templateselector extends javax.swing.JFrame {
     private javax.swing.JLabel title;
     // End of variables declaration//GEN-END:variables
 
-    private void saveApplicantData(Connection conn, String applicantName, int mailTypeId) throws SQLException {
-        String query = "INSERT INTO mail_content (applicant_name, mail_type_id) VALUES (?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, applicantName);
-            ps.setInt(2, mailTypeId);
-            ps.executeUpdate();
+    private void saveApplicantData(String applicantName, int mailTypeId) throws SQLException {
+        try {
+            Connection conn = koneksi.getConnection();
+            String query = "INSERT INTO mail_content (applicant_name, mail_type_id) VALUES (?, ?)";
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setString(1, applicantName);
+                ps.setInt(2, mailTypeId);
+                ps.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal menyimpan data ke database!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }
 

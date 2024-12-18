@@ -8,7 +8,6 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import java.awt.HeadlessException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -18,6 +17,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -32,6 +32,7 @@ import org.apache.tika.parser.microsoft.rtf.RTFParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.mailtemplate.templateselector;
 
 /**
  *
@@ -133,7 +134,7 @@ public class mailform extends javax.swing.JFrame {
         btn_next.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btn_next.setForeground(new java.awt.Color(255, 255, 255));
         btn_next.setText("Lanjutkan");
-        btn_next.setPreferredSize(new java.awt.Dimension(100, 35));
+        btn_next.setPreferredSize(new java.awt.Dimension(120, 35));
         btn_next.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_nextActionPerformed(evt);
@@ -286,7 +287,7 @@ public class mailform extends javax.swing.JFrame {
                         .addComponent(btn_next, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39)
                         .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 901, Short.MAX_VALUE))
+                        .addGap(0, 881, Short.MAX_VALUE))
                     .addGroup(bodyLayout.createSequentialGroup()
                         .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(text_pekerjaan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -429,22 +430,8 @@ public class mailform extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_nextActionPerformed(java.awt.event.ActionEvent evt) {
-        Connection conn = null;
-        try {
-            conn = koneksi.getConnection();
-            saveData(conn);
-            generatePDF(conn);
-        } catch (HeadlessException ex) {
-            JOptionPane.showMessageDialog(this, "Error processing data: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
+        saveData();
+        generatePDF();
     }
 
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {
@@ -467,16 +454,14 @@ public class mailform extends javax.swing.JFrame {
         form_title.setText(title);
     }
 
-    private void saveData(Connection conn) {
+    private void saveData() {
+        Connection conn = koneksi.getConnection();
         String queryCivilRegistry = "INSERT INTO civil_registry (nama, no_ktp, no_kk, tempat_tanggal_lahir, warga_negara, agama, jenis_kelamin, pekerjaan, alamat, gol_darah) " +
-                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String queryUpdateMailContent = "UPDATE mail_content SET no_ktp = ?, mulai_berlaku = ?, tgl_akhir = ? " +
-                                        "WHERE mail_id = (SELECT mail_id FROM mail_content ORDER BY mail_id DESC LIMIT 1)";
-        PreparedStatement stmt1 = null;
-        PreparedStatement stmt2 = null;
-        try {
-            stmt1 = conn.prepareStatement(queryCivilRegistry);
-            stmt2 = conn.prepareStatement(queryUpdateMailContent);
+                "WHERE mail_id = (SELECT mail_id FROM mail_content ORDER BY mail_id DESC LIMIT 1)";
+        try (PreparedStatement stmt1 = conn.prepareStatement(queryCivilRegistry);
+             PreparedStatement stmt2 = conn.prepareStatement(queryUpdateMailContent)) {
             stmt1.setString(1, text_nama.getText());
             stmt1.setString(2, text_noktp.getText());
             stmt1.setString(3, text_nokk.getText());
@@ -503,25 +488,13 @@ public class mailform extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Data berhasil disimpan dan diperbarui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
             Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, "Kesalahan SQL: " + ex.getMessage(), ex);
-        } finally {
-            if (stmt1 != null) {
-                try {
-                    stmt1.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            if (stmt2 != null) {
-                try {
-                    stmt2.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        } catch (Exception ex) {
+            Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, "Kesalahan: " + ex.getMessage(), ex);
         }
     }
 
-    private Map<String, String> getVillageData(Connection conn) {
+    private Map<String, String> getVillageData() {
+        Connection conn = koneksi.getConnection();
         Map<String, String> villageData = new HashMap<>();
         String query = "SELECT district, subdistrict, village_name, village_loc, village_id FROM village_data LIMIT 1";
         try (PreparedStatement stmt = conn.prepareStatement(query);
@@ -548,30 +521,31 @@ public class mailform extends javax.swing.JFrame {
         String sampaiTanggal = sdf.format(sampaitanggal.getDate());
 
         return content.replace("[judul_surat]", "Surat Pengajuan")
-                      .replace("[nama]", text_nama.getText() != null ? text_nama.getText() : "")
-                      .replace("[ttl]", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : "")
-                      .replace("[usia]", jUmur.getValue() != null ? jUmur.getValue().toString() : "")
-                      .replace("[warga_negara]", wni.isSelected() ? "WNI" : "WNA")
-                      .replace("[agama]", box_agama.getSelectedItem() != null ? box_agama.getSelectedItem().toString() : "")
-                      .replace("[sex]", lakilaki.isSelected() ? "Laki-laki" : "Perempuan")
-                      .replace("[pekerjaan]", text_pekerjaan.getText() != null ? text_pekerjaan.getText() : "")
-                      .replace("[alamat]", text_ttinggal.getText() != null ? text_ttinggal.getText() : "")
-                      .replace("[no_ktp]", text_noktp.getText() != null ? text_noktp.getText() : "")
-                      .replace("[no_kk]", text_nokk.getText() != null ? text_nokk.getText() : "")
-                      .replace("[keperluan]", text_keperluan.getText() != null ? text_keperluan.getText() : "")
-                      .replace("[mulai_berlaku]", dariTanggal)
-                      .replace("[tgl_akhir]", sampaiTanggal)
-                      .replace("[gol_darah]", box_goldar.getSelectedItem() != null ? box_goldar.getSelectedItem().toString() : "")
-                      .replace("[nama_kab]", villageData.getOrDefault("nama_kab", ""))
-                      .replace("[nama_kec]", villageData.getOrDefault("nama_kec", ""))
-                      .replace("[nama_des]", villageData.getOrDefault("nama_des", ""))
-                      .replace("[alamat_des]", villageData.getOrDefault("alamat_des", ""))
-                      .replace("[kode_des]", villageData.getOrDefault("kode_des", ""));
+                .replace("[nama]", text_nama.getText() != null ? text_nama.getText() : "")
+                .replace("[ttl]", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : "")
+                .replace("[usia]", jUmur.getValue() != null ? jUmur.getValue().toString() : "")
+                .replace("[warga_negara]", wni.isSelected() ? "WNI" : "WNA")
+                .replace("[agama]", box_agama.getSelectedItem() != null ? box_agama.getSelectedItem().toString() : "")
+                .replace("[sex]", lakilaki.isSelected() ? "Laki-laki" : "Perempuan")
+                .replace("[pekerjaan]", text_pekerjaan.getText() != null ? text_pekerjaan.getText() : "")
+                .replace("[alamat]", text_ttinggal.getText() != null ? text_ttinggal.getText() : "")
+                .replace("[no_ktp]", text_noktp.getText() != null ? text_noktp.getText() : "")
+                .replace("[no_kk]", text_nokk.getText() != null ? text_nokk.getText() : "")
+                .replace("[keperluan]", text_keperluan.getText() != null ? text_keperluan.getText() : "")
+                .replace("[mulai_berlaku]", dariTanggal)
+                .replace("[tgl_akhir]", sampaiTanggal)
+                .replace("[gol_darah]", box_goldar.getSelectedItem() != null ? box_goldar.getSelectedItem().toString() : "")
+                .replace("[nama_kab]", villageData.getOrDefault("nama_kab", ""))
+                .replace("[nama_kec]", villageData.getOrDefault("nama_kec", ""))
+                .replace("[nama_des]", villageData.getOrDefault("nama_des", ""))
+                .replace("[alamat_des]", villageData.getOrDefault("alamat_des", ""))
+                .replace("[kode_des]", villageData.getOrDefault("kode_des", ""));
     }
 
     private String loadRTFTemplate() {
-        try (Connection conn = koneksi.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT mail_type FROM mail_type WHERE mail_type_id = ?")) {
+        try {
+            Connection conn = koneksi.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT mail_type FROM mail_type WHERE mail_type_id = ?");
             stmt.setInt(1, mailTypeId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -583,89 +557,82 @@ public class mailform extends javax.swing.JFrame {
         return null;
     }
 
-    private void generatePDF(Connection conn) {
+    private void generatePDF() {
         try {
-            if (conn == null || conn.isClosed()) {
-                Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, "Database connection is closed or null.");
-                JOptionPane.showMessageDialog(this, "Database connection is closed.", "Error", JOptionPane.ERROR_MESSAGE);
+            Connection conn = koneksi.getConnection();
+            String rtfPath = loadRTFTemplate();
+            if (rtfPath == null || rtfPath.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "RTF Template not found.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-        } catch (SQLException ex) {
+            BodyContentHandler handler = new BodyContentHandler();
+            new RTFParser().parse(new FileInputStream(rtfPath), handler, new Metadata(), new ParseContext());
+
+            // Ambil data desa
+            Map<String, String> villageData = getVillageData();
+
+            // Replace Placeholders
+            String processedContent = replacePlaceholders(handler.toString(), villageData);
+
+            // Ambil mail_id dan type_name
+            String query = "SELECT mail_id, type_name FROM mail_content mc "
+                    + "JOIN mail_type mt ON mc.mail_type_id = mt.mail_type_id "
+                    + "WHERE mc.mail_type_id = ? ORDER BY mail_id DESC LIMIT 1";
+            String fileName = "output.pdf";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, mailTypeId);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    int mailId = rs.getInt("mail_id");
+                    String typeName = rs.getString("type_name");
+                    fileName = mailId + "_" + typeName + ".pdf";
+                }
+            }
+
+            // Simpan ke PDF
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Simpan File PDF");
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                String outputDir = fileChooser.getSelectedFile().getAbsolutePath();
+                String pdfPath = outputDir + "/" + fileName;
+
+                try (PdfWriter writer = new PdfWriter(pdfPath);
+                     PdfDocument pdf = new PdfDocument(writer);
+                     Document document = new Document(pdf)) {
+                    document.add(new Paragraph(processedContent));
+                }
+
+                // Update mail_content dengan mail_number dan file_path
+                String mailNumber = mailTypeId + "/" + villageData.get("kode_des") + "/" +
+                        LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
+                updateMailContent(conn, mailNumber, pdfPath);
+
+                JOptionPane.showMessageDialog(this, "File PDF berhasil disimpan di: " + pdfPath, "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                Logger.getLogger(mailform.class.getName()).log(Level.INFO, "PDF saving was cancelled by the user.");
+            }
+        } catch (IOException | TikaException | SQLException | SAXException ex) {
             Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, null, ex);
         }
-        SwingUtilities.invokeLater(() -> {
-            try {
-                // Load Template RTF
-                String rtfPath = loadRTFTemplate();
-                if (rtfPath == null || rtfPath.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "RTF Template not found.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                BodyContentHandler handler = new BodyContentHandler();
-                new RTFParser().parse(new FileInputStream(rtfPath), handler, new Metadata(), new ParseContext());
-
-                // Ambil data desa
-                Map<String, String> villageData = getVillageData(conn);
-
-                // Replace Placeholders
-                String processedContent = replacePlaceholders(handler.toString(), villageData);
-
-                // Ambil mail_id dan type_name
-                String query = "SELECT mail_id, type_name FROM mail_content mc "
-                             + "JOIN mail_type mt ON mc.mail_type_id = mt.mail_type_id "
-                             + "WHERE mc.mail_type_id = ? ORDER BY mail_id DESC LIMIT 1";
-                String fileName = "output.pdf";
-                try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                    stmt.setInt(1, mailTypeId);
-                    ResultSet rs = stmt.executeQuery();
-                    if (rs.next()) {
-                        int mailId = rs.getInt("mail_id");
-                        String typeName = rs.getString("type_name");
-                        fileName = mailId + "_" + typeName;
-                    }
-                }
-
-                // Simpan ke PDF
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Simpan File PDF");
-                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-                if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                    String outputDir = fileChooser.getSelectedFile().getAbsolutePath();
-                    String pdfPath = outputDir + "/" + fileName;
-
-                    try (PdfWriter writer = new PdfWriter(pdfPath);
-                         PdfDocument pdf = new PdfDocument(writer);
-                         Document document = new Document(pdf)) {
-                        document.add(new Paragraph(processedContent));
-                    }
-
-                    // Update mail_content dengan mail_number dan file_path
-                    String mailNumber = mailTypeId + "/" + villageData.get("kode_des") + "/" +
-                                        LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
-                    updateMailContent(conn, mailNumber, pdfPath);
-
-                    JOptionPane.showMessageDialog(this, "File PDF berhasil disimpan di: " + pdfPath, "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    Logger.getLogger(mailform.class.getName()).log(Level.INFO, "PDF saving was cancelled by the user.");
-                }
-            } catch (HeadlessException | IOException | SQLException | TikaException | SAXException ex) {
-                Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, "Error generating PDF: " + ex.getMessage(), ex);
-                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
     }
 
     private void updateMailContent(Connection conn, String mailNumber, String pdfPath) throws SQLException {
-        String query = "UPDATE mail_content SET mail_number = ?, status = 'Diproses', mail_date = NOW(), "
-                     + "created_at = NOW(), updated_at = NOW(), file_path = ? WHERE mail_type_id = ?";
+        String query = "UPDATE mail_content SET mail_number = ?, status = 'Diproses', mail_date = ?, "
+                + "created_at = NOW(), updated_at = NOW() WHERE mail_type_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, mailNumber);
-            stmt.setString(2, pdfPath);
-            stmt.setInt(3, mailTypeId);
+            // Format the current date to dd/MM/yyyy
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String formattedDate = dateFormat.format(new Date());
+            stmt.setString(2, formattedDate);
+            stmt.setString(3, pdfPath);
+            stmt.setInt(4, mailTypeId);
             stmt.executeUpdate();
         }
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel agama;
     private javax.swing.JLabel berlaku;
