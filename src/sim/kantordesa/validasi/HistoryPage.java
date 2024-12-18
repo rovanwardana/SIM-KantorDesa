@@ -258,7 +258,7 @@ public class HistoryPage extends javax.swing.JFrame {
         
         public ButtonPanel() {
 //            GroupLayout layout = new GroupLayout(this);
-            FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
+            FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
             setLayout(layout);
             editButton = new JButton("Edit");
             deleteButton = new JButton("Delete");
