@@ -29,7 +29,7 @@ public class ValidationPages extends javax.swing.JFrame {
         model = new javax.swing.table.DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;
+                return column == 7;
             }
         };
 
