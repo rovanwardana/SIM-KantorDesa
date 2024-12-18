@@ -288,6 +288,11 @@ public class HistoryPage extends javax.swing.JFrame {
         }
     }
 
+    
+     private void refreshActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        // TODO add your handling code here:
+        setTableAction();
+    }           
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -319,6 +324,7 @@ public class HistoryPage extends javax.swing.JFrame {
         panelScrollTb = new javax.swing.JScrollPane();
         tbHistory = new javax.swing.JTable();
         labelHistory = new javax.swing.JLabel();
+        refresh = new javax.swing.JButton();
         usernameBar = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -557,6 +563,16 @@ public class HistoryPage extends javax.swing.JFrame {
         labelHistory.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         labelHistory.setText("History Surat Masuk");
 
+        refresh.setBackground(new java.awt.Color(19, 128, 97));
+        refresh.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        refresh.setForeground(new java.awt.Color(255, 255, 255));
+        refresh.setText("Refresh");
+        refresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelTbLayout = new javax.swing.GroupLayout(panelTb);
         panelTb.setLayout(panelTbLayout);
         panelTbLayout.setHorizontalGroup(
@@ -564,17 +580,20 @@ public class HistoryPage extends javax.swing.JFrame {
             .addGroup(panelTbLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelScrollTb, javax.swing.GroupLayout.DEFAULT_SIZE, 857, Short.MAX_VALUE)
                     .addGroup(panelTbLayout.createSequentialGroup()
                         .addComponent(labelHistory)
-                        .addGap(0, 742, Short.MAX_VALUE))
-                    .addComponent(panelScrollTb))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         panelTbLayout.setVerticalGroup(
             panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTbLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(labelHistory)
+                .addContainerGap()
+                .addGroup(panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelHistory))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelScrollTb)
                 .addContainerGap())
@@ -643,7 +662,7 @@ public class HistoryPage extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
           ValidationPages.main(null);
-        dispose();ban
+        dispose();
     }// GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton5ActionPerformed
@@ -698,6 +717,7 @@ public class HistoryPage extends javax.swing.JFrame {
     private javax.swing.JLabel labelHistory;
     private javax.swing.JScrollPane panelScrollTb;
     private javax.swing.JPanel panelTb;
+    private javax.swing.JButton refresh;
     private javax.swing.JPanel sideBarHistory;
     private javax.swing.JTable tbHistory;
     private javax.swing.JPanel usernameBar;
