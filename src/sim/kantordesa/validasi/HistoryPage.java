@@ -33,7 +33,12 @@ public class HistoryPage extends javax.swing.JFrame {
     public HistoryPage() {
         initComponents();
         
-        model = new javax.swing.table.DefaultTableModel();
+        model = new javax.swing.table.DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tbHistory.setModel(model);
         

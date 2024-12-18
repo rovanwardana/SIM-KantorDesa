@@ -26,7 +26,12 @@ public class ValidationPages extends javax.swing.JFrame {
     public ValidationPages() {
         initComponents();
 
-        model = new javax.swing.table.DefaultTableModel();
+        model = new javax.swing.table.DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         jTable1.setModel(model);
 
