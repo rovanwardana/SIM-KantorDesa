@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -430,6 +431,43 @@ public class mailform extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_nextActionPerformed(java.awt.event.ActionEvent evt) {
+        String ktp = text_noktp.getText().trim();
+        String kk = text_nokk.getText().trim();
+        String nama = text_nama.getText().trim();
+        String tempatTanggalLahir = text_tgl_lahir.getText().trim();
+        String alamat = text_ttinggal.getText().trim();
+        String pekerjaan = text_pekerjaan.getText().trim();
+
+        if (!ktp.matches("\\d{1,16}")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "No KTP harus berupa angka dan maksimal 16 karakter!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!kk.matches("\\d{1,16}")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "No KK harus berupa angka dan maksimal 16 karakter!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (nama.length() > 100 || !nama.matches("^[a-zA-Z\\s]+$")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Nama tidak boleh lebih dari 100 karakter dan harus berupa huruf!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (tempatTanggalLahir.length() > 100) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Tempat dan tanggal lahir tidak boleh lebih dari 100 karakter!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (alamat.length() > 100) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Alamat tidak boleh lebih dari 100 karakter!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (pekerjaan.length() > 50) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Pekerjaan tidak boleh lebih dari 50 karakter!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         saveData();
         generatePDF();
     }

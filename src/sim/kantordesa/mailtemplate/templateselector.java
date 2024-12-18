@@ -157,6 +157,11 @@ public class templateselector extends javax.swing.JFrame {
             return;
         }
         
+        if (applicantName.length() > 100 || !applicantName.matches("^[a-zA-Z\\s]+$")) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Nama pengaju tidak boleh lebih dari 100 karakter dan harus berupa huruf!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         if (templateName == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Silakan pilih template surat!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;

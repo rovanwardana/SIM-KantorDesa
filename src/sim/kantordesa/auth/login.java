@@ -187,6 +187,15 @@ public class login extends javax.swing.JFrame {
             return;
         }
 
+        if (usernameIn.length() > 150) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Username tidak boleh lebih dari 150 karakter!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (passwordIn.length() > 255) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Password tidak boleh lebih dari 255 karakter!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         try {
             Connection conn = koneksi.getConnection();
             String query = "SELECT password FROM users WHERE username = ?";
