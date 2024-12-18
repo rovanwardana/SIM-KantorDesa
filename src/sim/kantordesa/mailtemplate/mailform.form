@@ -71,8 +71,8 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="text_nama" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="text_tgl_lahir" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="text_nama" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="nama" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="tgl_lahir" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="text_ttinggal" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -134,11 +134,11 @@
                           <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                           <Component id="nama" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="text_tgl_lahir" min="-2" max="-2" attributes="0"/>
+                          <Component id="text_nama" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="tgl_lahir" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="text_nama" min="-2" max="-2" attributes="0"/>
+                          <Component id="text_tgl_lahir" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="no_ktp" min="-2" max="-2" attributes="0"/>

@@ -17,12 +17,10 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -33,7 +31,6 @@ import org.apache.tika.parser.microsoft.rtf.RTFParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 import sim.kantordesa.config.koneksi;
-import sim.kantordesa.mailtemplate.templateselector;
 
 /**
  *
@@ -296,8 +293,8 @@ public class mailform extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(bodyLayout.createSequentialGroup()
                         .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(text_nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(text_tgl_lahir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(text_nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(nama)
                             .addComponent(tgl_lahir)
                             .addComponent(text_ttinggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -347,11 +344,11 @@ public class mailform extends javax.swing.JFrame {
                         .addGap(41, 41, 41)
                         .addComponent(nama)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(text_tgl_lahir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(text_nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tgl_lahir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(text_nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(text_tgl_lahir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(bodyLayout.createSequentialGroup()
                         .addComponent(no_ktp)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -500,10 +497,10 @@ public class mailform extends javax.swing.JFrame {
                 "WHERE mail_id = (SELECT mail_id FROM mail_content ORDER BY mail_id DESC LIMIT 1)";
         try (PreparedStatement stmt1 = conn.prepareStatement(queryCivilRegistry);
              PreparedStatement stmt2 = conn.prepareStatement(queryUpdateMailContent)) {
-            stmt1.setString(1, text_nama.getText());
+            stmt1.setString(1, text_tgl_lahir.getText());
             stmt1.setString(2, text_noktp.getText());
             stmt1.setString(3, text_nokk.getText());
-            stmt1.setString(4, text_tgl_lahir.getText());
+            stmt1.setString(4, text_nama.getText());
             stmt1.setString(5, wni.isSelected() ? "WNI" : "WNA");
             stmt1.setString(6, box_agama.getSelectedItem().toString());
             stmt1.setString(7, lakilaki.isSelected() ? "Laki-laki" : "Perempuan");
@@ -559,8 +556,8 @@ public class mailform extends javax.swing.JFrame {
         String sampaiTanggal = sdf.format(sampaitanggal.getDate());
 
         return content.replace("[judul_surat]", "Surat Pengajuan")
-                .replace("[nama]", text_nama.getText() != null ? text_nama.getText() : "")
-                .replace("[ttl]", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : "")
+                .replace("[nama]", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : "")
+                .replace("[ttl]", text_nama.getText() != null ? text_nama.getText() : "")
                 .replace("[usia]", jUmur.getValue() != null ? jUmur.getValue().toString() : "")
                 .replace("[warga_negara]", wni.isSelected() ? "WNI" : "WNA")
                 .replace("[agama]", box_agama.getSelectedItem() != null ? box_agama.getSelectedItem().toString() : "")
