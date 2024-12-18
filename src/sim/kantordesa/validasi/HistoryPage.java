@@ -37,13 +37,13 @@ public class HistoryPage extends javax.swing.JFrame {
 
         tbHistory.setModel(model);
         
-        model.addColumn("No");
-        model.addColumn("No. Surat");
+        model.addColumn("No.");
+        model.addColumn("Nomor Surat");
         model.addColumn("Nama Pemohon");
-        model.addColumn("Tgl Surat Masuk");
-        model.addColumn("Tgl Validasi Sekdes");
-        model.addColumn("Tgl Validasi Kades");
+        model.addColumn("Tanggal Pengajuan");
         model.addColumn("Perihal");
+        model.addColumn("Status Validasi Sekdes");
+        model.addColumn("Status Validasi Kades");
         model.addColumn("Aksi");
         
 
@@ -67,9 +67,9 @@ public class HistoryPage extends javax.swing.JFrame {
                 r.getString("mail_number"),
                 r.getString("applicant_name"),
                 r.getString("created_at"),
+                r.getString("type_name"),
                 r.getBoolean("status_validation") == false ? "Reject" : "Accept",
                 r.getBoolean("status_lead") == false ? "Reject" : "Accept",
-                r.getString("type_name"),
               });
               tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
               tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
@@ -518,15 +518,22 @@ public class HistoryPage extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "No.", "No. Surat", "Tanggal Surat Masuk", "Tanggal Validasi Sekdes", "Tanggal Validasi Kades", "Perihal", "Aksi"
+                "No.", "No. Surat", "Tanggal Surat Masuk", "Status Validasi Sekdes", "Status Validasi Kades", "Perihal", "Aksi"
             }
         ) {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, true
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         tbHistory.setRowHeight(30);
@@ -534,7 +541,7 @@ public class HistoryPage extends javax.swing.JFrame {
         panelScrollTb.setViewportView(tbHistory);
         if (tbHistory.getColumnModel().getColumnCount() > 0) {
             tbHistory.getColumnModel().getColumn(0).setMinWidth(30);
-            tbHistory.getColumnModel().getColumn(0).setMaxWidth(40);
+            tbHistory.getColumnModel().getColumn(0).setMaxWidth(30);
             tbHistory.getColumnModel().getColumn(1).setMinWidth(120);
             tbHistory.getColumnModel().getColumn(1).setMaxWidth(130);
             tbHistory.getColumnModel().getColumn(2).setMinWidth(140);
@@ -569,8 +576,8 @@ public class HistoryPage extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addComponent(labelHistory)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelScrollTb, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
-                .addGap(31, 31, 31))
+                .addComponent(panelScrollTb)
+                .addContainerGap())
         );
 
         usernameBar.setBackground(new java.awt.Color(19, 128, 97));
@@ -626,7 +633,7 @@ public class HistoryPage extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sideBarHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelTb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(panelTb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         pack();

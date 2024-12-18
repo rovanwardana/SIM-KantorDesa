@@ -261,6 +261,11 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
         });
 
         Perihal.setEditable(false);
+        Perihal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PerihalActionPerformed(evt);
+            }
+        });
 
         TanggalSurat.setEditable(false);
 
@@ -794,6 +799,10 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
     private void NomorSuratActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NomorSuratActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_NomorSuratActionPerformed
+
+    private void PerihalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PerihalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_PerihalActionPerformed
 
     /**
      * @param args the command line arguments

@@ -33,13 +33,13 @@ public class ValidationPages extends javax.swing.JFrame {
         // "No", "Status", "Diterima tgl.", "Nama Pemohon", "Perihal", "Val. Sekdes",
         // "Val. Kades", "Aksi"
 
-        model.addColumn("No");
+        model.addColumn("No.");
         model.addColumn("Nomor Surat");
-        model.addColumn("Diterima tgl.");
         model.addColumn("Nama Pemohon");
+        model.addColumn("Tanggal Pengajuan");
         model.addColumn("Perihal");
-        model.addColumn("Val. Sekdes");
-        model.addColumn("Val. Kades");
+        model.addColumn("Status Validasi Sekdes");
+        model.addColumn("Status Validasi Kades");
         model.addColumn("Aksi");
         
         loadData();
@@ -59,8 +59,8 @@ public class ValidationPages extends javax.swing.JFrame {
             while (r.next()) {
                 tableContent[0] = i;
                 tableContent[1] = r.getInt("mail_number");
-                tableContent[2] = r.getString("created_at");
-                tableContent[3] = r.getString("applicant_name");
+                tableContent[2] = r.getString("applicant_name");
+                tableContent[3] = r.getString("created_at");
                 tableContent[4] = r.getString("type_name");
                 tableContent[5] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
                 tableContent[6] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
@@ -248,7 +248,7 @@ public class ValidationPages extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel10)
                     .addComponent(jButton5))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(530, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -272,12 +272,6 @@ public class ValidationPages extends javax.swing.JFrame {
         jTable1.setRowHeight(30);
         jTable1.setShowGrid(true);
         jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(20);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
-            jTable1.getColumnModel().getColumn(7).setMinWidth(80);
-            jTable1.getColumnModel().getColumn(7).setMaxWidth(80);
-        }
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setText("Validasi Surat Masuk");
@@ -309,7 +303,7 @@ public class ValidationPages extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 486, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 558, Short.MAX_VALUE)
                 .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -328,12 +322,12 @@ public class ValidationPages extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(533, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addGap(45, 45, 45)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
 
         jPanel5.setBackground(new java.awt.Color(19, 128, 97));
@@ -419,7 +413,7 @@ public class ValidationPages extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         pack();
