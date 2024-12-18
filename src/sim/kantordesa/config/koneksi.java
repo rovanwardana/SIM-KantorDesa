@@ -11,7 +11,8 @@ public class koneksi {
     public static Connection getConnection() {
         if (conn == null) {
             try {
-                String url = "jdbc:mysql://server.razik.net/db_pbo";
+//                String url = "jdbc:mysql://server.razik.net/db_pbo";
+                String url = "jdbc:mysql://server.razik.net/test_validasi";
                 String user = "razik";
                 String password = "razik";
                 DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
