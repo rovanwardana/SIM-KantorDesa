@@ -32,6 +32,7 @@ import org.apache.tika.parser.microsoft.rtf.RTFParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.mailtemplate.templateselector;
 
 /**
  *
@@ -622,12 +623,8 @@ public class mailform extends javax.swing.JFrame {
                 + "created_at = NOW(), updated_at = NOW() WHERE mail_type_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, mailNumber);
-            // Format the current date to dd/MM/yyyy
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            String formattedDate = dateFormat.format(new Date());
-            stmt.setString(2, formattedDate);
-            stmt.setString(3, pdfPath);
-            stmt.setInt(4, mailTypeId);
+            stmt.setString(2, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            stmt.setInt(3, mailTypeId);
             stmt.executeUpdate();
         }
     }
