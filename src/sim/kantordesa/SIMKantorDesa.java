@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package sim.kantordesa;
+import sim.kantordesa.auth.login;
 
 import sim.kantordesa.validasi.ValidationPages;
 
@@ -11,13 +12,13 @@ import sim.kantordesa.validasi.ValidationPages;
  * @author Krisna
  */
 public class SIMKantorDesa {
-
-        /**
-         * @param args the command line arguments
-         */
-        public static void main(String[] args) {
-                System.out.println("Hello World");
-                ValidationPages.main(null);
-        }
-
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        login LoginFrame = new login();
+        LoginFrame.setVisible(true);
+        LoginFrame.pack();
+        LoginFrame.setLocationRelativeTo(null);
+    }
 }
