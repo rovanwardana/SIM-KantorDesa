@@ -58,7 +58,7 @@ public class ValidationPages extends javax.swing.JFrame {
         try {
             Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
-            String sql = "select mail_number, created_at, applicant_name, status_validation, status_lead, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            String sql = "select mail_id, mail_number, created_at, applicant_name, status_validation, status_lead, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()) {
@@ -69,13 +69,15 @@ public class ValidationPages extends javax.swing.JFrame {
                 tableContent[4] = r.getString("type_name");
                 tableContent[5] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
                 tableContent[6] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
-                jTable1.getColumn("Aksi").setCellRenderer(new ButtonRenderer());
-                jTable1.getColumn("Aksi").setCellEditor(new ButtonEditor(jTable1));
                 i++;
                 model.addRow(tableContent);
             }
             r.close();
             s.close();
+            jTable1.getColumn("Status Validasi Sekdes").setCellRenderer(new StatusCellRenderer());
+            jTable1.getColumn("Status Validasi Kades").setCellRenderer(new StatusCellRenderer());
+            jTable1.getColumn("Aksi").setCellRenderer(new ButtonRenderer());
+            jTable1.getColumn("Aksi").setCellEditor(new ButtonEditor(jTable1));
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }

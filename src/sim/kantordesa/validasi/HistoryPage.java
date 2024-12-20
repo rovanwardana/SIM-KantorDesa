@@ -87,8 +87,10 @@ public class HistoryPage extends javax.swing.JFrame {
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }
-            tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
-            tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
+        tbHistory.getColumn("Status Validasi Sekdes").setCellRenderer(new StatusCellRenderer());
+        tbHistory.getColumn("Status Validasi Kades").setCellRenderer(new StatusCellRenderer());
+        tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
+        tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
     }
     
     public static void adjustColumnWidths(JTable table) {

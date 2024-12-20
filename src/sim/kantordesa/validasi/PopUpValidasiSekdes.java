@@ -81,8 +81,8 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
                 NomorSurat.setText(r.getString("mail_number"));
                 Perihal.setText(r.getString("type_name"));
                 TanggalSurat.setText(r.getString("mail_date"));
-                StatusSekdes.setText(r.getString("status_validation"));
-                StatusKades.setText(r.getString("status_lead"));
+                StatusSekdes.setText(r.getBoolean("status_validation") == false ? "Reject" : "Accept");
+                StatusKades.setText(r.getBoolean("status_lead") == false ? "Reject" : "Accept");
                 TanggalPengajuan.setText(r.getString("created_at"));
                 DataNik.setText(r.getString("no_ktp"));
                 DataNama.setText(r.getString("nama"));
