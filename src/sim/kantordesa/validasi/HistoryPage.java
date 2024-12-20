@@ -12,19 +12,24 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import static javax.swing.UIManager.getString;
 import javax.swing.table.TableColumn;
 import sim.kantordesa.config.koneksi;
+import java.awt.HeadlessException;
+
 
 /**
  *
  * @author krisna
  */
 public class HistoryPage extends javax.swing.JFrame {
-    private final javax.swing.table.DefaultTableModel model;
+    private javax.swing.table.DefaultTableModel model;
+    Connection c = koneksi.getConnection();
+
     
     public HistoryPage() {
         initComponents();
@@ -54,12 +59,11 @@ public class HistoryPage extends javax.swing.JFrame {
         
     }
 
-    private void setTableAction() {
+    public void setTableAction() {
         model.getDataVector().removeAllElements();
         model.fireTableDataChanged();
         
         try {
-            Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
             String sql = "select mail_id, mail_number, created_at, applicant_name, mail_comment, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
             ResultSet r = s.executeQuery(sql);
@@ -85,7 +89,7 @@ public class HistoryPage extends javax.swing.JFrame {
             System.out.println("Error, " + e);
         }
         tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
-        tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
+        tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory, new deleteData()));
     }
     
     public static void adjustColumnWidths(JTable table) {
@@ -146,11 +150,13 @@ public class HistoryPage extends javax.swing.JFrame {
     static class ButtonPanelEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
         ButtonPanel panel;
         JTable table;
+        deleteData d;
 
 //        public ButtonPanelEditor(JButton editButton, JButton deleteButton, JButton downloadButton) {
-        public ButtonPanelEditor(JTable table) {
+        public ButtonPanelEditor(JTable table, deleteData d) {
               this.table = table;
               panel = new ButtonPanel();
+              this.d = d;
               
               panel.editButton.addActionListener(e -> handleEditButtonAction());
               panel.deleteButton.addActionListener(e -> handleDeleteButtonAction());
@@ -164,17 +170,25 @@ public class HistoryPage extends javax.swing.JFrame {
         }
         private void handleDeleteButtonAction() {
             System.out.println("Delete Button diklik");
-//            String mail = mail_id.getText();
-//
-//            String query = "delete from mail_content where mail_id = ?";
-//            boolean hasil = koneksi.delete(query, mail);
-//
-//            if (hasil) {
-//                System.out.println("berhasil menghapus pengajuan surat");
+            int row = table.getSelectedRow();
+            if (row == -1){
+                JOptionPane.showMessageDialog(table, "Silahkan pilih baris terlebih dahulu");
+                return;
+            }
+            
+            String mailId =(String) table.getValueAt(row, 8);
+            
+            int confirm = JOptionPane.showConfirmDialog(
+                    null, 
+                    "Apakah anda yakin ingin menghapus pengajuan surat ini?", 
+                    "Konfirmasi Hapus", 
+                    JOptionPane.YES_NO_OPTION
+            );
+            
+            if(confirm == JOptionPane.YES_OPTION){
+                d.deleteDataFromDB(mailId);
 //                setTableAction();
-//            } else { 
-//               System.out.println("gagal menghapus pengajuan surat");
-//            }
+            }
         }
         private void handleDownloadButtonAction() {
             System.out.println("Download Button diklik");
@@ -202,6 +216,28 @@ public class HistoryPage extends javax.swing.JFrame {
             throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
     }
+    class deleteData{
+        public deleteData(){
+            
+        }
+        
+        public void deleteDataFromDB(String mailId){
+                String query = "DELETE FROM mail_content WHERE mail_id = ?";
+                try {
+                    boolean hasil = koneksi.delete(query, mailId);
+                    if(hasil){
+                        setTableAction();
+                        JOptionPane.showMessageDialog(
+                                null, 
+                                "Data Pengajuan Berhasil Dihapus");
+                    }
+                } catch(HeadlessException e){
+                   System.out.println("Error, " + e);
+                }
+            }
+    }
+    
+    
     
     static class ButtonPanel extends javax.swing.JPanel {
         public javax.swing.JButton editButton;
