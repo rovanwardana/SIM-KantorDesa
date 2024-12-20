@@ -32,7 +32,7 @@ public class HistoryPage extends javax.swing.JFrame {
         model = new javax.swing.table.DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 7;
+                return column == 8;
             }
         };
 
@@ -45,6 +45,7 @@ public class HistoryPage extends javax.swing.JFrame {
         model.addColumn("Perihal");
         model.addColumn("Status Validasi Sekdes");
         model.addColumn("Status Validasi Kades");
+        model.addColumn("Comment");
         model.addColumn("Aksi");
         
 
@@ -60,10 +61,11 @@ public class HistoryPage extends javax.swing.JFrame {
         try {
             Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
-            String sql = "select mail_number, created_at, applicant_name, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            String sql = "select mail_number, created_at, applicant_name, mail_comment, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()){
+                
               model.addRow(new Object[]{
                 i++,
                 r.getString("mail_number"),
@@ -72,16 +74,17 @@ public class HistoryPage extends javax.swing.JFrame {
                 r.getString("type_name"),
                 r.getBoolean("status_validation") == false ? "Reject" : "Accept",
                 r.getBoolean("status_lead") == false ? "Reject" : "Accept",
-                r.getString("comment"),
+                r.getString("mail_comment"),
               });
-              tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
-              tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
+              
             }
             r.close();
             s.close();
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }
+        tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
+        tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
     }
     
     public static void adjustColumnWidths(JTable table) {
@@ -120,6 +123,8 @@ public class HistoryPage extends javax.swing.JFrame {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
                 int row, int column) {
+                boolean hasMailComment = table.getValueAt(row, 7) != null; // Assuming mail_comment is at index 7
+                downloadButton.setVisible(hasMailComment);
                 if (isSelected) {
                     setBackground(table.getSelectionBackground());
                     setForeground(table.getSelectionForeground());
@@ -144,6 +149,8 @@ public class HistoryPage extends javax.swing.JFrame {
               panel.editButton.addActionListener(e -> handleEditButtonAction());
               panel.deleteButton.addActionListener(e -> handleDeleteButtonAction());
               panel.downloadButton.addActionListener(e -> handleDownloadButtonAction());
+              
+              
         }
         
         private void handleEditButtonAction() {
@@ -164,6 +171,8 @@ public class HistoryPage extends javax.swing.JFrame {
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
                 int column) {
+            boolean hasMailComment = table.getValueAt(row, 7) != null;
+            panel.downloadButton.setVisible(hasMailComment);
             return panel;
         }
 
@@ -183,14 +192,11 @@ public class HistoryPage extends javax.swing.JFrame {
             setLayout(layout);
             editButton = new JButton("Edit");
             deleteButton = new JButton("Delete");
+            downloadButton = new JButton("Download");
             
             add(editButton);
             add(deleteButton);
-            String comment = ("mail_comment");
-            if (comment != null ){
-                downloadButton = new JButton("Download");
-                add(downloadButton);
-            }
+            add(downloadButton);
             
         }
     }
