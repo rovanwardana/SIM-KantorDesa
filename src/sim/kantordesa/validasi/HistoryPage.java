@@ -11,15 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.AbstractCellEditor;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.LayoutStyle;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
-import javax.swing.ImageIcon;
+import static javax.swing.UIManager.getString;
 import javax.swing.table.TableColumn;
 import sim.kantordesa.config.koneksi;
 
@@ -36,7 +32,7 @@ public class HistoryPage extends javax.swing.JFrame {
         model = new javax.swing.table.DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 7;
+                return column == 8;
             }
         };
 
@@ -49,11 +45,13 @@ public class HistoryPage extends javax.swing.JFrame {
         model.addColumn("Perihal");
         model.addColumn("Status Validasi Sekdes");
         model.addColumn("Status Validasi Kades");
+        model.addColumn("Comment");
         model.addColumn("Aksi");
         
 
         setTableAction();
         adjustColumnWidths(tbHistory);
+        
     }
 
     private void setTableAction() {
@@ -63,10 +61,11 @@ public class HistoryPage extends javax.swing.JFrame {
         try {
             Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
-            String sql = "select mail_number, created_at, applicant_name, status_validation, status_lead, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            String sql = "select mail_number, created_at, applicant_name, mail_comment, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()){
+                
               model.addRow(new Object[]{
                 i++,
                 r.getString("mail_number"),
@@ -75,21 +74,17 @@ public class HistoryPage extends javax.swing.JFrame {
                 r.getString("type_name"),
                 r.getBoolean("status_validation") == false ? "Reject" : "Accept",
                 r.getBoolean("status_lead") == false ? "Reject" : "Accept",
+                r.getString("mail_comment"),
               });
-              tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
-              tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
+              
             }
             r.close();
             s.close();
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }
-//        TableColumnModel columnModel = tbHistory.getColumnModel();
-        
-//        columnModel.getColumn(6).setCellEditor(new ButtonPanelEditor(
-//                new JButton("Edit"),
-//                new JButton("Delete"),
-//                new JButton("Download")));
+        tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
+        tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
     }
     
     public static void adjustColumnWidths(JTable table) {
@@ -120,12 +115,6 @@ public class HistoryPage extends javax.swing.JFrame {
     }
 
     static class ButtonPanelRenderer extends ButtonPanel implements TableCellRenderer {
-        // ImageIcon EditIcon = new
-        // ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/edit.png"));
-        // ImageIcon DeleteIcon = new
-        // ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/delete.png"));
-        // ImageIcon DownloadIcon = new
-        // ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/download.png"));
         public ButtonPanelRenderer() {
             setBackground(Color.white);
                 setOpaque(true);
@@ -134,34 +123,8 @@ public class HistoryPage extends javax.swing.JFrame {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
                 int row, int column) {
-//            removeAll();
-//
-//            JButton editButton = new JButton("Edit");
-//            JButton deleteButton = new JButton("Delete");
-//            JButton downloadButton = new JButton("Download");
-//
-//            GroupLayout layout = new GroupLayout(this);
-//            setLayout(layout);
-//            layout.setAutoCreateGaps(true);
-//            layout.setAutoCreateContainerGaps(true);
-//            layout.setHorizontalGroup(
-//                    layout.createSequentialGroup()
-//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                            .addComponent(editButton)
-//                            .addGap(10).addComponent(deleteButton)
-//                            .addGap(10).addComponent(downloadButton)
-//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-//            layout.setVerticalGroup(
-//                    layout.createParallelGroup(
-//                            GroupLayout.Alignment.CENTER)
-//                            .addComponent(editButton)
-//                            .addComponent(deleteButton)
-//                            .addComponent(downloadButton));
-//
-//            return this;
-
+                boolean hasMailComment = table.getValueAt(row, 7) != null; // Assuming mail_comment is at index 7
+                downloadButton.setVisible(hasMailComment);
                 if (isSelected) {
                     setBackground(table.getSelectionBackground());
                     setForeground(table.getSelectionForeground());
@@ -186,35 +149,8 @@ public class HistoryPage extends javax.swing.JFrame {
               panel.editButton.addActionListener(e -> handleEditButtonAction());
               panel.deleteButton.addActionListener(e -> handleDeleteButtonAction());
               panel.downloadButton.addActionListener(e -> handleDownloadButtonAction());
-            
-//            this.editButton = editButton;
-//            this.editButton.addActionListener(this);
-//            this.deleteButton = deleteButton;
-//            this.deleteButton.addActionListener(this);
-//            this.downloadButton = downloadButton;
-//            this.downloadButton.addActionListener(this);
-//            panel = new JPanel();
-//
-//            GroupLayout layout = new GroupLayout(panel);
-//            panel.setLayout(layout);
-//
-//            layout.setAutoCreateGaps(true);
-//            layout.setAutoCreateContainerGaps(true);
-//            layout.setHorizontalGroup(
-//                    layout.createSequentialGroup()
-//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                            .addComponent(editButton)
-//                            .addGap(10).addComponent(deleteButton)
-//                            .addGap(10).addComponent(downloadButton)
-//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-//            layout.setVerticalGroup(
-//                    layout.createParallelGroup(
-//                            GroupLayout.Alignment.CENTER)
-//                            .addComponent(editButton)
-//                            .addComponent(deleteButton)
-//                            .addComponent(downloadButton));
+              
+              
         }
         
         private void handleEditButtonAction() {
@@ -235,20 +171,10 @@ public class HistoryPage extends javax.swing.JFrame {
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
                 int column) {
+            boolean hasMailComment = table.getValueAt(row, 7) != null;
+            panel.downloadButton.setVisible(hasMailComment);
             return panel;
         }
-
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//            if (e.getSource() == panel.editButton) {
-//                System.out.println("Edit Button diklik");
-//            } else if (e.getSource() == panel.deleteButton) {
-//                System.out.println("Delete Button diklik");
-//            } else if (e.getSource() == panel.downloadButton) {
-//                System.out.println("Download Button diklik");
-//            }
-//            fireEditingStopped();
-//        }
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -262,30 +188,12 @@ public class HistoryPage extends javax.swing.JFrame {
         public javax.swing.JButton downloadButton;
         
         public ButtonPanel() {
-//            GroupLayout layout = new GroupLayout(this);
             FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
             setLayout(layout);
             editButton = new JButton("Edit");
             deleteButton = new JButton("Delete");
             downloadButton = new JButton("Download");
             
-//            layout.setAutoCreateGaps(true);
-//            layout.setAutoCreateContainerGaps(true);
-//            layout.setHorizontalGroup(
-//                    layout.createSequentialGroup()
-//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                            .addComponent(editButton)
-//                            .addGap(10).addComponent(deleteButton)
-//                            .addGap(10).addComponent(downloadButton)
-//                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-//                                    GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-//            layout.setVerticalGroup(
-//                    layout.createParallelGroup(
-//                            GroupLayout.Alignment.CENTER)
-//                            .addComponent(editButton)
-//                            .addComponent(deleteButton)
-//                            .addComponent(downloadButton));
             add(editButton);
             add(deleteButton);
             add(downloadButton);
