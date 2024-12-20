@@ -16,7 +16,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import static javax.swing.UIManager.getString;
 import javax.swing.table.TableColumn;
 import sim.kantordesa.config.koneksi;
 import java.awt.HeadlessException;
@@ -88,8 +87,8 @@ public class HistoryPage extends javax.swing.JFrame {
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }
-        tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
-        tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory, new deleteData()));
+            tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
+            tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
     }
     
     public static void adjustColumnWidths(JTable table) {
@@ -119,7 +118,7 @@ public class HistoryPage extends javax.swing.JFrame {
         return maxWidth + 10; // Add some margin
     }
 
-    static class ButtonPanelRenderer extends ButtonPanel implements TableCellRenderer {
+    class ButtonPanelRenderer extends ButtonPanel implements TableCellRenderer {
         public ButtonPanelRenderer() {
             setBackground(Color.white);
                 setOpaque(true);
@@ -147,16 +146,15 @@ public class HistoryPage extends javax.swing.JFrame {
 
     }
 
-    static class ButtonPanelEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
+    class ButtonPanelEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
         ButtonPanel panel;
         JTable table;
-        deleteData d;
 
 //        public ButtonPanelEditor(JButton editButton, JButton deleteButton, JButton downloadButton) {
-        public ButtonPanelEditor(JTable table, deleteData d) {
+        public ButtonPanelEditor(JTable table) {
               this.table = table;
               panel = new ButtonPanel();
-              this.d = d;
+
               
               panel.editButton.addActionListener(e -> handleEditButtonAction());
               panel.deleteButton.addActionListener(e -> handleDeleteButtonAction());
@@ -186,8 +184,18 @@ public class HistoryPage extends javax.swing.JFrame {
             );
             
             if(confirm == JOptionPane.YES_OPTION){
-                d.deleteDataFromDB(mailId);
-//                setTableAction();
+                String query = "DELETE FROM mail_content WHERE mail_id = ?";
+                try {
+                    boolean hasil = koneksi.delete(query, mailId);
+                    if(hasil){
+                        setTableAction();
+                        JOptionPane.showMessageDialog(
+                                null, 
+                                "Data Pengajuan Berhasil Dihapus");
+                    }
+                } catch(HeadlessException e){
+                   System.out.println("Error, " + e);
+                }
             }
         }
         private void handleDownloadButtonAction() {
@@ -215,26 +223,11 @@ public class HistoryPage extends javax.swing.JFrame {
         public void actionPerformed(ActionEvent e) {
             throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
-    }
-    class deleteData{
-        public deleteData(){
-            
-        }
         
-        public void deleteDataFromDB(String mailId){
-                String query = "DELETE FROM mail_content WHERE mail_id = ?";
-                try {
-                    boolean hasil = koneksi.delete(query, mailId);
-                    if(hasil){
-                        setTableAction();
-                        JOptionPane.showMessageDialog(
-                                null, 
-                                "Data Pengajuan Berhasil Dihapus");
-                    }
-                } catch(HeadlessException e){
-                   System.out.println("Error, " + e);
-                }
-            }
+        @Override
+        protected void fireEditingStopped() {
+            super.fireEditingStopped();
+        }
     }
     
     
