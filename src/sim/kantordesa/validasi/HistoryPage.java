@@ -61,7 +61,7 @@ public class HistoryPage extends javax.swing.JFrame {
         try {
             Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
-            String sql = "select mail_number, created_at, applicant_name, mail_comment, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            String sql = "select mail_id, mail_number, created_at, applicant_name, mail_comment, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()){
@@ -75,6 +75,7 @@ public class HistoryPage extends javax.swing.JFrame {
                 r.getBoolean("status_validation") == false ? "Reject" : "Accept",
                 r.getBoolean("status_lead") == false ? "Reject" : "Accept",
                 r.getString("mail_comment"),
+                r.getString("mail_id"),
               });
               
             }
@@ -123,7 +124,12 @@ public class HistoryPage extends javax.swing.JFrame {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
                 int row, int column) {
-                boolean hasMailComment = table.getValueAt(row, 7) != null; // Assuming mail_comment is at index 7
+            boolean statusValidation = "Accept".equals(table.getValueAt(row, 5));
+            boolean statusLead = "Accept".equals(table.getValueAt(row, 6));
+                    Object mailComment = table.getValueAt(row, 7);
+            boolean hasMailComment = (mailComment != null && !mailComment.toString().isEmpty() && statusValidation && statusLead);
+
+//              boolean hasMailComment = ((table.getValueAt(row, 7) != null) && (table.getValueAt(row, 5) != false) && (table.getValueAt(row, 6) != false); // Assuming mail_comment is at index 7
                 downloadButton.setVisible(hasMailComment);
                 if (isSelected) {
                     setBackground(table.getSelectionBackground());
@@ -158,6 +164,17 @@ public class HistoryPage extends javax.swing.JFrame {
         }
         private void handleDeleteButtonAction() {
             System.out.println("Delete Button diklik");
+//            String mail = mail_id.getText();
+//
+//            String query = "delete from mail_content where mail_id = ?";
+//            boolean hasil = koneksi.delete(query, mail);
+//
+//            if (hasil) {
+//                System.out.println("berhasil menghapus pengajuan surat");
+//                setTableAction();
+//            } else { 
+//               System.out.println("gagal menghapus pengajuan surat");
+//            }
         }
         private void handleDownloadButtonAction() {
             System.out.println("Download Button diklik");
@@ -171,7 +188,11 @@ public class HistoryPage extends javax.swing.JFrame {
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
                 int column) {
-            boolean hasMailComment = table.getValueAt(row, 7) != null;
+            boolean statusValidation = "Accept".equals(table.getValueAt(row, 5));
+            boolean statusLead = "Accept".equals(table.getValueAt(row, 6));
+                    Object mailComment = table.getValueAt(row, 7);
+                    
+            boolean hasMailComment = (mailComment != null && !mailComment.toString().isEmpty() && statusValidation && statusLead);
             panel.downloadButton.setVisible(hasMailComment);
             return panel;
         }
