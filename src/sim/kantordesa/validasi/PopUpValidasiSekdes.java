@@ -6,11 +6,6 @@ package sim.kantordesa.validasi;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.WindowAdapter;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -39,6 +34,7 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
     
     /**
      * Creates new form PopUpValidasiSekdes
+     * @param value
      */
     public PopUpValidasiSekdes(String value) {
         initComponents();
@@ -61,26 +57,9 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
         checkboxes[7] = cb8;
         checkboxes[8] = cb9;
         
-        ItemListener checkboxListener = new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                boolean allChecked = true;
-                for (JCheckBox cb : checkboxes) {
-                    if (!cb.isSelected()) {
-                        allChecked = false;
-                        break;
-                    }
-                }
-                Validasi.setEnabled(allChecked);
-            }
-        };
-        
-        for (JCheckBox cb : checkboxes) {
-            cb.addItemListener(checkboxListener);
-        }
-        
         for (JCheckBox cb : checkboxes) {
             cb.addItemListener(e -> {
-                boolean allChecked = true;
+                allChecked = true;
                 for (JCheckBox checkbox : checkboxes) {
                     if (!checkbox.isSelected()) {
                         allChecked = false;
@@ -727,21 +706,11 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
 
     private void ValidasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ValidasiActionPerformed
         // TODO add your handling code here:
-        
-        Validasi.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-                for (JCheckBox cb : checkboxes) {
-                    if(cb.isSelected()){
-                        allChecked = true;
-                    }
-                    break;
-                }
-                if (allChecked) {
-                    JOptionPane.showMessageDialog(popup, "Validasi surat berhasil dilakukan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                } 
-            }  
-        });
+        if (allChecked) {
+            JOptionPane.showMessageDialog(popup, "Validasi surat berhasil dilakukan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(popup, "Silahkan cek data terlebih dahulu", "Gagal", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_ValidasiActionPerformed
 
     private void NamaPemohonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NamaPemohonActionPerformed
