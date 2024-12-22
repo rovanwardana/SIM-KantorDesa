@@ -3,23 +3,34 @@ package sim.kantordesa.config;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Base64;
+import java.io.FileInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class koneksi {
 
     static Connection conn;
 
     public static Connection getConnection() {
+        Properties properties = new Properties();
+        File configFile = new File("src/sim/kantordesa/config/config.properties");
         if (conn == null) {
-            try {
-//                String url = "jdbc:mysql://server.razik.net/db_pbo";
-                String url = "jdbc:mysql://server.razik.net/test_validasi";
-                String user = "razik";
-                String password = "razik";
-                DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-                conn = (Connection) DriverManager.getConnection(url, user, password);
-            } catch (SQLException e) {
-                Logger.getLogger(koneksi.class.getName()).log(Level.SEVERE, "Connection failed!", e);
+            try (InputStream input = new FileInputStream(configFile.getAbsolutePath())) {
+                properties.load(input);
+                try {
+                    String url = properties.getProperty("db.url") + properties.getProperty("db.name");
+                    String creds = new String((byte[]) Base64.getDecoder().decode(properties.getProperty("db.credentials")));
+                    DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+                    conn = (Connection) DriverManager.getConnection(url, creds, creds);
+                } catch (SQLException e) {
+                    Logger.getLogger(koneksi.class.getName()).log(Level.SEVERE, "Connection failed!", e);
 
+                }
+            } catch (IOException e) {
+                Logger.getLogger(koneksi.class.getName()).log(Level.SEVERE, "Cannot read config file!", e);
             }
         }
         return conn;
