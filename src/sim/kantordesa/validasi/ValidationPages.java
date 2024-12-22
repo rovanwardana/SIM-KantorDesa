@@ -4,9 +4,7 @@
  */
 package sim.kantordesa.validasi;
 
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import javax.swing.UnsupportedLookAndFeelException;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Connection;
