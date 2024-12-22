@@ -64,7 +64,7 @@ public class ValidationPages extends javax.swing.JFrame {
             int i = 1;
             while (r.next()) {
                 tableContent[0] = i;
-                tableContent[1] = r.getInt("mail_number");
+                tableContent[1] = r.getString("mail_number");
                 tableContent[2] = r.getString("applicant_name");
                 tableContent[3] = r.getString("created_at");
                 tableContent[4] = r.getString("type_name");
