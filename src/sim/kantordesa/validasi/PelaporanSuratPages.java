@@ -25,12 +25,12 @@ import java.awt.HeadlessException;
  *
  * @author krisna
  */
-public class HistoryPage extends javax.swing.JFrame {
+public class PelaporanSuratPages extends javax.swing.JFrame {
     private javax.swing.table.DefaultTableModel model;
     Connection c = koneksi.getConnection();
 
     
-    public HistoryPage() {
+    public PelaporanSuratPages() {
         initComponents();
         
         model = new javax.swing.table.DefaultTableModel() {
@@ -544,7 +544,7 @@ public class HistoryPage extends javax.swing.JFrame {
         }
 
         labelHistory.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        labelHistory.setText("History Surat Masuk");
+        labelHistory.setText("Pelaporan Surat Masuk");
 
         refresh.setBackground(new java.awt.Color(19, 128, 97));
         refresh.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -677,7 +677,7 @@ public class HistoryPage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new HistoryPage().setVisible(true);
+                new PelaporanSuratPages().setVisible(true);
             }
         });
     }

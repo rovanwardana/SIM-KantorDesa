@@ -5,6 +5,7 @@
 package sim.kantordesa.validasi;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.FlowLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -73,7 +74,7 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
         try {
             Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
-            String sql = "SELECT m.applicant_name, m.mail_number, t.type_name, m.mail_date, m.status_validation, m.status_lead, m.created_at, m.no_ktp, c.nama, c.tempat_tanggal_lahir, c.warga_negara, c.agama, c.jenis_kelamin, c.pekerjaan, c.alamat, c.gol_darah FROM mail_content AS m JOIN civil_registry AS c ON m.no_ktp = c.no_ktp JOIN mail_type AS t ON m.mail_type_id = t.mail_type_id WHERE mail_number = " + value + ";";
+            String sql = "SELECT m.applicant_name, m.mail_number, t.type_name, m.mail_date, m.status_validation, m.status_lead, m.created_at, m.no_ktp, c.nama, c.tempat_tanggal_lahir, c.warga_negara, c.agama, c.jenis_kelamin, c.pekerjaan, c.alamat, c.gol_darah FROM mail_content AS m JOIN civil_registry AS c ON m.no_ktp = c.no_ktp JOIN mail_type AS t ON m.mail_type_id = t.mail_type_id WHERE mail_number = \"" + value + "\";";
             ResultSet r = s.executeQuery(sql);
             
             while (r.next()) {
@@ -81,8 +82,8 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
                 NomorSurat.setText(r.getString("mail_number"));
                 Perihal.setText(r.getString("type_name"));
                 TanggalSurat.setText(r.getString("mail_date"));
-                StatusSekdes.setText(r.getString("status_validation"));
-                StatusKades.setText(r.getString("status_lead"));
+                StatusSekdes.setText(r.getBoolean("status_validation") == false ? "Reject" : "Accept");
+                StatusKades.setText(r.getBoolean("status_lead") == false ? "Reject" : "Accept");
                 TanggalPengajuan.setText(r.getString("created_at"));
                 DataNik.setText(r.getString("no_ktp"));
                 DataNama.setText(r.getString("nama"));
@@ -777,29 +778,7 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-            javax.swing.UIManager.setLookAndFeel(new FlatIntelliJLaf());
-        } catch (UnsupportedLookAndFeelException  ex) {
-            java.util.logging.Logger.getLogger(PopUpValidasiSekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex); }
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-        //</editor-fold>
+        FlatLightLaf.setup();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

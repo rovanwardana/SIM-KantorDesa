@@ -5,6 +5,7 @@
 package sim.kantordesa.validasi;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -58,24 +59,26 @@ public class ValidationPages extends javax.swing.JFrame {
         try {
             Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
-            String sql = "select mail_number, created_at, applicant_name, status_validation, status_lead, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            String sql = "select mail_id, mail_number, created_at, applicant_name, status_validation, status_lead, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()) {
                 tableContent[0] = i;
-                tableContent[1] = r.getInt("mail_number");
+                tableContent[1] = r.getString("mail_number");
                 tableContent[2] = r.getString("applicant_name");
                 tableContent[3] = r.getString("created_at");
                 tableContent[4] = r.getString("type_name");
                 tableContent[5] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
                 tableContent[6] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
-                jTable1.getColumn("Aksi").setCellRenderer(new ButtonRenderer());
-                jTable1.getColumn("Aksi").setCellEditor(new ButtonEditor(jTable1));
                 i++;
                 model.addRow(tableContent);
             }
             r.close();
             s.close();
+            jTable1.getColumn("Status Validasi Sekdes").setCellRenderer(new StatusCellRenderer());
+            jTable1.getColumn("Status Validasi Kades").setCellRenderer(new StatusCellRenderer());
+            jTable1.getColumn("Aksi").setCellRenderer(new ButtonRenderer());
+            jTable1.getColumn("Aksi").setCellEditor(new ButtonEditor(jTable1));
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }
@@ -104,6 +107,8 @@ public class ValidationPages extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -161,7 +166,7 @@ public class ValidationPages extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setText("Keluar");
+        jButton5.setText("Pelaporan Surat");
         jButton5.setBorder(null);
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -173,7 +178,7 @@ public class ValidationPages extends javax.swing.JFrame {
 
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/pepicons-pop_paper-plane-circle-filled.png"))); // NOI18N
 
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/el_off.png"))); // NOI18N
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/mdi_graph-box.png"))); // NOI18N
 
         jButton6.setText("Validasi");
         jButton6.setBorder(null);
@@ -184,6 +189,16 @@ public class ValidationPages extends javax.swing.JFrame {
         });
 
         jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/lets-icons_check-fill.png"))); // NOI18N
+
+        jButton7.setText("Keluar");
+        jButton7.setBorder(null);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/el_off.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -215,11 +230,13 @@ public class ValidationPages extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel10)
-                                    .addComponent(jLabel13))
+                                    .addComponent(jLabel13)
+                                    .addComponent(jLabel12))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButton6)
-                                    .addComponent(jButton5))))))
+                                    .addComponent(jButton5)
+                                    .addComponent(jButton7))))))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -253,7 +270,11 @@ public class ValidationPages extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel10)
                     .addComponent(jButton5))
-                .addContainerGap(530, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel12)
+                    .addComponent(jButton7))
+                .addContainerGap(502, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -430,6 +451,10 @@ public class ValidationPages extends javax.swing.JFrame {
         loadData();
     }//GEN-LAST:event_refreshActionPerformed
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton7ActionPerformed
+
     private void historybtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_historybtnActionPerformed
         // TODO add your handling code here:
         HistoryPage.main(null);
@@ -460,50 +485,7 @@ public class ValidationPages extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-        // (optional) ">
-        /*
-         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-         * look and feel.
-         * For details see
-         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            // for (javax.swing.UIManager.LookAndFeelInfo info :
-            // javax.swing.UIManager.getInstalledLookAndFeels()) {
-            // if ("Nimbus".equals(info.getName())) {
-            // javax.swing.UIManager.setLookAndFeel(info.getClassName());
-            // break;
-            // }
-            // }
-            javax.swing.UIManager.setLookAndFeel(new FlatIntelliJLaf());
-        } catch (UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ValidationPages.class.getName()).log(java.util.logging.Level.SEVERE,
-                    null, ex);
-        }
-        // } catch (InstantiationException ex) {
-        // java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE,
-        // null, ex);
-        // } catch (IllegalAccessException ex) {
-        // java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE,
-        // null, ex);
-        // } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-        // java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE,
-        // null, ex);
-        // }
-        // </editor-fold>
-        // } catch (InstantiationException ex) {
-        // java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE,
-        // null, ex);
-        // } catch (IllegalAccessException ex) {
-        // java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE,
-        // null, ex);
-        // } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-        // java.util.logging.Logger.getLogger(sekdes.class.getName()).log(java.util.logging.Level.SEVERE,
-        // null, ex);
-        // }
-        // </editor-fold>
+        FlatLightLaf.setup();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -520,9 +502,11 @@ public class ValidationPages extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
