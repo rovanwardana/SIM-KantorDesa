@@ -106,6 +106,8 @@ public class ValidationPages extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -163,7 +165,7 @@ public class ValidationPages extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setText("Keluar");
+        jButton5.setText("Pelaporan Surat");
         jButton5.setBorder(null);
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -175,7 +177,7 @@ public class ValidationPages extends javax.swing.JFrame {
 
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/pepicons-pop_paper-plane-circle-filled.png"))); // NOI18N
 
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/el_off.png"))); // NOI18N
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/mdi_graph-box.png"))); // NOI18N
 
         jButton6.setText("Validasi");
         jButton6.setBorder(null);
@@ -186,6 +188,16 @@ public class ValidationPages extends javax.swing.JFrame {
         });
 
         jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/lets-icons_check-fill.png"))); // NOI18N
+
+        jButton7.setText("Keluar");
+        jButton7.setBorder(null);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/validasi/gambar/el_off.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -217,11 +229,13 @@ public class ValidationPages extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel10)
-                                    .addComponent(jLabel13))
+                                    .addComponent(jLabel13)
+                                    .addComponent(jLabel12))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButton6)
-                                    .addComponent(jButton5))))))
+                                    .addComponent(jButton5)
+                                    .addComponent(jButton7))))))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -255,7 +269,11 @@ public class ValidationPages extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel10)
                     .addComponent(jButton5))
-                .addContainerGap(530, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel12)
+                    .addComponent(jButton7))
+                .addContainerGap(502, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -432,6 +450,10 @@ public class ValidationPages extends javax.swing.JFrame {
         loadData();
     }//GEN-LAST:event_refreshActionPerformed
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton7ActionPerformed
+
     private void historybtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_historybtnActionPerformed
         // TODO add your handling code here:
         HistoryPage.main(null);
@@ -522,9 +544,11 @@ public class ValidationPages extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
