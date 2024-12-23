@@ -26,7 +26,7 @@ import java.awt.HeadlessException;
  * @author krisna
  */
 public class HistoryPage extends javax.swing.JFrame {
-    private javax.swing.table.DefaultTableModel model;
+    private javax.swing.table.DefaultTableModel model; 
     Connection c = koneksi.getConnection();
 
     
@@ -40,8 +40,8 @@ public class HistoryPage extends javax.swing.JFrame {
             }
         };
 
-        tbHistory.setModel(model);
-        
+        tbHistory.setModel(model); //create table 
+        //create table header
         model.addColumn("No.");
         model.addColumn("Nomor Surat");
         model.addColumn("Nama Pemohon");
@@ -53,13 +53,13 @@ public class HistoryPage extends javax.swing.JFrame {
         model.addColumn("Aksi");
         
 
-        setTableAction();
-        adjustColumnWidths(tbHistory);
+        setTableAction(); //call function setTableAction()
+        adjustColumnWidths(tbHistory); //call function adjustColumnWidths()
         
     }
 
-    public void setTableAction() {
-        model.getDataVector().removeAllElements();
+    public void setTableAction() { //function query get data from db
+        model.getDataVector().removeAllElements();//remove value on table
         model.fireTableDataChanged();
         
         try {
@@ -69,7 +69,7 @@ public class HistoryPage extends javax.swing.JFrame {
             int i = 1;
             while (r.next()){
                 
-              model.addRow(new Object[]{
+              model.addRow(new Object[]{//crate row on table and get data from db
                 i++,
                 r.getString("mail_number"),
                 r.getString("applicant_name"),
@@ -87,8 +87,10 @@ public class HistoryPage extends javax.swing.JFrame {
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }
+        //set style on status value 
         tbHistory.getColumn("Status Validasi Sekdes").setCellRenderer(new StatusCellRenderer());
         tbHistory.getColumn("Status Validasi Kades").setCellRenderer(new StatusCellRenderer());
+        //rendering action button
         tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
         tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
     }
@@ -100,8 +102,8 @@ public class HistoryPage extends javax.swing.JFrame {
             tableColumn.setPreferredWidth(preferredWidth);
         }
     }
-
-    private static int getMaxPreferredWidth(JTable table, int column) {
+    
+    private static int getMaxPreferredWidth(JTable table, int column) { //width adjusting with comparing max widht on header and value
         int maxWidth = 0;
         TableColumn tableColumn = table.getColumnModel().getColumn(column);
 
@@ -121,14 +123,15 @@ public class HistoryPage extends javax.swing.JFrame {
     }
 
     class ButtonPanelRenderer extends ButtonPanel implements TableCellRenderer {
-        public ButtonPanelRenderer() {
+        public ButtonPanelRenderer() { //action button style
             setBackground(Color.white);
                 setOpaque(true);
         }
 
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-                int row, int column) {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            
+            //checking condition where accepted mail will rendering download button
             boolean statusValidation = "Accept".equals(table.getValueAt(row, 5));
             boolean statusLead = "Accept".equals(table.getValueAt(row, 6));
                     Object mailComment = table.getValueAt(row, 7);
@@ -153,10 +156,9 @@ public class HistoryPage extends javax.swing.JFrame {
         JTable table;
 
 //        public ButtonPanelEditor(JButton editButton, JButton deleteButton, JButton downloadButton) {
-        public ButtonPanelEditor(JTable table) {
+        public ButtonPanelEditor(JTable table) { //constructor 
               this.table = table;
               panel = new ButtonPanel();
-
               
               panel.editButton.addActionListener(e -> handleEditButtonAction());
               panel.deleteButton.addActionListener(e -> handleDeleteButtonAction());
@@ -171,13 +173,14 @@ public class HistoryPage extends javax.swing.JFrame {
         private void handleDeleteButtonAction() {
             System.out.println("Delete Button diklik");
             int row = table.getSelectedRow();
-            if (row == -1){
-                JOptionPane.showMessageDialog(table, "Silahkan pilih baris terlebih dahulu");
-                return;
-            }
-            
+//            if (row == -1){
+//                JOptionPane.showMessageDialog(table, "Silahkan pilih baris terlebih dahulu");
+//                return;
+//            }
+//          
+            //get mailID on selected row
             String mailId =(String) table.getValueAt(row, 8);
-            
+            //option panel to confirm delete
             int confirm = JOptionPane.showConfirmDialog(
                     null, 
                     "Apakah anda yakin ingin menghapus pengajuan surat ini?", 
@@ -204,7 +207,7 @@ public class HistoryPage extends javax.swing.JFrame {
             System.out.println("Download Button diklik");
         }
 
-        @Override
+        @Override //make can't edit table value
         public Object getCellEditorValue() {
             return "";
         }
@@ -240,12 +243,16 @@ public class HistoryPage extends javax.swing.JFrame {
         public javax.swing.JButton downloadButton;
         
         public ButtonPanel() {
+            //lauouting action button 
             FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
             setLayout(layout);
+            
+            //create action button edit, delete, and download
             editButton = new JButton("Edit");
             deleteButton = new JButton("Delete");
             downloadButton = new JButton("Download");
             
+            //add button to panel
             add(editButton);
             add(deleteButton);
             add(downloadButton);
@@ -253,7 +260,7 @@ public class HistoryPage extends javax.swing.JFrame {
         }
     }
 
-    
+    //call setTableAction() function
      private void refreshActionPerformed(java.awt.event.ActionEvent evt) {                                        
         // TODO add your handling code here:
         setTableAction();
