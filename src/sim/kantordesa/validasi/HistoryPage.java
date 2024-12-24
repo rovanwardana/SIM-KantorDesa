@@ -19,6 +19,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import sim.kantordesa.config.koneksi;
 import java.awt.HeadlessException;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 
 /**
@@ -235,8 +238,6 @@ public class HistoryPage extends javax.swing.JFrame {
         }
     }
     
-    
-    
     static class ButtonPanel extends javax.swing.JPanel {
         public javax.swing.JButton editButton;
         public javax.swing.JButton deleteButton;
@@ -256,7 +257,6 @@ public class HistoryPage extends javax.swing.JFrame {
             add(editButton);
             add(deleteButton);
             add(downloadButton);
-            
         }
     }
 
@@ -264,7 +264,60 @@ public class HistoryPage extends javax.swing.JFrame {
      private void refreshActionPerformed(java.awt.event.ActionEvent evt) {                                        
         // TODO add your handling code here:
         setTableAction();
-    }           
+    }
+    //filtering history 
+    private void filter(String query) {
+    TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(model);
+    tbHistory.setRowSorter(tr);
+
+    RowFilter<DefaultTableModel, Object> filter = null; //no filter
+
+    if ("Diproses".equals(query)) {//filter by surat diproses
+        filter = new RowFilter<>() {
+            @Override
+            public boolean include(Entry<? extends DefaultTableModel, ? extends Object> entry) {
+                String statusSekdes = (String) entry.getValue(5);
+                String statusKades = (String) entry.getValue(6);
+                String mailComment = (String) entry.getValue(7);
+
+                return "Reject".equals(statusSekdes) && "Reject".equals(statusKades) && 
+                       (mailComment == null || mailComment.isEmpty());
+            }
+        };
+    } else if ("Ditolak".equals(query)) {//filter by surat ditolak
+        filter = new RowFilter<>() {
+            @Override
+            public boolean include(Entry<? extends DefaultTableModel, ? extends Object> entry) {
+                String statusSekdes = (String) entry.getValue(5);
+                String statusKades = (String) entry.getValue(6);
+                String mailComment = (String) entry.getValue(7);
+
+                return "Reject".equals(statusSekdes) && "Reject".equals(statusKades) && 
+                       (mailComment != null && !mailComment.isEmpty());
+            }
+        };
+    } else if ("Selesai".equals(query)) {//filter by surat selesai
+        filter = new RowFilter<>() {
+            @Override
+            public boolean include(Entry<? extends DefaultTableModel, ? extends Object> entry) {
+                String statusSekdes = (String) entry.getValue(5);
+                String statusKades = (String) entry.getValue(6);
+                String mailComment = (String) entry.getValue(7);
+
+                return "Accept".equals(statusSekdes) && "Accept".equals(statusKades) && 
+                       (mailComment != null && !mailComment.isEmpty());
+            }
+        };
+    } else if ("Semua".equals(query)) {
+        tr.setRowFilter(null); // no filter
+        return;
+    }
+
+    if (filter != null) {
+        tr.setRowFilter(filter);
+    }
+}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -299,6 +352,8 @@ public class HistoryPage extends javax.swing.JFrame {
         tbHistory = new javax.swing.JTable();
         labelHistory = new javax.swing.JLabel();
         refresh = new javax.swing.JButton();
+        filterBox = new javax.swing.JComboBox<>();
+        filterLabel = new javax.swing.JLabel();
         usernameBar = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -563,6 +618,21 @@ public class HistoryPage extends javax.swing.JFrame {
             }
         });
 
+        filterBox.setBackground(new java.awt.Color(19, 128, 97));
+        filterBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semua", "Diproses", "Ditolak", "Selesai" }));
+        filterBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                filterBoxItemStateChanged(evt);
+            }
+        });
+        filterBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterBoxActionPerformed(evt);
+            }
+        });
+
+        filterLabel.setText("Filter:");
+
         javax.swing.GroupLayout panelTbLayout = new javax.swing.GroupLayout(panelTb);
         panelTb.setLayout(panelTbLayout);
         panelTbLayout.setHorizontalGroup(
@@ -574,6 +644,10 @@ public class HistoryPage extends javax.swing.JFrame {
                     .addGroup(panelTbLayout.createSequentialGroup()
                         .addComponent(labelHistory)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(filterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(filterBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
                         .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -583,7 +657,9 @@ public class HistoryPage extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelHistory))
+                    .addComponent(labelHistory)
+                    .addComponent(filterBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(filterLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelScrollTb)
                 .addContainerGap())
@@ -653,6 +729,16 @@ public class HistoryPage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void filterBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_filterBoxActionPerformed
+
+    private void filterBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_filterBoxItemStateChanged
+        String query = filterBox.getSelectedItem().toString();
+        
+        filter(query);
+    }//GEN-LAST:event_filterBoxItemStateChanged
+
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
           ValidationPages.main(null);
@@ -691,6 +777,8 @@ public class HistoryPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel administrasiBar;
+    private javax.swing.JComboBox<String> filterBox;
+    private javax.swing.JLabel filterLabel;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
