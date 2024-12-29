@@ -20,9 +20,11 @@ public class Dashboard_admin extends javax.swing.JFrame {
         Role.setText("");
         NamaUser.setText(currentUser.getFullName());
         Role.setText(currentUser.getRole());
-        Card.removeAll();
+//        Card.removeAll();
         Card.add(new Beranda().getContentPanel(), "Beranda");
         switchPanel(Card, "Beranda");
+        User_access userAccessPanel = new User_access();
+        Card.add(userAccessPanel.getContentPanel(), "Akses Role"); // Menambahkan panel baru ke Card
     }
 
     private static void switchPanel(JPanel content, String cardName) {
@@ -255,16 +257,13 @@ public class Dashboard_admin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AksesRoleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AksesRoleMouseClicked
-        Card.removeAll(); // Menghapus semua panel yang ada sebelumnya
-        User_access userAccessPanel = new User_access(); // Membuat instance baru dari panel User_access
-        Card.add(userAccessPanel.getContentPanel(), "Akses Role"); // Menambahkan panel baru ke Card
+//        Card.removeAll(); // Menghapus semua panel yang ada sebelumnya
         switchPanel(Card, "Akses Role"); // Menampilkan panel Akses Role
     }//GEN-LAST:event_AksesRoleMouseClicked
 
     private void BerandaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BerandaMouseClicked
-        Card.removeAll(); // Menghapus semua panel yang ada sebelumnya
-        Beranda berandaPanel = new Beranda(); // Membuat instance baru dari panel Beranda
-        Card.add(berandaPanel.getContentPanel(), "Beranda"); // Menambahkan panel baru ke Card
+//        Card.removeAll(); // Menghapus semua panel yang ada sebelumnya
+//        Beranda berandaPanel = new Beranda(); // Membuat instance baru dari panel Beranda
         switchPanel(Card, "Beranda"); // Menampilkan panel Beranda
     }//GEN-LAST:event_BerandaMouseClicked
 
