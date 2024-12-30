@@ -54,7 +54,7 @@
                           <Component id="box_template_surat" pref="640" max="32767" attributes="0"/>
                           <Component id="template_surat" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="nama_pengaju" min="-2" max="-2" attributes="0"/>
-                          <Component id="text_namapengaju" max="32767" attributes="0"/>
+                          <Component id="text_username" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -68,7 +68,7 @@
                   <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                   <Component id="nama_pengaju" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="text_namapengaju" min="-2" pref="35" max="-2" attributes="0"/>
+                  <Component id="text_username" min="-2" pref="35" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="template_surat" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -135,14 +135,14 @@
             <Property name="text" type="java.lang.String" value="Nama Pengaju"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="text_namapengaju">
+        <Component class="javax.swing.JTextField" name="text_username">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="text_namapengajuActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="text_usernameActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="template_surat">

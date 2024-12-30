@@ -1,6 +1,9 @@
 package sim.kantordesa.config;
 
+import java.sql.Connection;
 import java.time.LocalDateTime;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class User {
 
@@ -12,6 +15,11 @@ public class User {
     private String fullName;
     private LocalDateTime createdAt;
     private int idRole;
+    private String role;
+
+    public User() {
+        conn = koneksi.getConnection();
+    }
 
     // Getter dan Setter
     public int getUserId() {
@@ -76,6 +84,42 @@ public class User {
 
     public void setIdRole(int idRole) {
         this.idRole = idRole;
+    }
+
+    public String getRole() {
+        return role;
+    }
+    
+     public void setRole(String role) {
+        this.role = role;
+    }
+
+    private final Connection conn;
+
+    public static User getUserFromDatabase(String username) {
+        User user = null;
+        try {
+            Connection conn = koneksi.getConnection();
+            String sql = "SELECT * FROM users WHERE username = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setEmail(rs.getString("email"));
+                user.setBirthDate(rs.getString("birth_date"));
+                user.setFullName(rs.getString("full_name"));
+                user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                user.setIdRole(rs.getInt("id_role"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 
 }
