@@ -10,9 +10,7 @@ package sim.kantordesa.mailtemplate;
  */
 public class templateselector extends javax.swing.JFrame {
 
-    /**
-     * Creates new form templateselector
-     */
+    
     public templateselector() {
         initComponents();
     }
@@ -30,7 +28,7 @@ public class templateselector extends javax.swing.JFrame {
         header = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
         nama_pengaju = new javax.swing.JLabel();
-        text_namapengaju = new javax.swing.JTextField();
+        text_username = new javax.swing.JTextField();
         template_surat = new javax.swing.JLabel();
         box_template_surat = new javax.swing.JComboBox<>();
         btn_next = new javax.swing.JButton();
@@ -67,10 +65,10 @@ public class templateselector extends javax.swing.JFrame {
         nama_pengaju.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         nama_pengaju.setText("Nama Pengaju");
 
-        text_namapengaju.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        text_namapengaju.addActionListener(new java.awt.event.ActionListener() {
+        text_username.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        text_username.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                text_namapengajuActionPerformed(evt);
+                text_usernameActionPerformed(evt);
             }
         });
 
@@ -116,7 +114,7 @@ public class templateselector extends javax.swing.JFrame {
                         .addComponent(box_template_surat, 0, 640, Short.MAX_VALUE)
                         .addComponent(template_surat)
                         .addComponent(nama_pengaju)
-                        .addComponent(text_namapengaju)))
+                        .addComponent(text_username)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         bodyLayout.setVerticalGroup(
@@ -126,7 +124,7 @@ public class templateselector extends javax.swing.JFrame {
                 .addGap(40, 40, 40)
                 .addComponent(nama_pengaju)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(text_namapengaju, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(text_username, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(template_surat)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -152,52 +150,52 @@ public class templateselector extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void text_namapengajuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_namapengajuActionPerformed
+    private void text_usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_usernameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_text_namapengajuActionPerformed
+    }//GEN-LAST:event_text_usernameActionPerformed
 
     private void btn_nextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nextActionPerformed
-        // TODO add your handling code here:
-        String usernameIn = text_username.getText().trim();
-        String passwordIn = new String(text_password.getPassword());
-
-        if (usernameIn.isEmpty() || passwordIn.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Username atau Password Kosong!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        try {
-            Connection conn = koneksi.getConnection();
-            String query = "Select password FROM users WHERE username = ?";
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1, usernameIn);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                String storedPassword = rs.getString("password");
-                if (storedPassword.equals(passwordIn)) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "Login Berhasil!", "Sukses", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-
-                } else {
-                    javax.swing.JOptionPane.showMessageDialog(this, "Password Salah!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Username tidak ditemukan!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
-            rs.close();
-            ps.close();
-            conn.close();
-        } catch (SQLException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Sistem Error!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
+//        // TODO add your handling code here:
+//        String usernameIn = text_username.getText().trim();
+//        String passwordIn = new String(text_password.getPassword());
+//
+//        if (usernameIn.isEmpty() || passwordIn.isEmpty()) {
+//            javax.swing.JOptionPane.showMessageDialog(this, "Username atau Password Kosong!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+//
+//        try {
+//            Connection conn = koneksi.getConnection();
+//            String query = "Select password FROM users WHERE username = ?";
+//            PreparedStatement ps = conn.prepareStatement(query);
+//            ps.setString(1, usernameIn);
+//            ResultSet rs = ps.executeQuery();
+//
+//            if (rs.next()) {
+//                String storedPassword = rs.getString("password");
+//                if (storedPassword.equals(passwordIn)) {
+//                    javax.swing.JOptionPane.showMessageDialog(this, "Login Berhasil!", "Sukses", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+//
+//                } else {
+//                    javax.swing.JOptionPane.showMessageDialog(this, "Password Salah!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+//                }
+//            } else {
+//                javax.swing.JOptionPane.showMessageDialog(this, "Username tidak ditemukan!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+//            }
+//            rs.close();
+//            ps.close();
+//            conn.close();
+//        } catch (SQLException ex) {
+//            javax.swing.JOptionPane.showMessageDialog(this, "Sistem Error!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+//        }
     }//GEN-LAST:event_btn_nextActionPerformed
 
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_backActionPerformed
-        register RegisterFrame = new register();
-        RegisterFrame.setVisible(true);
-        RegisterFrame.pack();
-        RegisterFrame.setLocationRelativeTo(null);
-        this.dispose();
+//        register RegisterFrame = new register();
+//        RegisterFrame.setVisible(true);
+//        RegisterFrame.pack();
+//        RegisterFrame.setLocationRelativeTo(null);
+//        this.dispose();
     }//GEN-LAST:event_btn_backActionPerformed
 
     /**
@@ -243,7 +241,7 @@ public class templateselector extends javax.swing.JFrame {
     private javax.swing.JPanel header;
     private javax.swing.JLabel nama_pengaju;
     private javax.swing.JLabel template_surat;
-    private javax.swing.JTextField text_namapengaju;
+    private javax.swing.JTextField text_username;
     private javax.swing.JLabel title;
     // End of variables declaration//GEN-END:variables
 }
