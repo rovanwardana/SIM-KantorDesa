@@ -8,6 +8,10 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -466,7 +470,7 @@ public class mailform extends javax.swing.JFrame {
         }
 
         saveData();
-        generatePDF();
+        generatePDF(mailTypeId);
     }
 
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {
@@ -497,10 +501,10 @@ public class mailform extends javax.swing.JFrame {
                 "WHERE mail_id = (SELECT mail_id FROM mail_content ORDER BY mail_id DESC LIMIT 1)";
         try (PreparedStatement stmt1 = conn.prepareStatement(queryCivilRegistry);
              PreparedStatement stmt2 = conn.prepareStatement(queryUpdateMailContent)) {
-            stmt1.setString(1, text_tgl_lahir.getText());
+            stmt1.setString(1, text_nama.getText());
             stmt1.setString(2, text_noktp.getText());
             stmt1.setString(3, text_nokk.getText());
-            stmt1.setString(4, text_nama.getText());
+            stmt1.setString(4, text_tgl_lahir.getText());
             stmt1.setString(5, wni.isSelected() ? "WNI" : "WNA");
             stmt1.setString(6, box_agama.getSelectedItem().toString());
             stmt1.setString(7, lakilaki.isSelected() ? "Laki-laki" : "Perempuan");
@@ -556,8 +560,8 @@ public class mailform extends javax.swing.JFrame {
         String sampaiTanggal = sdf.format(sampaitanggal.getDate());
 
         return content.replace("[judul_surat]", "Surat Pengajuan")
-                .replace("[nama]", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : "")
-                .replace("[ttl]", text_nama.getText() != null ? text_nama.getText() : "")
+                .replace("[nama]", text_nama.getText() != null ? text_nama.getText() : "")
+                .replace("[ttl]", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : "")
                 .replace("[usia]", jUmur.getValue() != null ? jUmur.getValue().toString() : "")
                 .replace("[warga_negara]", wni.isSelected() ? "WNI" : "WNA")
                 .replace("[agama]", box_agama.getSelectedItem() != null ? box_agama.getSelectedItem().toString() : "")
@@ -592,12 +596,12 @@ public class mailform extends javax.swing.JFrame {
         return null;
     }
 
-    private void generatePDF() {
+    private void generatePDF(int mailTypeId) {
         try {
             Connection conn = koneksi.getConnection();
             String rtfPath = loadRTFTemplate();
             if (rtfPath == null || rtfPath.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "RTF Template not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "RTF Template tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             BodyContentHandler handler = new BodyContentHandler();
@@ -629,14 +633,42 @@ public class mailform extends javax.swing.JFrame {
             fileChooser.setDialogTitle("Simpan File PDF");
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                 String outputDir = fileChooser.getSelectedFile().getAbsolutePath();
                 String pdfPath = outputDir + "/" + fileName;
 
                 try (PdfWriter writer = new PdfWriter(pdfPath);
                      PdfDocument pdf = new PdfDocument(writer);
                      Document document = new Document(pdf)) {
-                    document.add(new Paragraph(processedContent));
+
+                    // Add header
+                    Paragraph header = new Paragraph("PEMERINTAH KABUPATEN PONOROGO\n")
+                        .setFontSize(16).setTextAlignment(TextAlignment.CENTER);
+                    header.add(new Text("PEMERINTAH kabupaten " + villageData.get("nama_kab")));
+                    header.add("\n" + villageData.get("nama_kec") + "\n" + villageData.get("nama_des") + "\n");
+                    header.add(villageData.get("alamat_des"));
+                    document.add(header);
+
+                    // Separator
+                    document.add(new Paragraph("------------------------------------------------------------")
+                        .setTextAlignment(TextAlignment.CENTER));
+
+                    // Main content
+                    Paragraph mainContent = new Paragraph(processedContent).setFontSize(12);
+                    mainContent.setTextAlignment(TextAlignment.JUSTIFIED);
+                    document.add(mainContent);
+
+                    // Signature table
+                    Table table = new Table(UnitValue.createPercentArray(new float[]{1, 1, 1}));
+                    table.setWidth(UnitValue.createPercentValue(100));
+
+                    // Row 1
+                    table.addCell(new Paragraph("Pemegang Surat\n\nJohn Doe").setTextAlignment(TextAlignment.CENTER));
+                    table.addCell(new Paragraph("Mengetahui,\nCamat " + villageData.get("nama_kec") + "\n\nNama Kepala Camat").setTextAlignment(TextAlignment.CENTER));
+                    table.addCell(new Paragraph(villageData.get("nama_des") + ", " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) +
+                            "\nJabatan " + villageData.get("nama_des") + "\n\nNama Pamong").setTextAlignment(TextAlignment.CENTER));
+
+                    document.add(table);
                 }
 
                 // Update mail_content dengan mail_number dan file_path
