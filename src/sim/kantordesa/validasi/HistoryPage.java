@@ -3,6 +3,7 @@ package sim.kantordesa.validasi;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,10 +20,15 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import sim.kantordesa.config.koneksi;
 import java.awt.HeadlessException;
+import javax.swing.BorderFactory;
+import javax.swing.JTextArea;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-
+import java.awt.GridBagLayout;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 
 /**
  *
@@ -45,7 +51,9 @@ public class HistoryPage extends javax.swing.JFrame {
         };
 
         tbHistory.setModel(model); //create table 
-        //create table header
+        tbHistory.setShowGrid(true);
+        tbHistory.setGridColor(Color.lightGray);
+        //create table column and column header
         model.addColumn("No.");
         model.addColumn("Nomor Surat");
         model.addColumn("Nama Pemohon");
@@ -60,6 +68,19 @@ public class HistoryPage extends javax.swing.JFrame {
         setTableAction(); //call function setTableAction()
         adjustColumnWidths(tbHistory); //call function adjustColumnWidths()
         
+         // Set the preferred width for the "Comment" column 
+        TableColumn commentColumn = tbHistory.getColumnModel().getColumn(7);
+        commentColumn.setPreferredWidth(250);
+        commentColumn.setMaxWidth(250);
+        commentColumn.setMinWidth(250); 
+   
+        // Set the preferred width for the "No." column 
+        TableColumn noColumn = tbHistory.getColumnModel().getColumn(0);
+        noColumn.setMaxWidth(50);
+        noColumn.setMinWidth(50);
+    
+        // Set the custom cell renderer for the "Comment" column
+        commentColumn.setCellRenderer(new TextAreaRenderer());
     }
 
     public void setTableAction() { //function query get data from db
@@ -98,6 +119,60 @@ public class HistoryPage extends javax.swing.JFrame {
         tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
         tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
     }
+    
+    
+    // Custom cell renderer for text wrapping
+    public class TextAreaRenderer extends JTextArea implements TableCellRenderer {
+       private static final int FIXED_WIDTH = 200; // Fixed width in pixels
+
+       public TextAreaRenderer() {
+           setLineWrap(true);
+           setWrapStyleWord(true);
+       }
+
+       @Override
+       public Component getTableCellRendererComponent(JTable table, Object value, 
+               boolean isSelected, boolean hasFocus, int row, int column) {
+           setText(value != null ? value.toString() : "");
+           setSize(FIXED_WIDTH, Short.MAX_VALUE);
+
+           // Calculate the preferred height based on the fixed width
+           int preferredHeight = getPreferredSize().height;
+
+           // Set minimum height to avoid very small rows
+           preferredHeight = Math.max(preferredHeight, 40);
+
+           // Update the row height if necessary
+           if (table.getRowHeight(row) != preferredHeight) {
+               table.setRowHeight(row, preferredHeight);
+           }
+           
+           //adding border
+            setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.lightGray),  // Border hitam
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)  // Padding
+            ));
+           
+           // Handle selection highlighting
+           if (isSelected) {
+               setBackground(table.getSelectionBackground());
+               setForeground(table.getSelectionForeground());
+           } else {
+               setBackground(table.getBackground());
+               setForeground(table.getForeground());
+           }
+
+           return this;
+       }
+
+       // Override getPreferredSize to maintain fixed width
+       @Override
+       public Dimension getPreferredSize() {
+           Dimension d = super.getPreferredSize();
+           d.width = FIXED_WIDTH;
+           return d;
+       }
+   }
     
     public static void adjustColumnWidths(JTable table) {
         for (int column = 0; column < table.getColumnCount(); column++) {
@@ -141,8 +216,14 @@ public class HistoryPage extends javax.swing.JFrame {
                     Object mailComment = table.getValueAt(row, 7);
             boolean hasMailComment = (mailComment != null && !mailComment.toString().isEmpty() && statusValidation && statusLead);
 
-//              boolean hasMailComment = ((table.getValueAt(row, 7) != null) && (table.getValueAt(row, 5) != false) && (table.getValueAt(row, 6) != false); // Assuming mail_comment is at index 7
                 downloadButton.setVisible(hasMailComment);
+                editButton.setVisible(!hasMailComment);
+                
+                setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 1, 1, 0, Color.lightGray),  // Border hitam
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)  // Padding
+                ));
+                
                 if (isSelected) {
                     setBackground(table.getSelectionBackground());
                     setForeground(table.getSelectionForeground());
@@ -177,11 +258,7 @@ public class HistoryPage extends javax.swing.JFrame {
         private void handleDeleteButtonAction() {
             System.out.println("Delete Button diklik");
             int row = table.getSelectedRow();
-//            if (row == -1){
-//                JOptionPane.showMessageDialog(table, "Silahkan pilih baris terlebih dahulu");
-//                return;
-//            }
-//          
+
             //get mailID on selected row
             String mailId =(String) table.getValueAt(row, 8);
             //option panel to confirm delete
@@ -245,22 +322,34 @@ public class HistoryPage extends javax.swing.JFrame {
         public javax.swing.JButton downloadButton;
         
         public ButtonPanel() {
-            //lauouting action button 
-            FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
-            setLayout(layout);
-            
-            //create action button edit, delete, and download
-            editButton = new JButton("Edit");
-            deleteButton = new JButton("Delete");
-            downloadButton = new JButton("Download");
-            
-            //add button to panel
-            add(editButton);
-            add(deleteButton);
-            add(downloadButton);
+            // Use GridBagLayout for better centering control
+        setLayout(new GridBagLayout());
+        // Use BoxLayout for vertical alignment
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        
+        // Create inner panel for buttons with FlowLayout
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        buttonPanel.setOpaque(false);
+        
+        // Create buttons
+        editButton = new JButton("Edit");
+        deleteButton = new JButton("Delete");
+        downloadButton = new JButton("Download");
+        
+        // Add buttons to inner panel
+        buttonPanel.add(editButton);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(downloadButton);
+        
+        // Add vertical glue for centering
+        add(Box.createVerticalGlue());
+        // Add button panel
+        add(buttonPanel);
+        // Add vertical glue for centering
+        add(Box.createVerticalGlue());
+       
         }
     }
-    //call setTableAction() function
 
     //filtering history 
     private void filter(String query) {
