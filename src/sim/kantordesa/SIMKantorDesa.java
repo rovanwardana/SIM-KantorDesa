@@ -5,6 +5,8 @@
 package sim.kantordesa;
 import sim.kantordesa.auth.login;
 
+import sim.kantordesa.validasi.ValidationPages;
+
 /**
  *
  * @author Krisna
@@ -19,5 +21,4 @@ public class SIMKantorDesa {
         LoginFrame.pack();
         LoginFrame.setLocationRelativeTo(null);
     }
-    
 }

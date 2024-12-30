@@ -5,13 +5,14 @@
 package sim.kantordesa.auth;
 
 import java.sql.*;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import sim.kantordesa.config.User;
 import sim.kantordesa.config.koneksi;
-import sim.kantordesa.mailtemplate.templateselector;
+import sim.kantordesa.dashboard.Dashboard;
 
-/**
- *
- * @author manii
- */
 public class login extends javax.swing.JFrame {
 
     /**
@@ -33,7 +34,6 @@ public class login extends javax.swing.JFrame {
 
         body = new javax.swing.JPanel();
         PanelKiri = new javax.swing.JPanel();
-        logodesa = new javax.swing.JLabel();
         judul = new javax.swing.JLabel();
         PanelKanan = new javax.swing.JPanel();
         LOGIN = new javax.swing.JLabel();
@@ -61,9 +61,6 @@ public class login extends javax.swing.JFrame {
         PanelKiri.setMinimumSize(new java.awt.Dimension(0, 0));
         PanelKiri.setPreferredSize(new java.awt.Dimension(400, 500));
 
-        logodesa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        logodesa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/auth/icon/logorandom.png"))); // NOI18N
-
         judul.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         judul.setForeground(new java.awt.Color(255, 255, 255));
         judul.setText("SIM-Desa");
@@ -73,20 +70,14 @@ public class login extends javax.swing.JFrame {
         PanelKiriLayout.setHorizontalGroup(
             PanelKiriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelKiriLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(logodesa, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(PanelKiriLayout.createSequentialGroup()
                 .addGap(116, 116, 116)
                 .addComponent(judul)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
         PanelKiriLayout.setVerticalGroup(
             PanelKiriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelKiriLayout.createSequentialGroup()
-                .addGap(101, 101, 101)
-                .addComponent(logodesa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addContainerGap(319, Short.MAX_VALUE)
                 .addComponent(judul)
                 .addGap(133, 133, 133))
         );
@@ -168,6 +159,7 @@ public class login extends javax.swing.JFrame {
         getContentPane().add(body, java.awt.BorderLayout.CENTER);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
@@ -198,18 +190,48 @@ public class login extends javax.swing.JFrame {
 
         try {
             Connection conn = koneksi.getConnection();
-            String query = "SELECT password FROM users WHERE username = ?";
+
+            String query = "SELECT u.password, r.role_name FROM users u "
+                    + "JOIN role r ON u.id_role = r.id_role "
+                    + "WHERE u.username = ?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, usernameIn);
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
                 String storedPassword = rs.getString("password");
+                String roleName = rs.getString("role_name");
+
                 if (storedPassword.equals(passwordIn)) {
-                    templateselector DashboardFrame = new templateselector();
-                    DashboardFrame.setVisible(true);
-                    DashboardFrame.pack();
-                    DashboardFrame.setLocationRelativeTo(null);
-                    this.dispose();
+                    User currentUser = User.getUserFromDatabase(usernameIn);
+
+                    // Jika user ditemukan
+                    if (currentUser != null) {
+                        currentUser.setRole(roleName);
+
+                        try {
+                            String sql = "SELECT a.access_name FROM role_access ra "
+                                    + "JOIN access a ON ra.access_id = a.access_id "
+                                    + "WHERE ra.role_id = ?";
+                            PreparedStatement Ps = conn.prepareStatement(sql);
+                            Ps.setInt(1, currentUser.getIdRole()); // Menggunakan ID Role dari user yang login
+                            ResultSet resultSet = Ps.executeQuery();
+
+                            Set<String> userAccess = new HashSet<>();
+                            while (resultSet.next()) {
+                                userAccess.add(resultSet.getString("access_name"));
+                            }
+
+                            Dashboard dashboardFrame = new Dashboard(currentUser, userAccess);
+                            dashboardFrame.setVisible(true);
+                            this.dispose();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        javax.swing.JOptionPane.showMessageDialog(this, "User tidak ditemukan!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
                     javax.swing.JOptionPane.showMessageDialog(this, "Password salah!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 }
@@ -217,26 +239,47 @@ public class login extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "Username tidak ditemukan!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException ex) {
-            // Display error message if database connection fails
             javax.swing.JOptionPane.showMessageDialog(this, "Sistem error!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
+
+
     }//GEN-LAST:event_loginActionPerformed
 
     private void hidepassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hidepassMouseClicked
         hidepass.setVisible(false);
         showpass.setVisible(true);
-        text_password.setEchoChar ((char)0);
+        text_password.setEchoChar((char) 0);
     }//GEN-LAST:event_hidepassMouseClicked
 
     private void showpassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showpassMouseClicked
         hidepass.setVisible(true);
         showpass.setVisible(false);
-        text_password.setEchoChar ('*');
+        text_password.setEchoChar('*');
     }//GEN-LAST:event_showpassMouseClicked
 
     /**
      * @param args the command line arguments
      */
+//    public static void main(String[] args) throws UnsupportedLookAndFeelException {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        try {
+//            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        EventQueue.invokeLater(() -> {
+//            new login().setVisible(true);
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LOGIN;
@@ -246,7 +289,6 @@ public class login extends javax.swing.JFrame {
     private javax.swing.JLabel hidepass;
     private javax.swing.JLabel judul;
     private javax.swing.JButton login;
-    private javax.swing.JLabel logodesa;
     private javax.swing.JLabel password;
     private javax.swing.JButton register;
     private javax.swing.JLabel registertext;
