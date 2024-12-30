@@ -2,17 +2,21 @@ package sim.kantordesa.dashboard;
 
 import java.awt.CardLayout;
 import java.sql.Connection;
+import java.util.Set;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import sim.kantordesa.config.User;
 import sim.kantordesa.config.koneksi;
-import sim.kantordesa.master.User_access;
+import sim.kantordesa.master.Create_acc;
+import sim.kantordesa.auth.login;
+import sim.kantordesa.master.Akses_role;
 
-public class Dashboard_admin extends javax.swing.JFrame {
+public class Dashboard extends javax.swing.JFrame {
 
     private final Connection conn;
-    private User currentUser;
+    private final User currentUser;
 
-    public Dashboard_admin(User currentUser) {
+    public Dashboard(User currentUser, Set<String> userAccess) {
         this.currentUser = currentUser;
         initComponents();
         conn = koneksi.getConnection();
@@ -20,17 +24,29 @@ public class Dashboard_admin extends javax.swing.JFrame {
         Role.setText("");
         NamaUser.setText(currentUser.getFullName());
         Role.setText(currentUser.getRole());
-//        Card.removeAll();
+        setSidebarVisibility(userAccess);
         Card.add(new Beranda().getContentPanel(), "Beranda");
         switchPanel(Card, "Beranda");
-        User_access userAccessPanel = new User_access();
-        Card.add(userAccessPanel.getContentPanel(), "Akses Role"); // Menambahkan panel baru ke Card
+        Card.add(new Akses_role().getContentPanel(), "Akses Role");
+        Card.add(new Create_acc().getContentPanel(), "Daftar Akun");
     }
 
     private static void switchPanel(JPanel content, String cardName) {
         CardLayout layout = (CardLayout) content.getLayout();
         layout.show(content, cardName);
     }
+    
+    private void setSidebarVisibility(Set<String> userAccess) {
+    FormSuratMasuk.setVisible(userAccess.contains("Form Surat Masuk"));
+    FormSuratKeluar.setVisible(userAccess.contains("Form Surat Keluar"));
+    HistorySuratMasuk.setVisible(userAccess.contains("History Surat Masuk"));
+    HistorySuratKeluar.setVisible(userAccess.contains("History Surat Keluar"));
+    Disposisi.setVisible(userAccess.contains("Disposisi"));
+    Validasi.setVisible(userAccess.contains("Validasi"));
+    DaftarAkun.setVisible(userAccess.contains("Daftar Akun"));
+    AksesRole.setVisible(userAccess.contains("Akses Role"));
+}
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -46,6 +62,7 @@ public class Dashboard_admin extends javax.swing.JFrame {
         Validasi = new javax.swing.JLabel();
         DaftarAkun = new javax.swing.JLabel();
         AksesRole = new javax.swing.JLabel();
+        Keluar = new javax.swing.JLabel();
         NamaDesa = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -55,6 +72,7 @@ public class Dashboard_admin extends javax.swing.JFrame {
         Card = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("SIM-Kantor Desa");
 
         Sidebar.setBackground(new java.awt.Color(255, 255, 255));
         Sidebar.setPreferredSize(new java.awt.Dimension(200, 640));
@@ -81,6 +99,7 @@ public class Dashboard_admin extends javax.swing.JFrame {
 
         HistorySuratMasuk.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         HistorySuratMasuk.setForeground(new java.awt.Color(19, 128, 97));
+        HistorySuratMasuk.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         HistorySuratMasuk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/history.png"))); // NOI18N
         HistorySuratMasuk.setText("History Surat Masuk");
 
@@ -103,6 +122,11 @@ public class Dashboard_admin extends javax.swing.JFrame {
         DaftarAkun.setForeground(new java.awt.Color(19, 128, 97));
         DaftarAkun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/register.png"))); // NOI18N
         DaftarAkun.setText("Daftar Akun");
+        DaftarAkun.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                DaftarAkunMouseClicked(evt);
+            }
+        });
 
         AksesRole.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         AksesRole.setForeground(new java.awt.Color(19, 128, 97));
@@ -111,6 +135,15 @@ public class Dashboard_admin extends javax.swing.JFrame {
         AksesRole.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 AksesRoleMouseClicked(evt);
+            }
+        });
+
+        Keluar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Keluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/log_out.png"))); // NOI18N
+        Keluar.setText("Keluar");
+        Keluar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                KeluarMouseClicked(evt);
             }
         });
 
@@ -129,7 +162,8 @@ public class Dashboard_admin extends javax.swing.JFrame {
                     .addComponent(Disposisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Validasi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(DaftarAkun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(AksesRole, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(AksesRole, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Keluar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         SidebarLayout.setVerticalGroup(
@@ -137,24 +171,28 @@ public class Dashboard_admin extends javax.swing.JFrame {
             .addGroup(SidebarLayout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addComponent(Beranda)
-                .addGap(18, 25, Short.MAX_VALUE)
-                .addComponent(FormSuratMasuk)
-                .addGap(18, 25, Short.MAX_VALUE)
-                .addComponent(FormSuratKeluar)
-                .addGap(18, 25, Short.MAX_VALUE)
-                .addComponent(HistorySuratMasuk)
-                .addGap(18, 25, Short.MAX_VALUE)
-                .addComponent(HistorySuratKeluar)
-                .addGap(18, 25, Short.MAX_VALUE)
-                .addComponent(Disposisi)
-                .addGap(18, 25, Short.MAX_VALUE)
-                .addComponent(Validasi)
-                .addGap(18, 26, Short.MAX_VALUE)
-                .addComponent(DaftarAkun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                .addComponent(AksesRole)
-                .addGap(212, 212, 212))
+                .addGap(18, 30, Short.MAX_VALUE)
+                .addComponent(FormSuratMasuk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 30, Short.MAX_VALUE)
+                .addComponent(FormSuratKeluar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 30, Short.MAX_VALUE)
+                .addComponent(HistorySuratMasuk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 30, Short.MAX_VALUE)
+                .addComponent(HistorySuratKeluar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 30, Short.MAX_VALUE)
+                .addComponent(Disposisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 30, Short.MAX_VALUE)
+                .addComponent(Validasi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 31, Short.MAX_VALUE)
+                .addComponent(DaftarAkun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(AksesRole, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
+                .addComponent(Keluar)
+                .addGap(20, 20, 20))
         );
+
+        Disposisi.getAccessibleContext().setAccessibleDescription("");
 
         NamaDesa.setBackground(new java.awt.Color(19, 128, 97));
         NamaDesa.setPreferredSize(new java.awt.Dimension(200, 60));
@@ -257,15 +295,30 @@ public class Dashboard_admin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AksesRoleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AksesRoleMouseClicked
-//        Card.removeAll(); // Menghapus semua panel yang ada sebelumnya
         switchPanel(Card, "Akses Role"); // Menampilkan panel Akses Role
     }//GEN-LAST:event_AksesRoleMouseClicked
 
     private void BerandaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BerandaMouseClicked
-//        Card.removeAll(); // Menghapus semua panel yang ada sebelumnya
-//        Beranda berandaPanel = new Beranda(); // Membuat instance baru dari panel Beranda
         switchPanel(Card, "Beranda"); // Menampilkan panel Beranda
     }//GEN-LAST:event_BerandaMouseClicked
+
+    private void DaftarAkunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DaftarAkunMouseClicked
+        switchPanel(Card, "Daftar Akun");
+    }//GEN-LAST:event_DaftarAkunMouseClicked
+
+    private void KeluarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_KeluarMouseClicked
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Apakah Anda yakin ingin keluar?",
+                "Konfirmasi Keluar",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            login loginFrame = new login(); 
+            loginFrame.setVisible(true);
+            this.dispose(); 
+        }
+    }//GEN-LAST:event_KeluarMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -279,6 +332,7 @@ public class Dashboard_admin extends javax.swing.JFrame {
     private javax.swing.JPanel Header;
     private javax.swing.JLabel HistorySuratKeluar;
     private javax.swing.JLabel HistorySuratMasuk;
+    private javax.swing.JLabel Keluar;
     private javax.swing.JPanel NamaDesa;
     private javax.swing.JLabel NamaUser;
     private javax.swing.JLabel Role;

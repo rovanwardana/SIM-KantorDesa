@@ -4,19 +4,15 @@
  */
 package sim.kantordesa.auth;
 
-import java.awt.EventQueue;
 import java.sql.*;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import sim.kantordesa.config.User;
 import sim.kantordesa.config.koneksi;
-import sim.kantordesa.dashboard.Dashboard_admin;
-import sim.kantordesa.mailtemplate.templateselector;
+import sim.kantordesa.dashboard.Dashboard;
 
-/**
- *
- * @author manii
- */
 public class login extends javax.swing.JFrame {
 
     /**
@@ -163,6 +159,7 @@ public class login extends javax.swing.JFrame {
         getContentPane().add(body, java.awt.BorderLayout.CENTER);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
@@ -198,25 +195,40 @@ public class login extends javax.swing.JFrame {
                     + "JOIN role r ON u.id_role = r.id_role "
                     + "WHERE u.username = ?";
             PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1, usernameIn);  
+            ps.setString(1, usernameIn);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 String storedPassword = rs.getString("password");
-                String roleName = rs.getString("role_name");  
+                String roleName = rs.getString("role_name");
 
                 if (storedPassword.equals(passwordIn)) {
                     User currentUser = User.getUserFromDatabase(usernameIn);
 
                     // Jika user ditemukan
                     if (currentUser != null) {
-                        currentUser.setRole(roleName);  
+                        currentUser.setRole(roleName);
 
-                        Dashboard_admin dashboardAdminFrame = new Dashboard_admin(currentUser);
-                        dashboardAdminFrame.setVisible(true);
-                        dashboardAdminFrame.pack();
-                        dashboardAdminFrame.setLocationRelativeTo(null);
-                        this.dispose(); 
+                        try {
+                            String sql = "SELECT a.access_name FROM role_access ra "
+                                    + "JOIN access a ON ra.access_id = a.access_id "
+                                    + "WHERE ra.role_id = ?";
+                            PreparedStatement Ps = conn.prepareStatement(sql);
+                            Ps.setInt(1, currentUser.getIdRole()); // Menggunakan ID Role dari user yang login
+                            ResultSet resultSet = Ps.executeQuery();
+
+                            Set<String> userAccess = new HashSet<>();
+                            while (resultSet.next()) {
+                                userAccess.add(resultSet.getString("access_name"));
+                            }
+
+                            Dashboard dashboardFrame = new Dashboard(currentUser, userAccess);
+                            dashboardFrame.setVisible(true);
+                            this.dispose();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
                     } else {
                         javax.swing.JOptionPane.showMessageDialog(this, "User tidak ditemukan!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                     }
