@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package sim.kantordesa.validasi;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -20,6 +16,7 @@ import sim.kantordesa.config.koneksi;
  * @author Krisna
  */
 public final class PopUpValidasiSekdes extends javax.swing.JFrame {
+    private int roleId;
     JDialog popup;
     boolean allChecked = false;
     JCheckBox[] checkboxes = {
@@ -36,6 +33,7 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
      * @param value
      */
     public PopUpValidasiSekdes(String value) {
+        this.roleId = roleId;
         initComponents();
         
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -704,12 +702,40 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
     }//GEN-LAST:event_CatatanActionPerformed
 
     private void ValidasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ValidasiActionPerformed
-        // TODO add your handling code here:
-        if (allChecked) {
-            JOptionPane.showMessageDialog(popup, "Validasi surat berhasil dilakukan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(popup, "Silahkan cek data terlebih dahulu", "Gagal", JOptionPane.ERROR_MESSAGE);
+    if (allChecked) {
+        try {
+            Connection c = koneksi.getConnection();
+            String sql;
+            
+            // Determine which status to update based on role ID
+            if (roleId == 2) { // Assuming 2 is for Sekdes
+                sql = "UPDATE mail_content SET status_validation = true, mail_comment = 'Data Tervalidasi' WHERE mail_number = ?";
+            } else if (roleId == 1) { // Assuming 1 is for Kades
+                sql = "UPDATE mail_content SET status_lead = true WHERE mail_number = ?";
+            } else {
+                JOptionPane.showMessageDialog(this, "Role tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try (java.sql.PreparedStatement ps = c.prepareStatement(sql)) {
+                ps.setString(1, NomorSurat.getText());
+                
+                int result = ps.executeUpdate();
+                if (result > 0) {
+                    JOptionPane.showMessageDialog(this, "Validasi berhasil dilakukan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose(); // Close the window after successful update
+                } else {
+                    JOptionPane.showMessageDialog(this, "Gagal melakukan validasi!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error: " + e);
         }
+    } else {
+        JOptionPane.showMessageDialog(this, "Silahkan cek data terlebih dahulu", "Gagal", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_ValidasiActionPerformed
 
     private void NamaPemohonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NamaPemohonActionPerformed
@@ -754,14 +780,42 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
     }//GEN-LAST:event_cb9ActionPerformed
 
     private void TolakPengajuanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TolakPengajuanActionPerformed
-        // TODO add your handling code here:
-        String note = Catatan.getText();
-            if (!note.isEmpty()) {
-
-                JOptionPane.showMessageDialog(popup, "Catatan berhasil disimpan! " );
+    String note = Catatan.getText();
+    if (!note.isEmpty()) {
+        try {
+            Connection c = koneksi.getConnection();
+            String sql;
+            
+            // Determine which status to update based on role ID
+            if (roleId == 2) { // Assuming 2 is for Sekdes
+                sql = "UPDATE mail_content SET status_validation = false, reject_note = ? WHERE mail_number = ?";
+            } else if (roleId == 1) { // Assuming 1 is for Kades
+                sql = "UPDATE mail_content SET status_lead = false, reject_note = ? WHERE mail_number = ?";
             } else {
-                JOptionPane.showMessageDialog(popup, "Catatan tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Role tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+
+            try (java.sql.PreparedStatement ps = c.prepareStatement(sql)) {
+                ps.setString(1, note);
+                ps.setString(2, NomorSurat.getText());
+                
+                int result = ps.executeUpdate();
+                if (result > 0) {
+                    JOptionPane.showMessageDialog(this, "Penolakan berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose(); // Close the window after successful update
+                } else {
+                    JOptionPane.showMessageDialog(this, "Gagal melakukan penolakan!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error: " + e);
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Catatan tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+    }
     }//GEN-LAST:event_TolakPengajuanActionPerformed
 
     private void NomorSuratActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NomorSuratActionPerformed
