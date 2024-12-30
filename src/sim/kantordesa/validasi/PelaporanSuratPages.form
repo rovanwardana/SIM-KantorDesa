@@ -161,7 +161,7 @@
                       <Component id="jLabel12" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="jButton7" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="502" max="32767" attributes="0"/>
+                  <EmptySpace pref="989" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -390,14 +390,22 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="panelScrollTb" alignment="0" pref="857" max="32767" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <Component id="labelHistory" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="644" max="32767" attributes="0"/>
                           <Component id="refresh" min="-2" pref="82" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Component id="panelScrollTb" min="-2" pref="801" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                  <Component id="chartPanel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -409,8 +417,10 @@
                       <Component id="refresh" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                       <Component id="labelHistory" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="panelScrollTb" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="chartPanel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="panelScrollTb" min="-2" pref="343" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -510,6 +520,10 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshActionPerformed"/>
           </Events>
         </Component>
+        <Container class="javax.swing.JPanel" name="chartPanel1">
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+        </Container>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="usernameBar">
