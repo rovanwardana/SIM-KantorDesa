@@ -302,6 +302,8 @@ public class HistoryPage extends javax.swing.JFrame {
                     
             boolean hasMailComment = (mailComment != null && !mailComment.toString().isEmpty() && statusValidation && statusLead);
             panel.downloadButton.setVisible(hasMailComment);
+            panel.editButton.setVisible(!hasMailComment);
+            
             return panel;
         }
 
