@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,12 +21,15 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import sim.kantordesa.config.koneksi;
 import java.awt.HeadlessException;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -39,6 +43,7 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
     public PelaporanSuratPages() {
         initComponents();
         showLineChart();
+        createPieChart();
 
         model = new javax.swing.table.DefaultTableModel() {
             @Override
@@ -96,25 +101,65 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
                 dataset
         );
         
-            // Set axis to display integers only
+
             CategoryPlot plot = lineChart.getCategoryPlot();
             NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
             rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
         ChartPanel chartPanel = new ChartPanel(lineChart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
-      //  chartPanel.setMouseWheelEnabled(true);
-//    chartPanel.removeAll();
-//    chartPanel.add(chartPanel1);
-//        chartPanel.revalidate();
+        chartPanel.setPreferredSize(new java.awt.Dimension(800,600));
         chartPanel1.removeAll();
         chartPanel1.setLayout(new BorderLayout());
         chartPanel1.add(chartPanel, BorderLayout.CENTER);
-//        chartPanel1.add(chartPanel);
         chartPanel1.revalidate();
         chartPanel1.repaint();
     }
+    
+    
+    private void createPieChart() {
+        DefaultPieDataset dataset = new DefaultPieDataset();
 
+        // Mengambil data dari database
+        try {
+            Statement s = c.createStatement();
+            String sql = "SELECT t.type_name, COUNT(*) AS jumlah_surat FROM mail_content c JOIN mail_type t ON c.mail_type_id = t.mail_type_id GROUP BY t.type_name;";
+            ResultSet r = s.executeQuery(sql);
+
+            while (r.next()) {
+                String category = r.getString("type_name");
+                int jumlahSurat = r.getInt("jumlah_surat");
+                dataset.setValue(category, jumlahSurat);
+            }
+            System.out.println(dataset.getValue(0));
+            r.close();
+            s.close();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        
+        System.out.println(dataset.getItemCount());
+
+        // Membuat Pie Chart
+        JFreeChart pieChart = ChartFactory.createPieChart(
+                "Jumlah Surat Masuk per Kategori", // Judul chart
+                dataset,                          // Data untuk chart
+                true,                             // Legend
+                true,                             // Tooltip
+                false                             // URLs
+        );
+
+        // Membungkus chart dalam ChartPanel
+        ChartPanel chartPanel = new ChartPanel(pieChart);
+        chartPanel2.setPreferredSize(new java.awt.Dimension(400, 400));
+        chartPanel2.removeAll();
+        chartPanel2.setLayout(new BorderLayout());
+        chartPanel2.add(chartPanel, BorderLayout.CENTER);
+        chartPanel2.revalidate();
+        chartPanel2.repaint();
+    }
+    
+    
+    
     public void setTableAction() {
         model.getDataVector().removeAllElements();
         model.fireTableDataChanged();
@@ -350,6 +395,7 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         labelHistory = new javax.swing.JLabel();
         refresh = new javax.swing.JButton();
         chartPanel1 = new javax.swing.JPanel();
+        chartPanel2 = new javax.swing.JPanel();
         usernameBar = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -616,6 +662,8 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
 
         chartPanel1.setLayout(new java.awt.BorderLayout());
 
+        chartPanel2.setLayout(new java.awt.BorderLayout());
+
         javax.swing.GroupLayout panelTbLayout = new javax.swing.GroupLayout(panelTb);
         panelTb.setLayout(panelTbLayout);
         panelTbLayout.setHorizontalGroup(
@@ -625,16 +673,19 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
                 .addGroup(panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelTbLayout.createSequentialGroup()
                         .addComponent(labelHistory)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 644, Short.MAX_VALUE)
-                        .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
                     .addGroup(panelTbLayout.createSequentialGroup()
-                        .addComponent(panelScrollTb, javax.swing.GroupLayout.PREFERRED_SIZE, 801, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(panelTbLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(chartPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(15, 15, 15)
+                        .addComponent(chartPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 126, Short.MAX_VALUE)
+                        .addComponent(chartPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTbLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelScrollTb, javax.swing.GroupLayout.PREFERRED_SIZE, 878, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(184, 184, 184))
         );
         panelTbLayout.setVerticalGroup(
             panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -643,11 +694,13 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
                 .addGroup(panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelHistory))
-                .addGap(18, 18, 18)
-                .addComponent(chartPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(chartPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .addComponent(chartPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
                 .addComponent(panelScrollTb, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         usernameBar.setBackground(new java.awt.Color(19, 128, 97));
@@ -664,7 +717,7 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         usernameBarLayout.setHorizontalGroup(
             usernameBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, usernameBarLayout.createSequentialGroup()
-                .addContainerGap(776, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
@@ -780,6 +833,7 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel administrasiBar;
     private javax.swing.JPanel chartPanel1;
+    private javax.swing.JPanel chartPanel2;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
