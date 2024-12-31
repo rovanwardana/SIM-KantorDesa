@@ -2,11 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+
 package sim.kantordesa.mailtemplate;
 
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Text;
@@ -27,9 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.microsoft.rtf.RTFParser;
 import org.apache.tika.sax.BodyContentHandler;
@@ -432,6 +432,8 @@ public class mailform extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_nextActionPerformed(java.awt.event.ActionEvent evt) {
+        Connection conn = koneksi.getConnection();
+        String title = form_title.getText();
         String ktp = text_noktp.getText().trim();
         String kk = text_nokk.getText().trim();
         String nama = text_nama.getText().trim();
@@ -470,7 +472,7 @@ public class mailform extends javax.swing.JFrame {
         }
 
         saveData();
-        generatePDF(mailTypeId);
+        generatePDF(mailTypeId, conn, title);
     }
 
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {
@@ -479,14 +481,6 @@ public class mailform extends javax.swing.JFrame {
         this.dispose();
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        SwingUtilities.invokeLater(() -> {
-            new mailform().setVisible(true);
-        });
-    }
 
     public final void updateTitle(String title) {
         this.setTitle(title);
@@ -559,8 +553,7 @@ public class mailform extends javax.swing.JFrame {
         String dariTanggal = sdf.format(daritanggal.getDate());
         String sampaiTanggal = sdf.format(sampaitanggal.getDate());
 
-        return content.replace("[judul_surat]", "Surat Pengajuan")
-                .replace("[nama]", text_nama.getText() != null ? text_nama.getText() : "")
+        return content.replace("[nama]", text_nama.getText() != null ? text_nama.getText() : "")
                 .replace("[ttl]", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : "")
                 .replace("[usia]", jUmur.getValue() != null ? jUmur.getValue().toString() : "")
                 .replace("[warga_negara]", wni.isSelected() ? "WNI" : "WNA")
@@ -596,16 +589,20 @@ public class mailform extends javax.swing.JFrame {
         return null;
     }
 
-    private void generatePDF(int mailTypeId) {
+    private String generateNomorSurat(int mailTypeId) {
+        int tahun = LocalDate.now().getYear();
+        return mailTypeId + "/" + tahun;
+    }
+    
+    private void generatePDF(int mailTypeId, Connection conn, String title) {
         try {
-            Connection conn = koneksi.getConnection();
             String rtfPath = loadRTFTemplate();
             if (rtfPath == null || rtfPath.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "RTF Template tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "RTF Template not found.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             BodyContentHandler handler = new BodyContentHandler();
-            new RTFParser().parse(new FileInputStream(rtfPath), handler, new Metadata(), new ParseContext());
+            new RTFParser().parse(new FileInputStream(rtfPath), handler, new org.apache.tika.metadata.Metadata(), new ParseContext());
 
             // Ambil data desa
             Map<String, String> villageData = getVillageData();
@@ -613,10 +610,13 @@ public class mailform extends javax.swing.JFrame {
             // Replace Placeholders
             String processedContent = replacePlaceholders(handler.toString(), villageData);
 
+            // Ambil data pemegang surat dari placeholders
+            String pemegangSurat = replacePlaceholders("[nama]", villageData);
+
             // Ambil mail_id dan type_name
-            String query = "SELECT mail_id, type_name FROM mail_content mc "
-                    + "JOIN mail_type mt ON mc.mail_type_id = mt.mail_type_id "
-                    + "WHERE mc.mail_type_id = ? ORDER BY mail_id DESC LIMIT 1";
+            String query = "SELECT mail_id, type_name FROM mail_content mc " +
+                    "INNER JOIN mail_type mt ON mc.mail_type_id = mt.mail_type_id " +
+                    "WHERE mc.mail_type_id = ? ORDER BY mail_id DESC LIMIT 1";
             String fileName = "output.pdf";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setInt(1, mailTypeId);
@@ -626,6 +626,8 @@ public class mailform extends javax.swing.JFrame {
                     String typeName = rs.getString("type_name");
                     fileName = mailId + "_" + typeName + ".pdf";
                 }
+            } catch (SQLException ex) {
+                Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             // Simpan ke PDF
@@ -641,51 +643,71 @@ public class mailform extends javax.swing.JFrame {
                      PdfDocument pdf = new PdfDocument(writer);
                      Document document = new Document(pdf)) {
 
-                    // Add header
-                    Paragraph header = new Paragraph("PEMERINTAH KABUPATEN PONOROGO\n")
+                    // Header
+                    Paragraph header = new Paragraph("PEMERINTAH " + villageData.get("nama_kab"))
                         .setFontSize(16).setTextAlignment(TextAlignment.CENTER);
-                    header.add(new Text("PEMERINTAH kabupaten " + villageData.get("nama_kab")));
-                    header.add("\n" + villageData.get("nama_kec") + "\n" + villageData.get("nama_des") + "\n");
+                    header.add(new Text("\n" + villageData.get("nama_kec") + "\n" + villageData.get("nama_des") + "\n"))
+                            .setFontSize(16).setTextAlignment(TextAlignment.CENTER);
                     header.add(villageData.get("alamat_des"));
                     document.add(header);
 
-                    // Separator
-                    document.add(new Paragraph("------------------------------------------------------------")
-                        .setTextAlignment(TextAlignment.CENTER));
+                    // Kode Desa dan Kode Surat
+                    Table kodeTable = new Table(UnitValue.createPercentArray(new float[]{1, 1} ));
+                    kodeTable.setWidth(UnitValue.createPercentValue(100));
+                    kodeTable.setBorder(Border.NO_BORDER);
+                    kodeTable.addCell(new Paragraph(villageData.get("kode_des") != null ? villageData.get("kode_des") : "")
+                        .setTextAlignment(TextAlignment.LEFT).setFontSize(12));
+                    kodeTable.addCell(new Paragraph("" + mailTypeId)
+                        .setTextAlignment(TextAlignment.RIGHT).setFontSize(12));
+                    document.add(kodeTable);
 
-                    // Main content
-                    Paragraph mainContent = new Paragraph(processedContent).setFontSize(12);
-                    mainContent.setTextAlignment(TextAlignment.JUSTIFIED);
+                    // Title
+                    Paragraph suratTitle = new Paragraph(title)
+                        .setFontSize(16).setTextAlignment(TextAlignment.CENTER).setMarginBottom(10);
+                    document.add(suratTitle);
+
+                    // Nomor Surat
+                    String noSurat = generateNomorSurat(mailTypeId);
+                    Paragraph nomorSurat = new Paragraph("Nomor: " + noSurat)
+                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12).setMarginBottom(20);
+                    document.add(nomorSurat);
+
+                    // Main Content
+                    Paragraph mainContent = new Paragraph(processedContent)
+                        .setFontSize(12).setTextAlignment(TextAlignment.JUSTIFIED).setMarginBottom(20);
                     document.add(mainContent);
 
-                    // Signature table
-                    Table table = new Table(UnitValue.createPercentArray(new float[]{1, 1, 1}));
-                    table.setWidth(UnitValue.createPercentValue(100));
+                    // Signature Table
+                    Table signatureTable = new Table(UnitValue.createPercentArray(new float[]{1, 1, 1}));
+                    signatureTable.setWidth(UnitValue.createPercentValue(100));
+                    signatureTable.setBorder(Border.NO_BORDER);
 
-                    // Row 1
-                    table.addCell(new Paragraph("Pemegang Surat\n\nJohn Doe").setTextAlignment(TextAlignment.CENTER));
-                    table.addCell(new Paragraph("Mengetahui,\nCamat " + villageData.get("nama_kec") + "\n\nNama Kepala Camat").setTextAlignment(TextAlignment.CENTER));
-                    table.addCell(new Paragraph(villageData.get("nama_des") + ", " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) +
-                            "\nJabatan " + villageData.get("nama_des") + "\n\nNama Pamong").setTextAlignment(TextAlignment.CENTER));
+                    signatureTable.addCell(new Paragraph("Pemegang Surat\n\n" + pemegangSurat)
+                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
+                    signatureTable.addCell(new Paragraph("Mengetahui,\nCamat " + villageData.get("nama_kec") + "\n\nI Gede Camat")
+                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
+                    signatureTable.addCell(new Paragraph(villageData.get("nama_des") + ", " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) +
+                            "\nJabatan " + villageData.get("nama_des") + "\n\nI Kadek Bendesa")
+                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
 
-                    document.add(table);
+                    document.add(signatureTable);
+                } catch (IOException ex) {
+                    Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
                 // Update mail_content dengan mail_number dan file_path
                 String mailNumber = mailTypeId + "/" + villageData.get("kode_des") + "/" +
                         LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
-                updateMailContent(conn, mailNumber, pdfPath);
+                updateMailContent(conn, mailNumber);
 
-                JOptionPane.showMessageDialog(this, "File PDF berhasil disimpan di: " + pdfPath, "Sukses", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                Logger.getLogger(mailform.class.getName()).log(Level.INFO, "PDF saving was cancelled by the user.");
+                JOptionPane.showMessageDialog(null, "File PDF berhasil disimpan di: " + pdfPath, "Sukses", JOptionPane.INFORMATION_MESSAGE);
             }
-        } catch (IOException | TikaException | SQLException | SAXException ex) {
-            Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException | IOException | SAXException | TikaException ex) {
+                Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void updateMailContent(Connection conn, String mailNumber, String pdfPath) throws SQLException {
+    private void updateMailContent(Connection conn, String mailNumber) throws SQLException {
         String query = "UPDATE mail_content SET mail_number = ?, status = 'Diproses', mail_date = ?, "
                 + "created_at = NOW(), updated_at = NOW() WHERE mail_type_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
