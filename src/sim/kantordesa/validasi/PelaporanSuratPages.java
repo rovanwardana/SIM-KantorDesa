@@ -33,7 +33,7 @@ import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
- * @author krisna
+ * @author krisna 
  */
 public class PelaporanSuratPages extends javax.swing.JFrame {
 
