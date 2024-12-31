@@ -6,7 +6,6 @@ package sim.kantordesa.validasi;
 
 import java.awt.Component;
 import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 /**
