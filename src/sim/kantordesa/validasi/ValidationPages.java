@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package sim.kantordesa.validasi;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -24,6 +20,8 @@ public class ValidationPages extends javax.swing.JFrame {
      */
     public ValidationPages() {
         initComponents();
+        setExtendedState(MAXIMIZED_BOTH);
+
 
         model = new javax.swing.table.DefaultTableModel() {
             @Override
@@ -57,20 +55,35 @@ public class ValidationPages extends javax.swing.JFrame {
         try {
             Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
-            String sql = "select mail_id, mail_number, created_at, applicant_name, status_validation, status_lead, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            String sql = "select mail_id, mail_number, applicant_name, created_at, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()) {
-                tableContent[0] = i;
-                tableContent[1] = r.getString("mail_number");
-                tableContent[2] = r.getString("applicant_name");
-                tableContent[3] = r.getString("created_at");
-                tableContent[4] = r.getString("type_name");
-                tableContent[5] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
-                tableContent[6] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
-                i++;
-                model.addRow(tableContent);
+                model.addRow(new Object[]{//crate row on table and get data from db
+                i++,
+                r.getString("mail_number"),
+                r.getString("applicant_name"),
+                r.getString("created_at"),
+                r.getString("type_name"),
+                r.getBoolean("status_validation") == false ? "Reject" : "Accept",
+                r.getBoolean("status_lead") == false ? "Reject" : "Accept",
+                r.getString("mail_comment"),
+                r.getString("mail_id"),
+              });
             }
+//                tableContent[0] = i;
+//                tableContent[1] = r.getString("mail_number");
+//                tableContent[2] = r.getString("applicant_name");
+//                tableContent[3] = r.getString("created_at");
+//                tableContent[4] = r.getString("type_name");
+//                tableContent[5] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
+//                tableContent[6] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
+//                i++;
+//                model.addRow(tableContent);
+//                r.getString("mail_comment");
+//                r.getString("mail_id");
+//                
+//            }
             r.close();
             s.close();
             jTable1.getColumn("Status Validasi Sekdes").setCellRenderer(new StatusCellRenderer());
@@ -161,7 +174,7 @@ public class ValidationPages extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 785, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1016, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         jPanel3Layout.setVerticalGroup(
@@ -176,7 +189,7 @@ public class ValidationPages extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addGap(45, 45, 45)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 

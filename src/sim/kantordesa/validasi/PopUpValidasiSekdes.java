@@ -655,7 +655,7 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
                         .addComponent(TolakPengajuan, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Validasi, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 4, Short.MAX_VALUE)))
+                        .addGap(0, 5, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
