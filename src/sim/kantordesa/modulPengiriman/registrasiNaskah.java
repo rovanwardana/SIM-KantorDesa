@@ -74,6 +74,7 @@ public class registrasiNaskah extends javax.swing.JFrame {
         t_pathFile = new javax.swing.JTextField();
         j_unggahFileSurat = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
+        t_tglSurat = new com.toedter.calendar.JDateChooser();
 
         jPanel7.setBackground(new java.awt.Color(0, 102, 51));
 
@@ -234,18 +235,24 @@ public class registrasiNaskah extends javax.swing.JFrame {
                         .addComponent(t_sifatSurat, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(609, 609, 609)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(b_kirim)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(j_halSurat)
-                                .addComponent(t_hal, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(j_isiRingkasSurat)
-                                .addComponent(t_isiRingkasSurat, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(b_kirim))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(t_pathFile, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(b_tambahFile)))
-                .addGap(0, 185, Short.MAX_VALUE))
+                        .addComponent(b_tambahFile))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(t_tglSurat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(t_tglSuratDiterima, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(t_urgensi, javax.swing.GroupLayout.Alignment.LEADING, 0, 138, Short.MAX_VALUE)
+                            .addComponent(t_sifatSurat, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(428, 428, 428)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(j_halSurat)
+                            .addComponent(t_hal, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(j_isiRingkasSurat)
+                            .addComponent(t_isiRingkasSurat, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(0, 228, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -293,7 +300,9 @@ public class registrasiNaskah extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(j_tanggalSurat)
-                        .addGap(38, 38, 38)
+                        .addGap(10, 10, 10)
+                        .addComponent(t_tglSurat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(j_sifatSurat)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(t_sifatSurat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -537,6 +546,7 @@ public class registrasiNaskah extends javax.swing.JFrame {
     private javax.swing.JTextField t_nomorSurat;
     private javax.swing.JTextField t_pathFile;
     private javax.swing.JComboBox<String> t_sifatSurat;
+    private com.toedter.calendar.JDateChooser t_tglSurat;
     private javax.swing.JTextField t_tglSuratDiterima;
     private javax.swing.JComboBox<String> t_urgensi;
     // End of variables declaration//GEN-END:variables
