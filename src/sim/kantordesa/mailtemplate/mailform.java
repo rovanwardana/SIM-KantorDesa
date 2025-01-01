@@ -595,6 +595,7 @@ public class mailform extends javax.swing.JFrame {
     }
     
     private void generatePDF(int mailTypeId, Connection conn, String title) {
+        
         try {
             String rtfPath = loadRTFTemplate();
             if (rtfPath == null || rtfPath.isEmpty()) {
@@ -656,9 +657,11 @@ public class mailform extends javax.swing.JFrame {
                     kodeTable.setWidth(UnitValue.createPercentValue(100));
                     kodeTable.setBorder(Border.NO_BORDER);
                     kodeTable.addCell(new Paragraph(villageData.get("kode_des") != null ? villageData.get("kode_des") : "")
-                        .setTextAlignment(TextAlignment.LEFT).setFontSize(12));
+                        .setTextAlignment(TextAlignment.LEFT).setFontSize(12))
+                        .setBorder(Border.NO_BORDER);
                     kodeTable.addCell(new Paragraph("" + mailTypeId)
-                        .setTextAlignment(TextAlignment.RIGHT).setFontSize(12));
+                        .setTextAlignment(TextAlignment.RIGHT).setFontSize(12))
+                        .setBorder(Border.NO_BORDER);
                     document.add(kodeTable);
 
                     // Title
@@ -671,24 +674,47 @@ public class mailform extends javax.swing.JFrame {
                     Paragraph nomorSurat = new Paragraph("Nomor: " + noSurat)
                         .setTextAlignment(TextAlignment.CENTER).setFontSize(12).setMarginBottom(20);
                     document.add(nomorSurat);
-
+                    
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String dariTanggal = sdf.format(daritanggal.getDate());
+                    String sampaiTanggal = sdf.format(sampaitanggal.getDate());
+        
                     // Main Content
-                    Paragraph mainContent = new Paragraph(processedContent)
-                        .setFontSize(12).setTextAlignment(TextAlignment.JUSTIFIED).setMarginBottom(20);
+                    Paragraph mainContent = new Paragraph()
+                            .add (new Text("Nama                     : " + (text_nama.getText()!= null ? text_nama.getText(): "")). setFontSize(12))
+                            .add (new Text("\nTempat/tanggal lahir   : " + (text_tgl_lahir.getText()!= null ? text_tgl_lahir.getText(): "")). setFontSize(12))
+                            .add (new Text("\nUsia                   : " + (jUmur.getValue()!= null ? jUmur.getValue().toString(): "")). setFontSize(12))
+                            .add (new Text("\nWarga negara           : " + (wni.isSelected() ? "WNI" : "WNA")). setFontSize(12))
+                            .add (new Text("\nAgama                  : " + (box_agama.getSelectedItem()!= null ? box_agama.getSelectedItem().toString(): "")). setFontSize(12))
+                            .add (new Text("\nJenis Kelamin          : " + (lakilaki.isSelected() ? "Laki-laki" : "Perempuan")). setFontSize(12))
+                            .add (new Text("\nPekerjaan              : " + (text_pekerjaan.getText() != null ? text_pekerjaan.getText() : "")). setFontSize(12))
+                            .add (new Text("\nTempat Tinggal         : " + (text_ttinggal.getText() != null ? text_ttinggal.getText() : "")). setFontSize(12))
+                            .add (new Text("\n\nSurat bukti diri"). setFontSize(12))
+                            .add (new Text("\nKTP                    : " + (text_noktp.getText() != null ? text_noktp.getText() : "")). setFontSize(12))
+                            .add (new Text("\nKK                     : " + (text_nokk.getText() != null ? text_nokk.getText() : "")). setFontSize(12))
+                            .add (new Text("\nKeperluan              : Mohon keterangan yang akan dipergunakan untuk " + (text_keperluan.getText() != null ? text_keperluan.getText() : "")). setFontSize(12))
+                            .add (new Text("\nBerlaku                : " + dariTanggal + " s/d " + sampaiTanggal). setFontSize(12))
+                            .add (new Text("\nGolongan Darah         : " + (box_goldar.getSelectedItem() != null ? box_goldar.getSelectedItem().toString() : "")). setFontSize(12))
+                            .add (new Text("\n\nDemikian Surat ini dibuat, untuk dipergunakan sebagaimana mestinya.\n\n\n\n"). setFontSize(12));
+                      
                     document.add(mainContent);
+                   
 
                     // Signature Table
                     Table signatureTable = new Table(UnitValue.createPercentArray(new float[]{1, 1, 1}));
                     signatureTable.setWidth(UnitValue.createPercentValue(100));
                     signatureTable.setBorder(Border.NO_BORDER);
 
-                    signatureTable.addCell(new Paragraph("Pemegang Surat\n\n" + pemegangSurat)
-                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
-                    signatureTable.addCell(new Paragraph("Mengetahui,\nCamat " + villageData.get("nama_kec") + "\n\nI Gede Camat")
-                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
+                    signatureTable.addCell(new Paragraph("Pemegang Surat\n\n\n\n\n" + pemegangSurat)
+                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
+                        .setBorder(Border.NO_BORDER);
+                    signatureTable.addCell(new Paragraph("Mengetahui,\nCamat " + villageData.get("nama_kec") + "\n\n\n\nI Gede Camat")
+                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
+                        .setBorder(Border.NO_BORDER);
                     signatureTable.addCell(new Paragraph(villageData.get("nama_des") + ", " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) +
-                            "\nJabatan " + villageData.get("nama_des") + "\n\nI Kadek Bendesa")
-                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
+                            "\nJabatan " + villageData.get("nama_des") + "\n\n\n\nI Kadek Bendesa")
+                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
+                        .setBorder(Border.NO_BORDER);
 
                     document.add(signatureTable);
                 } catch (IOException ex) {
