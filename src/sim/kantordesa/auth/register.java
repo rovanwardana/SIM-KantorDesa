@@ -203,7 +203,7 @@ public class register extends javax.swing.JFrame {
         PanelKanan.add(Submit, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 540, -1, -1));
 
         logintext.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        logintext.setText("Saya sudah memiliki akun");
+        logintext.setText("Saya sudah memiliki akun?");
         PanelKanan.add(logintext, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 620, -1, -1));
 
         login.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
