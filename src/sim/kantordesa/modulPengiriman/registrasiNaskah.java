@@ -59,7 +59,6 @@ public class registrasiNaskah extends javax.swing.JFrame {
         j_nomorSurat = new javax.swing.JLabel();
         t_nomorSurat = new javax.swing.JTextField();
         j_tanggalSurat = new javax.swing.JLabel();
-        t_tglSurat = new de.wannawork.jcalendar.JCalendarComboBox();
         j_sifatSurat = new javax.swing.JLabel();
         t_sifatSurat = new javax.swing.JComboBox<>();
         j_urgensiSurat = new javax.swing.JLabel();
@@ -231,9 +230,8 @@ public class registrasiNaskah extends javax.swing.JFrame {
                     .addComponent(j_tanggalSuratDiterima)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(t_tglSuratDiterima, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(t_urgensi, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(t_sifatSurat, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(t_tglSurat, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(t_urgensi, javax.swing.GroupLayout.Alignment.LEADING, 0, 138, Short.MAX_VALUE)
+                        .addComponent(t_sifatSurat, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(609, 609, 609)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -295,9 +293,7 @@ public class registrasiNaskah extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(j_tanggalSurat)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(t_tglSurat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
+                        .addGap(38, 38, 38)
                         .addComponent(j_sifatSurat)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(t_sifatSurat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -541,7 +537,6 @@ public class registrasiNaskah extends javax.swing.JFrame {
     private javax.swing.JTextField t_nomorSurat;
     private javax.swing.JTextField t_pathFile;
     private javax.swing.JComboBox<String> t_sifatSurat;
-    private de.wannawork.jcalendar.JCalendarComboBox t_tglSurat;
     private javax.swing.JTextField t_tglSuratDiterima;
     private javax.swing.JComboBox<String> t_urgensi;
     // End of variables declaration//GEN-END:variables

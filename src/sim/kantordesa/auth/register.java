@@ -73,11 +73,13 @@ public class register extends javax.swing.JFrame {
         showpass = new javax.swing.JLabel();
         hidepass = new javax.swing.JLabel();
         Submit = new javax.swing.JButton();
+        logintext = new javax.swing.JLabel();
+        login = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("REGISTER");
         setMaximumSize(new java.awt.Dimension(1920, 1080));
-        setPreferredSize(new java.awt.Dimension(800, 630));
+        setPreferredSize(new java.awt.Dimension(800, 730));
 
         Body.setLayout(null);
 
@@ -96,25 +98,23 @@ public class register extends javax.swing.JFrame {
             PanelKiriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelKiriLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(logodesa, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                .addGroup(PanelKiriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(logodesa, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                    .addComponent(judul))
                 .addContainerGap())
-            .addGroup(PanelKiriLayout.createSequentialGroup()
-                .addGap(114, 114, 114)
-                .addComponent(judul)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PanelKiriLayout.setVerticalGroup(
             PanelKiriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelKiriLayout.createSequentialGroup()
-                .addGap(82, 82, 82)
-                .addComponent(logodesa, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                .addGap(180, 180, 180)
+                .addComponent(logodesa, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(judul)
-                .addGap(164, 164, 164))
+                .addContainerGap(247, Short.MAX_VALUE))
         );
 
         Body.add(PanelKiri);
-        PanelKiri.setBounds(0, 0, 400, 600);
+        PanelKiri.setBounds(0, 0, 400, 700);
 
         PanelKanan.setBackground(new java.awt.Color(255, 255, 255));
         PanelKanan.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -202,8 +202,23 @@ public class register extends javax.swing.JFrame {
         });
         PanelKanan.add(Submit, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 540, -1, -1));
 
+        logintext.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        logintext.setText("Saya sudah memiliki akun");
+        PanelKanan.add(logintext, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 620, -1, -1));
+
+        login.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        login.setForeground(new java.awt.Color(19, 128, 97));
+        login.setText("Login");
+        login.setPreferredSize(new java.awt.Dimension(100, 35));
+        login.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginActionPerformed(evt);
+            }
+        });
+        PanelKanan.add(login, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 610, -1, -1));
+
         Body.add(PanelKanan);
-        PanelKanan.setBounds(400, 0, 400, 600);
+        PanelKanan.setBounds(400, 0, 400, 700);
 
         getContentPane().add(Body, java.awt.BorderLayout.CENTER);
 
@@ -306,6 +321,14 @@ public class register extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_SubmitActionPerformed
 
+    private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
+        login LoginFrame = new login();
+        LoginFrame.setVisible(true);
+        LoginFrame.pack();
+        LoginFrame.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_loginActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Body;
     private javax.swing.JLabel Email;
@@ -322,6 +345,8 @@ public class register extends javax.swing.JFrame {
     private javax.swing.JLabel hidepass;
     private javax.swing.JComboBox<String> id_role;
     private javax.swing.JLabel judul;
+    private javax.swing.JButton login;
+    private javax.swing.JLabel logintext;
     private javax.swing.JLabel logodesa;
     private javax.swing.JLabel showpass;
     private javax.swing.JLabel tanggalLahir;
