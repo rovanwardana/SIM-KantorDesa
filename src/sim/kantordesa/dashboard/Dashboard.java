@@ -36,15 +36,19 @@ public class Dashboard extends javax.swing.JFrame {
         };
 
         conn = koneksi.getConnection();
+        
         NamaUser.setText("");
-        Role.setText("");
         NamaUser.setText(currentUser.getFullName());
+        
+        Role.setText("");
         Role.setText(currentUser.getRole());
 
         Card.add(new Beranda().getContentPanel(), "Beranda");
-        switchPanel(Card, "Beranda");
         Card.add(new Akses_role().getContentPanel(), "Akses Role");
         Card.add(new Create_acc().getContentPanel(), "Daftar Akun");
+        
+        switchPanel(Card, "Beranda");
+        
         Sidebar.removeAll();
         Sidebar.add(Beranda);
         Sidebar.add(FormSuratMasuk);
