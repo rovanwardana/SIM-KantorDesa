@@ -57,7 +57,7 @@ public class ValidationPages extends javax.swing.JFrame {
         try {
             Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
-            String sql = "select mail_id, mail_number, applicant_name, created_at, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            String sql = "select mail_id, mail_number, applicant_name, created_at, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id ORDER BY mail_id";
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()) {
