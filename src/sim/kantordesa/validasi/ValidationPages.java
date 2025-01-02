@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableColumn;
 import sim.kantordesa.config.koneksi;
 
 /**
@@ -12,6 +14,7 @@ import sim.kantordesa.config.koneksi;
  * @author rika
  */
 public class ValidationPages extends javax.swing.JFrame {
+
     Object[] tableContent = new Object[10];
     private final javax.swing.table.DefaultTableModel model;
 
@@ -21,7 +24,6 @@ public class ValidationPages extends javax.swing.JFrame {
     public ValidationPages() {
         initComponents();
         setExtendedState(MAXIMIZED_BOTH);
-
 
         model = new javax.swing.table.DefaultTableModel() {
             @Override
@@ -34,7 +36,6 @@ public class ValidationPages extends javax.swing.JFrame {
 
         // "No", "Status", "Diterima tgl.", "Nama Pemohon", "Perihal", "Val. Sekdes",
         // "Val. Kades", "Aksi"
-
         model.addColumn("No.");
         model.addColumn("Nomor Surat");
         model.addColumn("Nama Pemohon");
@@ -45,9 +46,16 @@ public class ValidationPages extends javax.swing.JFrame {
         model.addColumn("Aksi");
         model.addColumn("mail_comment");
         model.addColumn("mail_id");
-        
+
         loadData();
-        
+
+        TableColumnModel columnModel = jTable1.getColumnModel();
+        TableColumn mailCommentCol = columnModel.getColumn(jTable1.convertColumnIndexToView(8));
+        TableColumn mailIdCol = columnModel.getColumn(jTable1.convertColumnIndexToView(9));
+
+        columnModel.removeColumn(mailCommentCol);
+        columnModel.removeColumn(mailIdCol);
+
     }
 
     public void loadData() {
@@ -61,18 +69,6 @@ public class ValidationPages extends javax.swing.JFrame {
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()) {
-//                model.addRow(new Object[]{//crate row on table and get data from db
-//                i++,
-//                r.getString("mail_number"),
-//                r.getString("applicant_name"),
-//                r.getString("created_at"),
-//                r.getString("type_name"),
-//                r.getBoolean("status_validation") == false ? "Reject" : "Accept",
-//                r.getBoolean("status_lead") == false ? "Reject" : "Accept",
-//                r.getString("mail_comment"),
-//                r.getString("mail_id"),
-//              });
-//            }
                 tableContent[0] = i++;
                 tableContent[1] = r.getString("mail_number");
                 tableContent[2] = r.getString("applicant_name");
@@ -80,10 +76,11 @@ public class ValidationPages extends javax.swing.JFrame {
                 tableContent[4] = r.getString("type_name");
                 tableContent[5] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
                 tableContent[6] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
+                tableContent[7] = "Periksa";
                 tableContent[8] = r.getString("mail_comment");
                 tableContent[9] = r.getString("mail_id");
                 model.addRow(tableContent);
-                
+
             }
             r.close();
             s.close();
@@ -91,12 +88,12 @@ public class ValidationPages extends javax.swing.JFrame {
             jTable1.getColumn("Status Validasi Kades").setCellRenderer(new StatusCellRenderer());
             jTable1.getColumn("Aksi").setCellRenderer(new ButtonRenderer());
             jTable1.getColumn("Aksi").setCellEditor(new ButtonEditor(jTable1));
-            jTable1.getColumn("mail_comment").setMaxWidth(0);
-            jTable1.getColumn("mail_id").setMaxWidth(0);
+
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
