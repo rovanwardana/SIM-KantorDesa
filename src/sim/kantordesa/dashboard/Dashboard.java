@@ -3,6 +3,7 @@ package sim.kantordesa.dashboard;
 import java.awt.CardLayout;
 import java.sql.Connection;
 import java.util.Set;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import sim.kantordesa.config.User;
@@ -15,38 +16,97 @@ public class Dashboard extends javax.swing.JFrame {
 
     private final Connection conn;
     private final User currentUser;
+    private final int[][] buttonLocation;
 
     public Dashboard(User currentUser, Set<String> userAccess) {
         this.currentUser = currentUser;
+
         initComponents();
+
+        this.buttonLocation = new int[][]{
+            {Beranda.getX(), Beranda.getY()},
+            {FormSuratMasuk.getX(), FormSuratMasuk.getY()},
+            {FormSuratKeluar.getX(), FormSuratKeluar.getY()},
+            {HistorySuratMasuk.getX(), HistorySuratMasuk.getY()},
+            {HistorySuratKeluar.getX(), HistorySuratKeluar.getY()},
+            {Disposisi.getX(), Disposisi.getY()},
+            {Validasi.getX(), Validasi.getY()},
+            {DaftarAkun.getX(), DaftarAkun.getY()},
+            {AksesRole.getX(), AksesRole.getY()}
+        };
+
         conn = koneksi.getConnection();
+        
         NamaUser.setText("");
-        Role.setText("");
         NamaUser.setText(currentUser.getFullName());
+        
+        Role.setText("");
         Role.setText(currentUser.getRole());
-        setSidebarVisibility(userAccess);
+
         Card.add(new Beranda().getContentPanel(), "Beranda");
-        switchPanel(Card, "Beranda");
         Card.add(new Akses_role().getContentPanel(), "Akses Role");
         Card.add(new Create_acc().getContentPanel(), "Daftar Akun");
+        
+        switchPanel(Card, "Beranda");
+        
+        Sidebar.removeAll();
+        Sidebar.add(Beranda);
+        Sidebar.add(FormSuratMasuk);
+        Sidebar.add(FormSuratKeluar);
+        Sidebar.add(HistorySuratMasuk);
+        Sidebar.add(HistorySuratKeluar);
+        Sidebar.add(Disposisi);
+        Sidebar.add(Validasi);
+        Sidebar.add(DaftarAkun);
+        Sidebar.add(AksesRole);
+        Sidebar.add(Keluar);
+
+        setSidebarVisibility(userAccess);
+
     }
 
     private static void switchPanel(JPanel content, String cardName) {
         CardLayout layout = (CardLayout) content.getLayout();
         layout.show(content, cardName);
     }
-    
-    private void setSidebarVisibility(Set<String> userAccess) {
-    FormSuratMasuk.setVisible(userAccess.contains("Form Surat Masuk"));
-    FormSuratKeluar.setVisible(userAccess.contains("Form Surat Keluar"));
-    HistorySuratMasuk.setVisible(userAccess.contains("History Surat Masuk"));
-    HistorySuratKeluar.setVisible(userAccess.contains("History Surat Keluar"));
-    Disposisi.setVisible(userAccess.contains("Disposisi"));
-    Validasi.setVisible(userAccess.contains("Validasi"));
-    DaftarAkun.setVisible(userAccess.contains("Daftar Akun"));
-    AksesRole.setVisible(userAccess.contains("Akses Role"));
-}
 
+    private void setSidebarVisibility(Set<String> userAccess) {
+
+        JLabel[] buttons = {
+            Beranda,
+            FormSuratMasuk,
+            FormSuratKeluar,
+            HistorySuratMasuk,
+            HistorySuratKeluar,
+            Disposisi,
+            Validasi,
+            DaftarAkun,
+            AksesRole
+        };
+
+        int visibleIndex = 1;
+
+        for (JLabel button : buttons) {
+            String buttonLabel = button.getText();
+
+            if (button == Beranda) {
+                button.setLocation(buttonLocation[0][0], buttonLocation[0][1]);
+                Sidebar.add(button);
+                continue;
+            }
+
+            if (userAccess.contains(buttonLabel)) {
+                button.setLocation(button.getX(), buttonLocation[visibleIndex][1]);
+                Sidebar.add(button);
+                visibleIndex++;
+            } else {
+                Sidebar.remove(button);
+            }
+        }
+
+        Sidebar.revalidate();
+        Sidebar.repaint();
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -314,9 +374,9 @@ public class Dashboard extends javax.swing.JFrame {
                 JOptionPane.QUESTION_MESSAGE);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            login loginFrame = new login(); 
+            login loginFrame = new login();
             loginFrame.setVisible(true);
-            this.dispose(); 
+            this.dispose();
         }
     }//GEN-LAST:event_KeluarMouseClicked
 
