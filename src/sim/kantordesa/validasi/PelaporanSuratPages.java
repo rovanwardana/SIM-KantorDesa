@@ -33,7 +33,7 @@ import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
- * @author krisna 
+ * @author krisna
  */
 public class PelaporanSuratPages extends javax.swing.JFrame {
 
@@ -69,6 +69,10 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
 
     }
 
+    public JPanel getContentPanel() {
+        return (JPanel) this.getContentPane();
+    }
+
     private void showLineChart() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -89,10 +93,8 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }
-        
+
         System.out.println("Dataset size: " + dataset.getRowCount());
-
-
 
         JFreeChart lineChart = ChartFactory.createLineChart(
                 "Surat Masuk per Bulan",
@@ -100,22 +102,20 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
                 "Jumlah Surat",
                 dataset
         );
-        
 
-            CategoryPlot plot = lineChart.getCategoryPlot();
-            NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-            rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        CategoryPlot plot = lineChart.getCategoryPlot();
+        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
         ChartPanel chartPanel = new ChartPanel(lineChart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(800,600));
+        chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
         chartPanel1.removeAll();
         chartPanel1.setLayout(new BorderLayout());
         chartPanel1.add(chartPanel, BorderLayout.CENTER);
         chartPanel1.revalidate();
         chartPanel1.repaint();
     }
-    
-    
+
     private void createPieChart() {
         DefaultPieDataset dataset = new DefaultPieDataset();
 
@@ -136,16 +136,16 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
-        
+
         System.out.println(dataset.getItemCount());
 
         // Membuat Pie Chart
         JFreeChart pieChart = ChartFactory.createPieChart(
                 "Jumlah Surat Masuk per Kategori", // Judul chart
-                dataset,                          // Data untuk chart
-                true,                             // Legend
-                true,                             // Tooltip
-                false                             // URLs
+                dataset, // Data untuk chart
+                true, // Legend
+                true, // Tooltip
+                false // URLs
         );
 
         // Membungkus chart dalam ChartPanel
@@ -157,9 +157,7 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         chartPanel2.revalidate();
         chartPanel2.repaint();
     }
-    
-    
-    
+
     public void setTableAction() {
         model.getDataVector().removeAllElements();
         model.fireTableDataChanged();

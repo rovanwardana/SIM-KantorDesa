@@ -1,6 +1,7 @@
 package sim.kantordesa.dashboard;
 
 import java.awt.CardLayout;
+import java.awt.Point;
 import java.sql.Connection;
 import java.util.Set;
 import javax.swing.JLabel;
@@ -10,7 +11,15 @@ import sim.kantordesa.config.User;
 import sim.kantordesa.config.koneksi;
 import sim.kantordesa.master.Create_acc;
 import sim.kantordesa.auth.login;
+import sim.kantordesa.mailtemplate.mailform;
 import sim.kantordesa.master.Akses_role;
+import sim.kantordesa.modulPengiriman.detailSurat;
+import sim.kantordesa.modulPengiriman.historySuratMasuk;
+import sim.kantordesa.modulPengiriman.registrasiNaskah;
+import sim.kantordesa.modulPengiriman.suratMasukDisposisi;
+import sim.kantordesa.validasi.HistoryPage;
+import sim.kantordesa.validasi.PelaporanSuratPages;
+import sim.kantordesa.validasi.ValidationPages;
 
 public class Dashboard extends javax.swing.JFrame {
 
@@ -19,36 +28,47 @@ public class Dashboard extends javax.swing.JFrame {
     private final int[][] buttonLocation;
 
     public Dashboard(User currentUser, Set<String> userAccess) {
+        // this.location = FormSuratMasuk.getLocation();
+        // int yPosition = location.y; // mendapatkan nilai Y
         this.currentUser = currentUser;
 
         initComponents();
+        setExtendedState(MAXIMIZED_BOTH);
 
-        this.buttonLocation = new int[][]{
-            {Beranda.getX(), Beranda.getY()},
-            {FormSuratMasuk.getX(), FormSuratMasuk.getY()},
-            {FormSuratKeluar.getX(), FormSuratKeluar.getY()},
-            {HistorySuratMasuk.getX(), HistorySuratMasuk.getY()},
-            {HistorySuratKeluar.getX(), HistorySuratKeluar.getY()},
-            {Disposisi.getX(), Disposisi.getY()},
-            {Validasi.getX(), Validasi.getY()},
-            {DaftarAkun.getX(), DaftarAkun.getY()},
-            {AksesRole.getX(), AksesRole.getY()}
+        this.buttonLocation = new int[][] {
+                { Beranda.getX(), Beranda.getY() },
+                { FormSuratMasuk.getX(), FormSuratMasuk.getY() },
+                { FormSuratKeluar.getX(), FormSuratKeluar.getY() },
+                { HistorySuratMasuk.getX(), HistorySuratMasuk.getY() },
+                { HistorySuratKeluar.getX(), HistorySuratKeluar.getY() },
+                { Disposisi.getX(), Disposisi.getY() },
+                { Validasi.getX(), Validasi.getY() },
+                { DaftarAkun.getX(), DaftarAkun.getY() },
+                { AksesRole.getX(), AksesRole.getY() }
         };
 
         conn = koneksi.getConnection();
-        
+
         NamaUser.setText("");
         NamaUser.setText(currentUser.getFullName());
-        
+
         Role.setText("");
         Role.setText(currentUser.getRole());
 
         Card.add(new Beranda().getContentPanel(), "Beranda");
         Card.add(new Akses_role().getContentPanel(), "Akses Role");
         Card.add(new Create_acc().getContentPanel(), "Daftar Akun");
-        
+        Card.add(new registrasiNaskah().getContentPanel(), "Form Surat Masuk");
+        Card.add(new historySuratMasuk().getContentPanel(), "History Surat Masuk");
+        Card.add(new HistoryPage().getContentPanel(), "History Surat Keluar");
+        Card.add(new mailform().getContentPanel(), "Form Surat Keluar");
+        // String mail_received_id = null;
+        Card.add(new suratMasukDisposisi().getContentPanel(), "Disposisi");
+        Card.add(new ValidationPages().getContentPanel(), "Validasi");
+        Card.add(new PelaporanSuratPages().getContentPanel(), "Pelaporan");
+
         switchPanel(Card, "Beranda");
-        
+
         Sidebar.removeAll();
         Sidebar.add(Beranda);
         Sidebar.add(FormSuratMasuk);
@@ -73,15 +93,15 @@ public class Dashboard extends javax.swing.JFrame {
     private void setSidebarVisibility(Set<String> userAccess) {
 
         JLabel[] buttons = {
-            Beranda,
-            FormSuratMasuk,
-            FormSuratKeluar,
-            HistorySuratMasuk,
-            HistorySuratKeluar,
-            Disposisi,
-            Validasi,
-            DaftarAkun,
-            AksesRole
+                Beranda,
+                FormSuratMasuk,
+                FormSuratKeluar,
+                HistorySuratMasuk,
+                HistorySuratKeluar,
+                Disposisi,
+                Validasi,
+                DaftarAkun,
+                AksesRole
         };
 
         int visibleIndex = 1;
@@ -109,7 +129,8 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         Sidebar = new javax.swing.JPanel();
@@ -123,6 +144,7 @@ public class Dashboard extends javax.swing.JFrame {
         DaftarAkun = new javax.swing.JLabel();
         AksesRole = new javax.swing.JLabel();
         Keluar = new javax.swing.JLabel();
+        Pelaporan = new javax.swing.JLabel();
         NamaDesa = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -149,38 +171,75 @@ public class Dashboard extends javax.swing.JFrame {
 
         FormSuratMasuk.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         FormSuratMasuk.setForeground(new java.awt.Color(19, 128, 97));
-        FormSuratMasuk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/form.png"))); // NOI18N
+        FormSuratMasuk
+                .setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/form.png"))); // NOI18N
         FormSuratMasuk.setText("Form Surat Masuk");
+        FormSuratMasuk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                FormSuratMasukMouseClicked(evt);
+            }
+        });
 
         FormSuratKeluar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         FormSuratKeluar.setForeground(new java.awt.Color(19, 128, 97));
-        FormSuratKeluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/form.png"))); // NOI18N
+        FormSuratKeluar
+                .setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/form.png"))); // NOI18N
         FormSuratKeluar.setText("Form Surat Keluar");
+        FormSuratKeluar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                FormSuratKeluarMouseClicked(evt);
+            }
+        });
 
         HistorySuratMasuk.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         HistorySuratMasuk.setForeground(new java.awt.Color(19, 128, 97));
         HistorySuratMasuk.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        HistorySuratMasuk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/history.png"))); // NOI18N
+        HistorySuratMasuk.setIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/history.png"))); // NOI18N
         HistorySuratMasuk.setText("History Surat Masuk");
+        HistorySuratMasuk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                HistorySuratMasukMouseClicked(evt);
+            }
+        });
 
         HistorySuratKeluar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         HistorySuratKeluar.setForeground(new java.awt.Color(19, 128, 97));
-        HistorySuratKeluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/history.png"))); // NOI18N
+        HistorySuratKeluar.setIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/history.png"))); // NOI18N
         HistorySuratKeluar.setText("History Surat Keluar");
+        HistorySuratKeluar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                HistorySuratKeluarMouseClicked(evt);
+            }
+        });
 
         Disposisi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         Disposisi.setForeground(new java.awt.Color(19, 128, 97));
-        Disposisi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/disposisi.png"))); // NOI18N
+        Disposisi.setIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/disposisi.png"))); // NOI18N
         Disposisi.setText("Disposisi");
+        Disposisi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                DisposisiMouseClicked(evt);
+            }
+        });
 
         Validasi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         Validasi.setForeground(new java.awt.Color(19, 128, 97));
-        Validasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/validasi.png"))); // NOI18N
+        Validasi.setIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/validasi.png"))); // NOI18N
         Validasi.setText("Validasi");
+        Validasi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ValidasiMouseClicked(evt);
+            }
+        });
 
         DaftarAkun.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         DaftarAkun.setForeground(new java.awt.Color(19, 128, 97));
-        DaftarAkun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/register.png"))); // NOI18N
+        DaftarAkun.setIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/register.png"))); // NOI18N
         DaftarAkun.setText("Daftar Akun");
         DaftarAkun.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -190,7 +249,8 @@ public class Dashboard extends javax.swing.JFrame {
 
         AksesRole.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         AksesRole.setForeground(new java.awt.Color(19, 128, 97));
-        AksesRole.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/access.png"))); // NOI18N
+        AksesRole.setIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/access.png"))); // NOI18N
         AksesRole.setText("Akses Role");
         AksesRole.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -207,50 +267,92 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        Pelaporan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Pelaporan.setForeground(new java.awt.Color(19, 128, 97));
+        Pelaporan.setIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/sim/kantordesa/dashboard/icon/pelaporan.png"))); // NOI18N
+        Pelaporan.setText("Pelaporan");
+        Pelaporan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                PelaporanMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout SidebarLayout = new javax.swing.GroupLayout(Sidebar);
         Sidebar.setLayout(SidebarLayout);
         SidebarLayout.setHorizontalGroup(
-            SidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SidebarLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(SidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(Beranda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(FormSuratMasuk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(HistorySuratMasuk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(HistorySuratKeluar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(FormSuratKeluar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Disposisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Validasi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(DaftarAkun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(AksesRole, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Keluar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                SidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(SidebarLayout.createSequentialGroup()
+                                .addGap(31, 31, 31)
+                                .addGroup(SidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(Keluar, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(SidebarLayout.createSequentialGroup()
+                                                .addGroup(SidebarLayout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
+                                                                false)
+                                                        .addComponent(Beranda, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(FormSuratMasuk,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(HistorySuratMasuk,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(HistorySuratKeluar,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(FormSuratKeluar,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(Disposisi, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(Validasi, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(DaftarAkun, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(AksesRole, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(Pelaporan, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addContainerGap()));
         SidebarLayout.setVerticalGroup(
-            SidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SidebarLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(Beranda)
-                .addGap(18, 30, Short.MAX_VALUE)
-                .addComponent(FormSuratMasuk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 30, Short.MAX_VALUE)
-                .addComponent(FormSuratKeluar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 30, Short.MAX_VALUE)
-                .addComponent(HistorySuratMasuk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 30, Short.MAX_VALUE)
-                .addComponent(HistorySuratKeluar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 30, Short.MAX_VALUE)
-                .addComponent(Disposisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 30, Short.MAX_VALUE)
-                .addComponent(Validasi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 31, Short.MAX_VALUE)
-                .addComponent(DaftarAkun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                .addComponent(AksesRole, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
-                .addComponent(Keluar)
-                .addGap(20, 20, 20))
-        );
+                SidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(SidebarLayout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addComponent(Beranda)
+                                .addGap(18, 18, 18)
+                                .addComponent(FormSuratMasuk, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(FormSuratKeluar, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(HistorySuratMasuk, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(HistorySuratKeluar, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(Disposisi, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(Validasi, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(Pelaporan, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(DaftarAkun, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(AksesRole, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67,
+                                        Short.MAX_VALUE)
+                                .addComponent(Keluar)
+                                .addContainerGap(147, Short.MAX_VALUE)));
 
         Disposisi.getAccessibleContext().setAccessibleDescription("");
 
@@ -268,23 +370,26 @@ public class Dashboard extends javax.swing.JFrame {
         javax.swing.GroupLayout NamaDesaLayout = new javax.swing.GroupLayout(NamaDesa);
         NamaDesa.setLayout(NamaDesaLayout);
         NamaDesaLayout.setHorizontalGroup(
-            NamaDesaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NamaDesaLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(NamaDesaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(25, 25, 25))
-        );
+                NamaDesaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NamaDesaLayout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addGroup(NamaDesaLayout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(25, 25, 25)));
         NamaDesaLayout.setVerticalGroup(
-            NamaDesaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NamaDesaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(13, Short.MAX_VALUE))
-        );
+                NamaDesaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NamaDesaLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(0, 0, 0)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap(13, Short.MAX_VALUE)));
 
         Header.setBackground(new java.awt.Color(19, 128, 97));
         Header.setPreferredSize(new java.awt.Dimension(1300, 60));
@@ -304,23 +409,23 @@ public class Dashboard extends javax.swing.JFrame {
         javax.swing.GroupLayout HeaderLayout = new javax.swing.GroupLayout(Header);
         Header.setLayout(HeaderLayout);
         HeaderLayout.setHorizontalGroup(
-            HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, HeaderLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(NamaUser, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Role, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+                HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, HeaderLayout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(NamaUser, javax.swing.GroupLayout.PREFERRED_SIZE, 199,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Role, javax.swing.GroupLayout.PREFERRED_SIZE, 117,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap()));
         HeaderLayout.setVerticalGroup(
-            HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(HeaderLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(NamaUser)
-                    .addComponent(Role))
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
+                HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(HeaderLayout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addGroup(HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(NamaUser)
+                                        .addComponent(Role))
+                                .addContainerGap(20, Short.MAX_VALUE)));
 
         Card.setBackground(new java.awt.Color(255, 255, 255));
         Card.setPreferredSize(new java.awt.Dimension(1300, 640));
@@ -329,44 +434,51 @@ public class Dashboard extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Sidebar, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
-                    .addComponent(NamaDesa, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Card, javax.swing.GroupLayout.DEFAULT_SIZE, 1291, Short.MAX_VALUE)
-                    .addComponent(Header, javax.swing.GroupLayout.DEFAULT_SIZE, 1291, Short.MAX_VALUE)))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(Sidebar, javax.swing.GroupLayout.DEFAULT_SIZE, 203,
+                                                Short.MAX_VALUE)
+                                        .addComponent(NamaDesa, javax.swing.GroupLayout.DEFAULT_SIZE, 203,
+                                                Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(Card, javax.swing.GroupLayout.DEFAULT_SIZE, 1291, Short.MAX_VALUE)
+                                        .addComponent(Header, javax.swing.GroupLayout.DEFAULT_SIZE, 1291,
+                                                Short.MAX_VALUE))));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(NamaDesa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Sidebar, javax.swing.GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
-                    .addComponent(Card, javax.swing.GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(NamaDesa, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(Header, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(Sidebar, javax.swing.GroupLayout.DEFAULT_SIZE, 634,
+                                                Short.MAX_VALUE)
+                                        .addComponent(Card, javax.swing.GroupLayout.DEFAULT_SIZE, 634,
+                                                Short.MAX_VALUE))));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void AksesRoleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AksesRoleMouseClicked
+    private void AksesRoleMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_AksesRoleMouseClicked
         switchPanel(Card, "Akses Role"); // Menampilkan panel Akses Role
-    }//GEN-LAST:event_AksesRoleMouseClicked
+    }// GEN-LAST:event_AksesRoleMouseClicked
 
-    private void BerandaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BerandaMouseClicked
+    private void BerandaMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_BerandaMouseClicked
         switchPanel(Card, "Beranda"); // Menampilkan panel Beranda
-    }//GEN-LAST:event_BerandaMouseClicked
+    }// GEN-LAST:event_BerandaMouseClicked
 
-    private void DaftarAkunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DaftarAkunMouseClicked
+    private void DaftarAkunMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_DaftarAkunMouseClicked
         switchPanel(Card, "Daftar Akun");
-    }//GEN-LAST:event_DaftarAkunMouseClicked
+    }// GEN-LAST:event_DaftarAkunMouseClicked
 
-    private void KeluarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_KeluarMouseClicked
+    private void KeluarMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_KeluarMouseClicked
         int confirm = JOptionPane.showConfirmDialog(this,
                 "Apakah Anda yakin ingin keluar?",
                 "Konfirmasi Keluar",
@@ -378,8 +490,35 @@ public class Dashboard extends javax.swing.JFrame {
             loginFrame.setVisible(true);
             this.dispose();
         }
-    }//GEN-LAST:event_KeluarMouseClicked
+    }// GEN-LAST:event_KeluarMouseClicked
 
+    private void FormSuratKeluarMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_FormSuratKeluarMouseClicked
+        switchPanel(Card, "Form Surat Keluar");
+    }// GEN-LAST:event_FormSuratKeluarMouseClicked
+
+    private void FormSuratMasukMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_FormSuratMasukMouseClicked
+        switchPanel(Card, "Form Surat Masuk");
+    }// GEN-LAST:event_FormSuratMasukMouseClicked
+
+    private void HistorySuratMasukMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_HistorySuratMasukMouseClicked
+        switchPanel(Card, "History Surat Masuk");
+    }// GEN-LAST:event_HistorySuratMasukMouseClicked
+
+    private void HistorySuratKeluarMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_HistorySuratKeluarMouseClicked
+        switchPanel(Card, "History Surat Keluar");
+    }// GEN-LAST:event_HistorySuratKeluarMouseClicked
+
+    private void DisposisiMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_DisposisiMouseClicked
+        switchPanel(Card, "Disposisi");
+    }// GEN-LAST:event_DisposisiMouseClicked
+
+    private void ValidasiMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_ValidasiMouseClicked
+        switchPanel(Card, "Validasi");
+    }// GEN-LAST:event_ValidasiMouseClicked
+
+    private void PelaporanMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_PelaporanMouseClicked
+        switchPanel(Card, "Pelaporan");
+    }// GEN-LAST:event_PelaporanMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AksesRole;
@@ -395,6 +534,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel Keluar;
     private javax.swing.JPanel NamaDesa;
     private javax.swing.JLabel NamaUser;
+    private javax.swing.JLabel Pelaporan;
     private javax.swing.JLabel Role;
     private javax.swing.JPanel Sidebar;
     private javax.swing.JLabel Validasi;
