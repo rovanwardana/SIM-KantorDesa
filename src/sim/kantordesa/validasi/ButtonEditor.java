@@ -59,7 +59,7 @@ public class ButtonEditor extends javax.swing.AbstractCellEditor implements java
         public void actionPerformed(java.awt.event.ActionEvent e) {
             fireEditingStopped();
             int row = table.getSelectedRow();
-            int columnToCheck = 1;
+            int columnToCheck = 9;
             Object value = table.getValueAt(row, columnToCheck);
             PopUpValidasiSekdes.main(new String[] { value.toString() });
         }

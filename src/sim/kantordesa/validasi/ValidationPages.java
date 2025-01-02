@@ -12,7 +12,7 @@ import sim.kantordesa.config.koneksi;
  * @author rika
  */
 public class ValidationPages extends javax.swing.JFrame {
-    Object[] tableContent = new Object[9];
+    Object[] tableContent = new Object[10];
     private final javax.swing.table.DefaultTableModel model;
 
     /**
@@ -43,6 +43,8 @@ public class ValidationPages extends javax.swing.JFrame {
         model.addColumn("Status Validasi Sekdes");
         model.addColumn("Status Validasi Kades");
         model.addColumn("Aksi");
+        model.addColumn("mail_comment");
+        model.addColumn("mail_id");
         
         loadData();
         
@@ -59,37 +61,38 @@ public class ValidationPages extends javax.swing.JFrame {
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()) {
-                model.addRow(new Object[]{//crate row on table and get data from db
-                i++,
-                r.getString("mail_number"),
-                r.getString("applicant_name"),
-                r.getString("created_at"),
-                r.getString("type_name"),
-                r.getBoolean("status_validation") == false ? "Reject" : "Accept",
-                r.getBoolean("status_lead") == false ? "Reject" : "Accept",
-                r.getString("mail_comment"),
-                r.getString("mail_id"),
-              });
-            }
-//                tableContent[0] = i;
-//                tableContent[1] = r.getString("mail_number");
-//                tableContent[2] = r.getString("applicant_name");
-//                tableContent[3] = r.getString("created_at");
-//                tableContent[4] = r.getString("type_name");
-//                tableContent[5] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
-//                tableContent[6] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
-//                i++;
-//                model.addRow(tableContent);
-//                r.getString("mail_comment");
-//                r.getString("mail_id");
-//                
+//                model.addRow(new Object[]{//crate row on table and get data from db
+//                i++,
+//                r.getString("mail_number"),
+//                r.getString("applicant_name"),
+//                r.getString("created_at"),
+//                r.getString("type_name"),
+//                r.getBoolean("status_validation") == false ? "Reject" : "Accept",
+//                r.getBoolean("status_lead") == false ? "Reject" : "Accept",
+//                r.getString("mail_comment"),
+//                r.getString("mail_id"),
+//              });
 //            }
+                tableContent[0] = i++;
+                tableContent[1] = r.getString("mail_number");
+                tableContent[2] = r.getString("applicant_name");
+                tableContent[3] = r.getString("created_at");
+                tableContent[4] = r.getString("type_name");
+                tableContent[5] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
+                tableContent[6] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
+                tableContent[8] = r.getString("mail_comment");
+                tableContent[9] = r.getString("mail_id");
+                model.addRow(tableContent);
+                
+            }
             r.close();
             s.close();
             jTable1.getColumn("Status Validasi Sekdes").setCellRenderer(new StatusCellRenderer());
             jTable1.getColumn("Status Validasi Kades").setCellRenderer(new StatusCellRenderer());
             jTable1.getColumn("Aksi").setCellRenderer(new ButtonRenderer());
             jTable1.getColumn("Aksi").setCellEditor(new ButtonEditor(jTable1));
+            jTable1.getColumn("mail_comment").setMaxWidth(0);
+            jTable1.getColumn("mail_id").setMaxWidth(0);
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }
