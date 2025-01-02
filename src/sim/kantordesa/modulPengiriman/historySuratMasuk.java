@@ -1,5 +1,7 @@
 package sim.kantordesa.modulPengiriman;
 
+import java.awt.CardLayout;
+import java.awt.Container;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -9,20 +11,21 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import sim.kantordesa.config.koneksi;
-
 
 public class historySuratMasuk extends javax.swing.JFrame {
 
     Connection conn;
+
     public historySuratMasuk() {
         initComponents();
-        
+
         DefaultTableModel model = new DefaultTableModel();
-        
+
         tbl_historySuratMasuk.setModel(model);
-        
+
         model.addColumn("ID Penerimaan Surat");
         model.addColumn("Tanggal Penerimaan Surat");
         model.addColumn("Nomor Surat");
@@ -31,80 +34,86 @@ public class historySuratMasuk extends javax.swing.JFrame {
         model.addColumn("Asal Instansi");
         model.addColumn("Jenis Surat");
         model.addColumn("Kerahasiaan Surat");
-        model.addColumn("Urgensi Surat"); 
+        model.addColumn("Urgensi Surat");
         model.addColumn("Hal");
-        model.addColumn("Isi Ringkas Surat");      
+        model.addColumn("Isi Ringkas Surat");
         model.addColumn("Tanggal Surat Dibuat");
-        
-        
+
         conn = koneksi.getConnection();
         loadData();
-        
+
     }
-        
-        private void loadData(){
+
+    public Container getContentPanel() {
+        return this.getContentPane();
+    }
+
+    private void loadData() {
         DefaultTableModel model = (DefaultTableModel) tbl_historySuratMasuk.getModel();
         model.setRowCount(0);
-        
-        try{
-            String sql ="Select * From mail_received";
+
+        try {
+            String sql = "Select * From mail_received";
             try (java.sql.PreparedStatement st = conn.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
-                
-                while(rs.next()){
-                    String mail_received_id     = rs.getString("mail_received_id");
-                    String mail_received_date   = rs.getString("mail_received_date");
-                    String mail_number          = rs.getString("mail_number");
-                    String send_by              = rs.getString("send_by");
-                    String sender_position      = rs.getString("sender_position");
-                    String sender_instance      = rs.getString("sender_instance");
-                    String mail_type            = rs.getString("mail_type");
-                    String mail_secrecy         = rs.getString("mail_secrecy");
-                    String mail_urgency         = rs.getString("mail_urgency");                  
-                    String mail_about           = rs.getString("mail_about");
-                    String mail_content         = rs.getString("mail_content");            
-                    String mail_date            = rs.getString("mail_date");
-                    
-                    
-                    
-                    Object[] rowData = {mail_received_id,mail_received_date,mail_number, send_by, sender_position, sender_instance, mail_type, mail_secrecy, mail_urgency, mail_about, mail_content,mail_date};
+
+                while (rs.next()) {
+                    String mail_received_id = rs.getString("mail_received_id");
+                    String mail_received_date = rs.getString("mail_received_date");
+                    String mail_number = rs.getString("mail_number");
+                    String send_by = rs.getString("send_by");
+                    String sender_position = rs.getString("sender_position");
+                    String sender_instance = rs.getString("sender_instance");
+                    String mail_type = rs.getString("mail_type");
+                    String mail_secrecy = rs.getString("mail_secrecy");
+                    String mail_urgency = rs.getString("mail_urgency");
+                    String mail_about = rs.getString("mail_about");
+                    String mail_content = rs.getString("mail_content");
+                    String mail_date = rs.getString("mail_date");
+
+                    Object[] rowData = {mail_received_id, mail_received_date, mail_number, send_by, sender_position, sender_instance, mail_type, mail_secrecy, mail_urgency, mail_about, mail_content, mail_date};
                     model.addRow(rowData);
                 }
-                
+
             }
-        } catch (SQLException e){
-            Logger.getLogger(registrasiNaskah.class.getName()).log(Level.SEVERE,null,e);
-            }
-        
-    }
-
-public void bukaFile(String path_file) throws IOException {
-    String sql ="Select * From mail_received WHERE path_file = ?";
-    try (java.sql.PreparedStatement st = conn.prepareStatement(sql)) {
-
-        
-        st.setString(1, path_file);
-        ResultSet rs = st.executeQuery();
-
-        if (rs.next()) {
-            String pathPdf = rs.getString("path_file");
-            File pdfFile = new File(pathPdf);
-
-            // Cek apakah file ada dan bisa dibuka
-            if (pdfFile.exists()) {
-                // Jika file ditemukan, buka file PDF menggunakan Desktop
-                Desktop.getDesktop().open(pdfFile);
-            } else {
-                JOptionPane.showMessageDialog(null, "File tidak ditemukan!");
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Surat dengan ID tersebut tidak ditemukan!");
+        } catch (SQLException e) {
+            Logger.getLogger(registrasiNaskah.class.getName()).log(Level.SEVERE, null, e);
         }
-        
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Error membuka file: " + ex.getMessage());
+
     }
-}
+
+    public void bukaFile(String path_file) throws IOException {
+        String sql = "Select * From mail_received WHERE path_file = ?";
+        try (java.sql.PreparedStatement st = conn.prepareStatement(sql)) {
+
+            st.setString(1, path_file);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                String pathPdf = rs.getString("path_file");
+                File pdfFile = new File(pathPdf);
+
+                // Cek apakah file ada dan bisa dibuka
+                if (pdfFile.exists()) {
+                    // Jika file ditemukan, buka file PDF menggunakan Desktop
+                    Desktop.getDesktop().open(pdfFile);
+                } else {
+                    JOptionPane.showMessageDialog(null, "File tidak ditemukan!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Surat dengan ID tersebut tidak ditemukan!");
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error membuka file: " + ex.getMessage());
+        }
+    }
+    
+    private static void switchPanel(JPanel content, String cardName) {
+        CardLayout layout = (CardLayout) content.getLayout();
+        layout.show(content, cardName);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -210,25 +219,22 @@ public void bukaFile(String path_file) throws IOException {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1291, Short.MAX_VALUE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1297, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_tambahSuratActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahSuratActionPerformed
-        registrasiNaskah detail = new registrasiNaskah();
-        detail.setVisible(true);
+        this.dispose();
+        jPanel1.add(new registrasiNaskah().getContentPanel(), "Form Surat Masuk");
+        switchPanel(jPanel1, "Form Surat Masuk");
+//        registrasiNaskah detail = new registrasiNaskah();
+//        detail.setVisible(true);
     }//GEN-LAST:event_btn_tambahSuratActionPerformed
 
     private void tbl_historySuratMasukMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_historySuratMasukMouseClicked

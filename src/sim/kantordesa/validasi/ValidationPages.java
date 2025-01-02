@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import javax.swing.JPanel;
 import sim.kantordesa.config.koneksi;
 
 /**
@@ -46,6 +47,10 @@ public class ValidationPages extends javax.swing.JFrame {
         
         loadData();
         
+    }
+    
+    public JPanel getContentPanel() {
+        return (JPanel) this.getContentPane();
     }
 
     public void loadData() {

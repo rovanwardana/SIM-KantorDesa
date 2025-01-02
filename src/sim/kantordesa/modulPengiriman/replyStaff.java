@@ -1,6 +1,7 @@
 package sim.kantordesa.modulPengiriman;
 
 
+import java.awt.Container;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +23,10 @@ public class replyStaff extends javax.swing.JFrame {
         initComponents();
         conn = koneksi.getConnection();
         Date();
+    }
+    
+    public Container getContentPanel() {
+        return this.getContentPane();
     }
     
     public void Date(){

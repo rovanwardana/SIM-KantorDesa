@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 package sim.kantordesa.mailtemplate;
 
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -29,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.microsoft.rtf.RTFParser;
@@ -52,6 +52,10 @@ public class mailform extends javax.swing.JFrame {
 
     public mailform() {
         initComponents();
+    }
+
+    public JPanel getContentPanel() {
+        return (JPanel) this.getContentPane();
     }
 
     /**
@@ -104,7 +108,7 @@ public class mailform extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        body.setPreferredSize(new java.awt.Dimension(1200, 800));
+        body.setPreferredSize(new java.awt.Dimension(1300, 640));
 
         header.setBackground(new java.awt.Color(19, 128, 97));
         header.setPreferredSize(new java.awt.Dimension(1200, 80));
@@ -122,7 +126,7 @@ public class mailform extends javax.swing.JFrame {
             .addGroup(headerLayout.createSequentialGroup()
                 .addGap(60, 60, 60)
                 .addComponent(form_title, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(240, Short.MAX_VALUE))
+                .addContainerGap(331, Short.MAX_VALUE))
         );
         headerLayout.setVerticalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,7 +285,7 @@ public class mailform extends javax.swing.JFrame {
         body.setLayout(bodyLayout);
         bodyLayout.setHorizontalGroup(
             bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(header, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(header, javax.swing.GroupLayout.DEFAULT_SIZE, 1291, Short.MAX_VALUE)
             .addGroup(bodyLayout.createSequentialGroup()
                 .addGap(60, 60, 60)
                 .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -289,7 +293,7 @@ public class mailform extends javax.swing.JFrame {
                         .addComponent(btn_next, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39)
                         .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 881, Short.MAX_VALUE))
+                        .addGap(0, 972, Short.MAX_VALUE))
                     .addGroup(bodyLayout.createSequentialGroup()
                         .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(text_pekerjaan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -408,7 +412,7 @@ public class mailform extends javax.swing.JFrame {
                 .addComponent(pekerjaan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(text_pekerjaan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_next, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -419,12 +423,12 @@ public class mailform extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 1291, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(body, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -481,7 +485,6 @@ public class mailform extends javax.swing.JFrame {
         this.dispose();
     }
 
-
     public final void updateTitle(String title) {
         this.setTitle(title);
         form_title.setText(title);
@@ -489,12 +492,11 @@ public class mailform extends javax.swing.JFrame {
 
     private void saveData() {
         Connection conn = koneksi.getConnection();
-        String queryCivilRegistry = "INSERT INTO civil_registry (nama, no_ktp, no_kk, tempat_tanggal_lahir, warga_negara, agama, jenis_kelamin, pekerjaan, alamat, gol_darah) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String queryUpdateMailContent = "UPDATE mail_content SET no_ktp = ?, mulai_berlaku = ?, tgl_akhir = ? " +
-                "WHERE mail_id = (SELECT mail_id FROM mail_content ORDER BY mail_id DESC LIMIT 1)";
-        try (PreparedStatement stmt1 = conn.prepareStatement(queryCivilRegistry);
-             PreparedStatement stmt2 = conn.prepareStatement(queryUpdateMailContent)) {
+        String queryCivilRegistry = "INSERT INTO civil_registry (nama, no_ktp, no_kk, tempat_tanggal_lahir, warga_negara, agama, jenis_kelamin, pekerjaan, alamat, gol_darah) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String queryUpdateMailContent = "UPDATE mail_content SET no_ktp = ?, mulai_berlaku = ?, tgl_akhir = ? "
+                + "WHERE mail_id = (SELECT mail_id FROM mail_content ORDER BY mail_id DESC LIMIT 1)";
+        try (PreparedStatement stmt1 = conn.prepareStatement(queryCivilRegistry); PreparedStatement stmt2 = conn.prepareStatement(queryUpdateMailContent)) {
             stmt1.setString(1, text_nama.getText());
             stmt1.setString(2, text_noktp.getText());
             stmt1.setString(3, text_nokk.getText());
@@ -530,8 +532,7 @@ public class mailform extends javax.swing.JFrame {
         Connection conn = koneksi.getConnection();
         Map<String, String> villageData = new HashMap<>();
         String query = "SELECT district, subdistrict, village_name, village_loc, village_id FROM village_data LIMIT 1";
-        try (PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 villageData.put("nama_kab", rs.getString("district"));
                 villageData.put("nama_kec", rs.getString("subdistrict"));
@@ -593,7 +594,7 @@ public class mailform extends javax.swing.JFrame {
         int tahun = LocalDate.now().getYear();
         return mailTypeId + "/" + tahun;
     }
-    
+
     private void generatePDF(int mailTypeId, Connection conn, String title) {
         try {
             String rtfPath = loadRTFTemplate();
@@ -614,9 +615,9 @@ public class mailform extends javax.swing.JFrame {
             String pemegangSurat = replacePlaceholders("[nama]", villageData);
 
             // Ambil mail_id dan type_name
-            String query = "SELECT mail_id, type_name FROM mail_content mc " +
-                    "INNER JOIN mail_type mt ON mc.mail_type_id = mt.mail_type_id " +
-                    "WHERE mc.mail_type_id = ? ORDER BY mail_id DESC LIMIT 1";
+            String query = "SELECT mail_id, type_name FROM mail_content mc "
+                    + "INNER JOIN mail_type mt ON mc.mail_type_id = mt.mail_type_id "
+                    + "WHERE mc.mail_type_id = ? ORDER BY mail_id DESC LIMIT 1";
             String fileName = "output.pdf";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setInt(1, mailTypeId);
@@ -639,42 +640,40 @@ public class mailform extends javax.swing.JFrame {
                 String outputDir = fileChooser.getSelectedFile().getAbsolutePath();
                 String pdfPath = outputDir + "/" + fileName;
 
-                try (PdfWriter writer = new PdfWriter(pdfPath);
-                     PdfDocument pdf = new PdfDocument(writer);
-                     Document document = new Document(pdf)) {
+                try (PdfWriter writer = new PdfWriter(pdfPath); PdfDocument pdf = new PdfDocument(writer); Document document = new Document(pdf)) {
 
                     // Header
                     Paragraph header = new Paragraph("PEMERINTAH " + villageData.get("nama_kab"))
-                        .setFontSize(16).setTextAlignment(TextAlignment.CENTER);
+                            .setFontSize(16).setTextAlignment(TextAlignment.CENTER);
                     header.add(new Text("\n" + villageData.get("nama_kec") + "\n" + villageData.get("nama_des") + "\n"))
                             .setFontSize(16).setTextAlignment(TextAlignment.CENTER);
                     header.add(villageData.get("alamat_des"));
                     document.add(header);
 
                     // Kode Desa dan Kode Surat
-                    Table kodeTable = new Table(UnitValue.createPercentArray(new float[]{1, 1} ));
+                    Table kodeTable = new Table(UnitValue.createPercentArray(new float[]{1, 1}));
                     kodeTable.setWidth(UnitValue.createPercentValue(100));
                     kodeTable.setBorder(Border.NO_BORDER);
                     kodeTable.addCell(new Paragraph(villageData.get("kode_des") != null ? villageData.get("kode_des") : "")
-                        .setTextAlignment(TextAlignment.LEFT).setFontSize(12));
+                            .setTextAlignment(TextAlignment.LEFT).setFontSize(12));
                     kodeTable.addCell(new Paragraph("" + mailTypeId)
-                        .setTextAlignment(TextAlignment.RIGHT).setFontSize(12));
+                            .setTextAlignment(TextAlignment.RIGHT).setFontSize(12));
                     document.add(kodeTable);
 
                     // Title
                     Paragraph suratTitle = new Paragraph(title)
-                        .setFontSize(16).setTextAlignment(TextAlignment.CENTER).setMarginBottom(10);
+                            .setFontSize(16).setTextAlignment(TextAlignment.CENTER).setMarginBottom(10);
                     document.add(suratTitle);
 
                     // Nomor Surat
                     String noSurat = generateNomorSurat(mailTypeId);
                     Paragraph nomorSurat = new Paragraph("Nomor: " + noSurat)
-                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12).setMarginBottom(20);
+                            .setTextAlignment(TextAlignment.CENTER).setFontSize(12).setMarginBottom(20);
                     document.add(nomorSurat);
 
                     // Main Content
                     Paragraph mainContent = new Paragraph(processedContent)
-                        .setFontSize(12).setTextAlignment(TextAlignment.JUSTIFIED).setMarginBottom(20);
+                            .setFontSize(12).setTextAlignment(TextAlignment.JUSTIFIED).setMarginBottom(20);
                     document.add(mainContent);
 
                     // Signature Table
@@ -683,12 +682,12 @@ public class mailform extends javax.swing.JFrame {
                     signatureTable.setBorder(Border.NO_BORDER);
 
                     signatureTable.addCell(new Paragraph("Pemegang Surat\n\n" + pemegangSurat)
-                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
+                            .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
                     signatureTable.addCell(new Paragraph("Mengetahui,\nCamat " + villageData.get("nama_kec") + "\n\nI Gede Camat")
-                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
-                    signatureTable.addCell(new Paragraph(villageData.get("nama_des") + ", " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) +
-                            "\nJabatan " + villageData.get("nama_des") + "\n\nI Kadek Bendesa")
-                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
+                            .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
+                    signatureTable.addCell(new Paragraph(villageData.get("nama_des") + ", " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
+                            + "\nJabatan " + villageData.get("nama_des") + "\n\nI Kadek Bendesa")
+                            .setTextAlignment(TextAlignment.CENTER).setFontSize(12));
 
                     document.add(signatureTable);
                 } catch (IOException ex) {
@@ -696,14 +695,14 @@ public class mailform extends javax.swing.JFrame {
                 }
 
                 // Update mail_content dengan mail_number dan file_path
-                String mailNumber = mailTypeId + "/" + villageData.get("kode_des") + "/" +
-                        LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
+                String mailNumber = mailTypeId + "/" + villageData.get("kode_des") + "/"
+                        + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
                 updateMailContent(conn, mailNumber);
 
                 JOptionPane.showMessageDialog(null, "File PDF berhasil disimpan di: " + pdfPath, "Sukses", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (SQLException | IOException | SAXException | TikaException ex) {
-                Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(mailform.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

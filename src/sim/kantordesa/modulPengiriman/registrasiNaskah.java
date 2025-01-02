@@ -1,5 +1,6 @@
 package sim.kantordesa.modulPengiriman;
 
+import java.awt.Container;
 import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import sim.kantordesa.config.koneksi;
 
@@ -24,17 +26,22 @@ public class registrasiNaskah extends javax.swing.JFrame {
 
     Connection conn;
     private File selectedFile;
+
     public registrasiNaskah() {
         conn = koneksi.getConnection();
         initComponents();
         Date();
     }
-    
-        public void Date(){
+
+    public void Date() {
         DateTimeFormatter dates = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         t_tglSuratDiterima.setText(dates.format(now));
         t_tglSuratDiterima.setEditable(false);
+    }
+
+    public Container getContentPanel() {
+        return this.getContentPane();
     }
 
     @SuppressWarnings("unchecked")
@@ -100,7 +107,7 @@ public class registrasiNaskah extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jPanel1.setPreferredSize(new java.awt.Dimension(1300, 800));
+        jPanel1.setPreferredSize(new java.awt.Dimension(1200, 640));
 
         j_registrasiNaskah.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         j_registrasiNaskah.setText("Registrasi Naskah");
@@ -207,56 +214,51 @@ public class registrasiNaskah extends javax.swing.JFrame {
                 .addComponent(j_registrasiNaskah)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(b_kembali, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57))
+                .addGap(220, 220, 220))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(74, 74, 74)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(j_detailIsiSurat)
-                    .addComponent(j_identitasSurat)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(j_instansiPengirim)
-                        .addComponent(j_namaPengirim)
-                        .addComponent(t_namaPengirim)
-                        .addComponent(j_jabatanPengirim)
-                        .addComponent(t_jabatanPengirim)
-                        .addComponent(t_asalInstansi, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(j_unggahFileSurat)
-                    .addComponent(j_tipeSurat)
-                    .addComponent(t_jenisSurat, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(j_nomorSurat)
-                    .addComponent(j_tanggalSurat)
-                    .addComponent(t_nomorSurat, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(j_sifatSurat)
-                    .addComponent(j_urgensiSurat)
-                    .addComponent(j_tanggalSuratDiterima)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(t_tglSuratDiterima, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(t_urgensi, javax.swing.GroupLayout.Alignment.LEADING, 0, 138, Short.MAX_VALUE)
-                        .addComponent(t_sifatSurat, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(609, 609, 609)
-                        .addComponent(b_kirim))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(t_pathFile, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(b_tambahFile))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(t_tglSurat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(t_tglSuratDiterima, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(t_urgensi, javax.swing.GroupLayout.Alignment.LEADING, 0, 138, Short.MAX_VALUE)
-                            .addComponent(t_sifatSurat, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(t_tglSurat, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
                         .addGap(428, 428, 428)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(j_halSurat)
                             .addComponent(t_hal, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(j_isiRingkasSurat)
-                            .addComponent(t_isiRingkasSurat, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 228, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                            .addComponent(t_isiRingkasSurat, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(j_detailIsiSurat)
+                            .addComponent(j_identitasSurat)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(j_instansiPengirim)
+                                .addComponent(j_namaPengirim)
+                                .addComponent(t_namaPengirim)
+                                .addComponent(j_jabatanPengirim)
+                                .addComponent(t_jabatanPengirim)
+                                .addComponent(t_asalInstansi, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(j_unggahFileSurat)
+                            .addComponent(j_tipeSurat)
+                            .addComponent(t_jenisSurat, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(j_nomorSurat)
+                            .addComponent(j_tanggalSurat)
+                            .addComponent(t_nomorSurat, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(j_sifatSurat)
+                            .addComponent(j_urgensiSurat)
+                            .addComponent(j_tanggalSuratDiterima)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(t_tglSuratDiterima, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(t_urgensi, javax.swing.GroupLayout.Alignment.LEADING, 0, 138, Short.MAX_VALUE)
+                                .addComponent(t_sifatSurat, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(t_pathFile, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(b_tambahFile)
+                                .addGap(102, 102, 102)
+                                .addComponent(b_kirim)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(0, 101, Short.MAX_VALUE))
+            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -323,10 +325,9 @@ public class registrasiNaskah extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(t_pathFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(b_tambahFile))
-                .addGap(28, 28, 28)
-                .addComponent(b_kirim)
-                .addGap(84, 84, 84))
+                    .addComponent(b_tambahFile)
+                    .addComponent(b_kirim))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel1);
@@ -335,17 +336,11 @@ public class registrasiNaskah extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1291, Short.MAX_VALUE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -360,7 +355,7 @@ public class registrasiNaskah extends javax.swing.JFrame {
         String destDir = "sim.kantordesa.modulPengirimanFiles";
         File destFolder = new File(destDir);
         if (!destFolder.exists()) {
-        destFolder.mkdirs();
+            destFolder.mkdirs();
         }
         File destFile = new File(destFolder, selectedFile.getName());
         int status_id = 1;
@@ -376,7 +371,7 @@ public class registrasiNaskah extends javax.swing.JFrame {
         String mail_about = t_hal.getText();
         String mail_content = t_isiRingkasSurat.getText();
         String path_file = destFile.getAbsolutePath();
-    
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String mail_date = sdf.format(t_tglSurat.getDate());
 
@@ -386,69 +381,69 @@ public class registrasiNaskah extends javax.swing.JFrame {
 
             // Validasi koneksi database
             if (conn == null) {
-             JOptionPane.showMessageDialog(this, "Koneksi ke database belum dibuat. Harap periksa konfigurasi koneksi.");
+                JOptionPane.showMessageDialog(this, "Koneksi ke database belum dibuat. Harap periksa konfigurasi koneksi.");
                 return;
             }
 
-        String sql = "INSERT INTO mail_received (send_by, sender_position, sender_instance, mail_number, mail_type, mail_secrecy, mail_urgency, mail_received_date, mail_about, mail_content, mail_date, status_id, path_file) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        try (PreparedStatement st = conn.prepareStatement(sql)) {
-            st.setString(1, send_by);
-            st.setString(2, sender_position);
-            st.setString(3, sender_instance);
-            st.setString(4, mail_number);
-            st.setString(5, mail_type);
-            st.setString(6, mail_secrecy);
-            st.setString(7, mail_urgency);
-            st.setString(8, mail_received_date);
-            st.setString(9, mail_about);
-            st.setString(10, mail_content);
-            st.setString(11, mail_date);
-            st.setInt(12, status_id);
+            String sql = "INSERT INTO mail_received (send_by, sender_position, sender_instance, mail_number, mail_type, mail_secrecy, mail_urgency, mail_received_date, mail_about, mail_content, mail_date, status_id, path_file) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            try (PreparedStatement st = conn.prepareStatement(sql)) {
+                st.setString(1, send_by);
+                st.setString(2, sender_position);
+                st.setString(3, sender_instance);
+                st.setString(4, mail_number);
+                st.setString(5, mail_type);
+                st.setString(6, mail_secrecy);
+                st.setString(7, mail_urgency);
+                st.setString(8, mail_received_date);
+                st.setString(9, mail_about);
+                st.setString(10, mail_content);
+                st.setString(11, mail_date);
+                st.setInt(12, status_id);
 
-            InputStream inputStream = new FileInputStream(destFile);
-            st.setBinaryStream(13, inputStream, (int) destFile.length());
+                InputStream inputStream = new FileInputStream(destFile);
+                st.setBinaryStream(13, inputStream, (int) destFile.length());
 
-        int rowInserted = st.executeUpdate();
-        if (rowInserted > 0) {
-            JOptionPane.showMessageDialog(this, "Surat Berhasil Ditambahkan dan Dikirim Ke Akun Kepala Desa");
-            historySuratMasuk detail = new historySuratMasuk();
-            detail.setVisible(true);
-            resetForm();
+                int rowInserted = st.executeUpdate();
+                if (rowInserted > 0) {
+                    JOptionPane.showMessageDialog(this, "Surat Berhasil Ditambahkan dan Dikirim Ke Akun Kepala Desa");
+                    historySuratMasuk detail = new historySuratMasuk();
+                    detail.setVisible(true);
+                    resetForm();
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(registrasiNaskah.class.getName()).log(Level.SEVERE, "Kesalahan saat menyimpan data ke database", e);
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan database: " + e.getMessage());
+        } catch (IOException e) {
+            Logger.getLogger(registrasiNaskah.class.getName()).log(Level.SEVERE, "Kesalahan I/O saat mengakses file", e);
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat mengakses file: " + e.getMessage());
         }
-    }
-    } catch (SQLException e) {
-        Logger.getLogger(registrasiNaskah.class.getName()).log(Level.SEVERE, "Kesalahan saat menyimpan data ke database", e);
-        JOptionPane.showMessageDialog(this, "Terjadi kesalahan database: " + e.getMessage());
-    } catch (IOException e) {
-        Logger.getLogger(registrasiNaskah.class.getName()).log(Level.SEVERE, "Kesalahan I/O saat mengakses file", e);
-        JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat mengakses file: " + e.getMessage());
-}
 
     }//GEN-LAST:event_b_kirimActionPerformed
 
     private void b_tambahFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_tambahFileActionPerformed
-    JFileChooser jfc = new JFileChooser();
-    FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF Files", "pdf");
-    jfc.setFileFilter(filter);
+        JFileChooser jfc = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF Files", "pdf");
+        jfc.setFileFilter(filter);
 
-    int returnValue = jfc.showOpenDialog(null);
+        int returnValue = jfc.showOpenDialog(null);
 
-    if (returnValue == JFileChooser.APPROVE_OPTION) {
-        selectedFile = jfc.getSelectedFile(); // Simpan file yang dipilih ke variabel global
-        String fileName = selectedFile.getName();
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            selectedFile = jfc.getSelectedFile(); // Simpan file yang dipilih ke variabel global
+            String fileName = selectedFile.getName();
 
-    // Validasi jika file bukan PDF
-    if (!fileName.toLowerCase().endsWith(".pdf")) {
-        JOptionPane.showMessageDialog(null, "Hanya file PDF yang diperbolehkan.");
-        return; // Menghentikan proses jika bukan file PDF
-    }
+            // Validasi jika file bukan PDF
+            if (!fileName.toLowerCase().endsWith(".pdf")) {
+                JOptionPane.showMessageDialog(null, "Hanya file PDF yang diperbolehkan.");
+                return; // Menghentikan proses jika bukan file PDF
+            }
 
-    String dir = selectedFile.getAbsolutePath(); // Dapatkan path file
-    t_pathFile.setText(dir); // Tampilkan path file di text field
-    JOptionPane.showMessageDialog(null, "File berhasil dipilih: " + selectedFile.getName());
-    } else {
-    JOptionPane.showMessageDialog(null, "Tidak ada file yang dipilih.");
-    }
+            String dir = selectedFile.getAbsolutePath(); // Dapatkan path file
+            t_pathFile.setText(dir); // Tampilkan path file di text field
+            JOptionPane.showMessageDialog(null, "File berhasil dipilih: " + selectedFile.getName());
+        } else {
+            JOptionPane.showMessageDialog(null, "Tidak ada file yang dipilih.");
+        }
     }//GEN-LAST:event_b_tambahFileActionPerformed
 
     private void t_urgensiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t_urgensiActionPerformed
@@ -466,18 +461,19 @@ public class registrasiNaskah extends javax.swing.JFrame {
     private void t_pathFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t_pathFileActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_t_pathFileActionPerformed
-        private void resetForm() {
-             t_namaPengirim.setText("");
-             t_jabatanPengirim.setText("");
-             t_asalInstansi.setText("");
-             t_nomorSurat.setText("");
-             t_jenisSurat.setSelectedItem("-Pilih");
-             t_sifatSurat.setSelectedItem("-Pilih-");
-             t_urgensi.setSelectedItem("-Pilih-");
-             t_hal.setText("");
-             t_isiRingkasSurat.setText("");
-             t_pathFile.setText("");
+    private void resetForm() {
+        t_namaPengirim.setText("");
+        t_jabatanPengirim.setText("");
+        t_asalInstansi.setText("");
+        t_nomorSurat.setText("");
+        t_jenisSurat.setSelectedItem("-Pilih");
+        t_sifatSurat.setSelectedItem("-Pilih-");
+        t_urgensi.setSelectedItem("-Pilih-");
+        t_hal.setText("");
+        t_isiRingkasSurat.setText("");
+        t_pathFile.setText("");
     }
+
     /**
      * @param args the command line arguments
      */

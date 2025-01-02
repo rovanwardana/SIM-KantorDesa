@@ -1,5 +1,6 @@
 package sim.kantordesa.modulPengiriman;
 
+import java.awt.Container;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,40 +19,44 @@ import sim.kantordesa.config.koneksi;
 public class detailSurat extends javax.swing.JFrame {
 
     Connection conn;
-    
+
     public detailSurat(String mail_received_id) {
         initComponents();
         conn = koneksi.getConnection();
-        
+
         DefaultTableModel model = new DefaultTableModel();
-        
+
         tbl_history.setModel(model);
-        
+
         model.addColumn("Tanggal Proses");
         model.addColumn("Tanggal Penerimaan Surat");
         model.addColumn("Asal Proses");
         model.addColumn("Tujuan");
         model.addColumn("Pesan/Instruksi");
- 
+
         System.out.println("mail_received_id: " + mail_received_id);
         loadTabel(mail_received_id);
         String disposition_id = getMailDispositionId(mail_received_id);
-        if(disposition_id == null || disposition_id.isEmpty()){
-        btn_penyelesaianDisposisi.setEnabled(false);
-        getDataMail(mail_received_id);
-        }else{
-        getDataDisposition(mail_received_id);
-        btn_disposisi1.setEnabled(false);
-        hidePenyelesaianDisposisi(mail_received_id);
+        if (disposition_id == null || disposition_id.isEmpty()) {
+            btn_penyelesaianDisposisi.setEnabled(false);
+            getDataMail(mail_received_id);
+        } else {
+            getDataDisposition(mail_received_id);
+            btn_disposisi1.setEnabled(false);
+            hidePenyelesaianDisposisi(mail_received_id);
         }
     }
-    
-    private void loadTabel(String mail_received_id){
+
+    public Container getContentPanel() {
+        return this.getContentPane();
+    }
+
+    private void loadTabel(String mail_received_id) {
         DefaultTableModel model = (DefaultTableModel) tbl_history.getModel();
         model.setRowCount(0);
-        
-        try{
-            String sql ="Select  mr.mail_received_date, md.disposition_date, r1.role_name AS mail_destination, r2.role_name AS disposition_destination, "
+
+        try {
+            String sql = "Select  mr.mail_received_date, md.disposition_date, r1.role_name AS mail_destination, r2.role_name AS disposition_destination, "
                     + "md.disposition_instruction, md.disposition_notes_staff "
                     + "From mail_received mr "
                     + "JOIN mail_disposition md ON md.mail_received_id = mr.mail_received_id "
@@ -59,182 +64,182 @@ public class detailSurat extends javax.swing.JFrame {
                     + "JOIN role r2 ON r2.id_role = md.disposition_destination "
                     + "WHERE mr.mail_received_id = ?";
             try (java.sql.PreparedStatement st = conn.prepareStatement(sql);) {
-            st.setString(1, mail_received_id);
-            ResultSet rs = st.executeQuery();    
-                while(rs.next()){
-                    
+                st.setString(1, mail_received_id);
+                ResultSet rs = st.executeQuery();
+                while (rs.next()) {
+
                     String disposition_notes_staff = rs.getString("disposition_notes_staff");
-                    
-                    Object[] row1 = {rs.getString("mail_received_date"),rs.getString("disposition_date"), rs.getString("mail_destination"),
-                    rs.getString("disposition_destination"),rs.getString("disposition_instruction") };
+
+                    Object[] row1 = {rs.getString("mail_received_date"), rs.getString("disposition_date"), rs.getString("mail_destination"),
+                        rs.getString("disposition_destination"), rs.getString("disposition_instruction")};
                     model.addRow(row1);
-                    
-                    if (disposition_notes_staff != null){
-                    Object[] row2 = {rs.getString("disposition_date"),rs.getString("mail_received_date"), rs.getString("disposition_destination"),
-                    rs.getString("mail_destination"),rs.getString("disposition_notes_staff") };
-                    model.addRow(row2);
-                    }  
-                }
-                
-            }
-        } catch (SQLException e){
-            Logger.getLogger(registrasiNaskah.class.getName()).log(Level.SEVERE,null,e);
-            }
-    }
-    
-    private void getDataMail(String mail_received_id){
-            String sql = "SELECT mr.send_by, mr.sender_instance, mr.mail_number, mr.mail_type, mr.mail_secrecy, mr.mail_urgency, mr.mail_about, "
-                    + "mr.mail_content, mr.mail_received_date, mr.mail_date , mr.mail_received_id, status.status_name "
-                    + "FROM mail_received mr "
-                    + "JOIN status ON mr.status_id = status.status_id "
-                    + "WHERE mr.mail_received_id = ?";
-            try {
-        java.sql.PreparedStatement st = conn.prepareStatement(sql);
-        st.setString(1, mail_received_id);
-        ResultSet rs = st.executeQuery();
-        
-        if (rs.next()) {
-            t_idSurat.setText(rs.getString("mail_received_id"));
-            t_instansi.setText(rs.getString("sender_instance"));
-            t_perihal.setText(rs.getString("mail_about"));
-            t_noSurat.setText(rs.getString("mail_number"));
-            t_diterima.setText(rs.getString("mail_received_date"));
-            t_urgensi.setText(rs.getString("mail_urgency"));
-            t_tipeSurat.setText(rs.getString("mail_type"));
-            t_tglSurat.setText(rs.getString("mail_date"));
-            t_statusSurat.setText(rs.getString("status_name"));
-         
-        } else {
-            JOptionPane.showMessageDialog(null, "Data tidak ditemukan");
-        }
-        
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
-    private void getDataDisposition(String mail_received_id){
-            String sql = "SELECT mr.send_by, mr.sender_instance, mr.mail_number, mr.mail_type, mr.mail_secrecy, mr.mail_urgency, mr.mail_about, mr.mail_content, "
-                    + "mr.mail_received_date, mr.mail_date, mr.mail_received_id, md.disposition_deadline, "
-                    + "md.disposition_instruction, md.disposition_notes, md.disposition_date, md.disposition_id, status.status_name, role.role_name "
-                    + "FROM mail_received mr "
-                    + "JOIN mail_disposition md ON mr.mail_received_id = md.mail_received_id "
-                    + "JOIN status ON mr.status_id = status.status_id "
-                    + "JOIN role ON md.disposition_destination = role.id_role "
-                    + "WHERE mr.mail_received_id = ?";
-            
-            try {
-        java.sql.PreparedStatement st = conn.prepareStatement(sql);
-        st.setString(1, mail_received_id);
-        ResultSet rs = st.executeQuery();
-        
-        if (rs.next()) {
-            t_idSurat.setText(rs.getString("mail_received_id"));
-            t_instansi.setText(rs.getString("sender_instance"));
-            t_perihal.setText(rs.getString("mail_about"));
-            t_noSurat.setText(rs.getString("mail_number"));
-            t_diterima.setText(rs.getString("mail_received_date"));
-            t_urgensi.setText(rs.getString("mail_urgency"));
-            t_tipeSurat.setText(rs.getString("mail_type"));
-            t_tglSurat.setText(rs.getString("mail_date"));
-            t_tujuanDisposisi.setText(rs.getString("role_name"));
-            t_instruksi.setText(rs.getString("disposition_instruction"));
-            t_pesanDisposisi.setText(rs.getString("disposition_notes"));
-            t_tanggalDisposisi.setText(rs.getString("disposition_date"));
-            t_batasWaktu.setText(rs.getString("disposition_deadline"));
-            t_idDisposisi.setText(rs.getString("disposition_id"));
-            t_statusSurat.setText(rs.getString("status_name"));
-         
-        } else {
-            JOptionPane.showMessageDialog(null, "Data tidak ditemukan");
-        }
-        
-        //b_penyelesaian.setEnabled(false);
-        
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
-       public void bukaFile(String mail_received_id) throws IOException {
-    String sql = "SELECT path_file FROM mail_received WHERE mail_received_id = ?";
-    try (PreparedStatement st = conn.prepareStatement(sql)) {
-        st.setString(1, mail_received_id);
-        ResultSet rs = st.executeQuery();
 
-        if (rs.next()) {
-            // Ambil BLOB dari database
-            InputStream inputStream = rs.getBinaryStream("path_file");
-            if (inputStream != null) {
-                // Tentukan lokasi file sementara
-                File tempFile = File.createTempFile("tempFile", ".pdf");
-                tempFile.deleteOnExit(); // Hapus file otomatis setelah aplikasi selesai
-
-                // Tulis data dari InputStream ke file sementara
-                try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                    byte[] buffer = new byte[1024];
-                    int bytesRead;
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        fos.write(buffer, 0, bytesRead);
+                    if (disposition_notes_staff != null) {
+                        Object[] row2 = {rs.getString("disposition_date"), rs.getString("mail_received_date"), rs.getString("disposition_destination"),
+                            rs.getString("mail_destination"), rs.getString("disposition_notes_staff")};
+                        model.addRow(row2);
                     }
                 }
 
-                // Buka file menggunakan Desktop
-                if (Desktop.isDesktopSupported()) {
-                    Desktop.getDesktop().open(tempFile);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(registrasiNaskah.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    private void getDataMail(String mail_received_id) {
+        String sql = "SELECT mr.send_by, mr.sender_instance, mr.mail_number, mr.mail_type, mr.mail_secrecy, mr.mail_urgency, mr.mail_about, "
+                + "mr.mail_content, mr.mail_received_date, mr.mail_date , mr.mail_received_id, status.status_name "
+                + "FROM mail_received mr "
+                + "JOIN status ON mr.status_id = status.status_id "
+                + "WHERE mr.mail_received_id = ?";
+        try {
+            java.sql.PreparedStatement st = conn.prepareStatement(sql);
+            st.setString(1, mail_received_id);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                t_idSurat.setText(rs.getString("mail_received_id"));
+                t_instansi.setText(rs.getString("sender_instance"));
+                t_perihal.setText(rs.getString("mail_about"));
+                t_noSurat.setText(rs.getString("mail_number"));
+                t_diterima.setText(rs.getString("mail_received_date"));
+                t_urgensi.setText(rs.getString("mail_urgency"));
+                t_tipeSurat.setText(rs.getString("mail_type"));
+                t_tglSurat.setText(rs.getString("mail_date"));
+                t_statusSurat.setText(rs.getString("status_name"));
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Data tidak ditemukan");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getDataDisposition(String mail_received_id) {
+        String sql = "SELECT mr.send_by, mr.sender_instance, mr.mail_number, mr.mail_type, mr.mail_secrecy, mr.mail_urgency, mr.mail_about, mr.mail_content, "
+                + "mr.mail_received_date, mr.mail_date, mr.mail_received_id, md.disposition_deadline, "
+                + "md.disposition_instruction, md.disposition_notes, md.disposition_date, md.disposition_id, status.status_name, role.role_name "
+                + "FROM mail_received mr "
+                + "JOIN mail_disposition md ON mr.mail_received_id = md.mail_received_id "
+                + "JOIN status ON mr.status_id = status.status_id "
+                + "JOIN role ON md.disposition_destination = role.id_role "
+                + "WHERE mr.mail_received_id = ?";
+
+        try {
+            java.sql.PreparedStatement st = conn.prepareStatement(sql);
+            st.setString(1, mail_received_id);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                t_idSurat.setText(rs.getString("mail_received_id"));
+                t_instansi.setText(rs.getString("sender_instance"));
+                t_perihal.setText(rs.getString("mail_about"));
+                t_noSurat.setText(rs.getString("mail_number"));
+                t_diterima.setText(rs.getString("mail_received_date"));
+                t_urgensi.setText(rs.getString("mail_urgency"));
+                t_tipeSurat.setText(rs.getString("mail_type"));
+                t_tglSurat.setText(rs.getString("mail_date"));
+                t_tujuanDisposisi.setText(rs.getString("role_name"));
+                t_instruksi.setText(rs.getString("disposition_instruction"));
+                t_pesanDisposisi.setText(rs.getString("disposition_notes"));
+                t_tanggalDisposisi.setText(rs.getString("disposition_date"));
+                t_batasWaktu.setText(rs.getString("disposition_deadline"));
+                t_idDisposisi.setText(rs.getString("disposition_id"));
+                t_statusSurat.setText(rs.getString("status_name"));
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Data tidak ditemukan");
+            }
+
+            //b_penyelesaian.setEnabled(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void bukaFile(String mail_received_id) throws IOException {
+        String sql = "SELECT path_file FROM mail_received WHERE mail_received_id = ?";
+        try (PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setString(1, mail_received_id);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                // Ambil BLOB dari database
+                InputStream inputStream = rs.getBinaryStream("path_file");
+                if (inputStream != null) {
+                    // Tentukan lokasi file sementara
+                    File tempFile = File.createTempFile("tempFile", ".pdf");
+                    tempFile.deleteOnExit(); // Hapus file otomatis setelah aplikasi selesai
+
+                    // Tulis data dari InputStream ke file sementara
+                    try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            fos.write(buffer, 0, bytesRead);
+                        }
+                    }
+
+                    // Buka file menggunakan Desktop
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().open(tempFile);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Platform tidak mendukung fitur membuka file.");
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Platform tidak mendukung fitur membuka file.");
+                    JOptionPane.showMessageDialog(null, "File tidak ditemukan dalam database.");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "File tidak ditemukan dalam database.");
+                JOptionPane.showMessageDialog(null, "Data surat tidak ditemukan di database.");
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Data surat tidak ditemukan di database.");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error saat mengakses database: " + ex.getMessage());
         }
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Error saat mengakses database: " + ex.getMessage());
     }
-}
-
 
     public String getMailDispositionId(String mail_received_id) {
-    String sql = "SELECT disposition_id FROM mail_disposition WHERE mail_received_id = ?";
-    
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, mail_received_id);
-        ResultSet rs = stmt.executeQuery();
-        
-        if (rs.next()) {
-            return rs.getString("disposition_id");
+        String sql = "SELECT disposition_id FROM mail_disposition WHERE mail_received_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, mail_received_id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("disposition_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return null; // Jika tidak ditemukan, kembalikan null
     }
-    return null; // Jika tidak ditemukan, kembalikan null
-}   
-    
-    public void hidePenyelesaianDisposisi(String mail_received_id){
+
+    public void hidePenyelesaianDisposisi(String mail_received_id) {
         String sql = "SELECT disposition_notes_staff FROM mail_disposition WHERE mail_received_id =?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, mail_received_id);
-        ResultSet rs = stmt.executeQuery();
-        
-        if (rs.next()) {
-            String dispositionNotesStaff = rs.getString("disposition_notes_staff");
-            if (dispositionNotesStaff == null) {
-                // Jika nilai disposition_notes_staff adalah null, tombol di-enable
-                btn_penyelesaianDisposisi.setEnabled(true);
+            stmt.setString(1, mail_received_id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String dispositionNotesStaff = rs.getString("disposition_notes_staff");
+                if (dispositionNotesStaff == null) {
+                    // Jika nilai disposition_notes_staff adalah null, tombol di-enable
+                    btn_penyelesaianDisposisi.setEnabled(true);
+                } else {
+                    // Jika nilai disposition_notes_staff tidak null, tombol di-disable
+                    btn_penyelesaianDisposisi.setEnabled(false);
+                }
             } else {
-                // Jika nilai disposition_notes_staff tidak null, tombol di-disable
-                btn_penyelesaianDisposisi.setEnabled(false);
+                // Jika tidak ada data, tombol di-enable
+                btn_penyelesaianDisposisi.setEnabled(true);
             }
-        } else {
-            // Jika tidak ada data, tombol di-enable
-            btn_penyelesaianDisposisi.setEnabled(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
     }
-}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -288,6 +293,7 @@ public class detailSurat extends javax.swing.JFrame {
         btn_disposisi1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1290, 646));
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -296,7 +302,7 @@ public class detailSurat extends javax.swing.JFrame {
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jPanel6.setPreferredSize(new java.awt.Dimension(1300, 800));
+        jPanel6.setPreferredSize(new java.awt.Dimension(1290, 640));
 
         j_formDisposisi.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         j_formDisposisi.setText("Detail Surat");
@@ -466,11 +472,11 @@ public class detailSurat extends javax.swing.JFrame {
                 .addComponent(j_formDisposisi2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_penyelesaianDisposisi)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_disposisi1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_kembali, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(66, 66, 66))
+                .addGap(134, 134, 134))
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(72, 72, 72)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -518,30 +524,36 @@ public class detailSurat extends javax.swing.JFrame {
                                 .addGap(97, 97, 97)))
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(j_tujuanDisposisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(j_pesanDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(t_pesanDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(j_tujuanDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                                        .addGap(4, 4, 4)
-                                        .addComponent(t_tujuanDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(j_pesanDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(t_tujuanDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(t_pesanDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(j_tanggalDisposisi)
-                                    .addComponent(j_batasWaktu)
-                                    .addComponent(j_instruksi))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(t_instruksi, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(t_batasWaktu, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                                            .addComponent(t_tanggalDisposisi))
-                                        .addGap(310, 310, 310))))
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(j_batasWaktu)
+                                            .addComponent(j_instruksi))
+                                        .addGap(34, 34, 34))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(j_tanggalDisposisi)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addComponent(t_instruksi, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(300, Short.MAX_VALUE))
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(t_batasWaktu, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(t_tanggalDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(0, 0, Short.MAX_VALUE))))
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel6Layout.createSequentialGroup()
@@ -554,7 +566,7 @@ public class detailSurat extends javax.swing.JFrame {
                                             .addComponent(t_idDisposisi)))
                                     .addComponent(j_formDisposisi4)
                                     .addComponent(j_formDisposisi1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap())))
+                                .addContainerGap(437, Short.MAX_VALUE))))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(j_formDisposisi5)
@@ -568,10 +580,12 @@ public class detailSurat extends javax.swing.JFrame {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(j_formDisposisi2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_kembali)
-                        .addComponent(btn_disposisi1)
-                        .addComponent(btn_penyelesaianDisposisi)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_penyelesaianDisposisi)
+                            .addComponent(btn_disposisi1)
+                            .addComponent(btn_kembali))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
@@ -596,57 +610,60 @@ public class detailSurat extends javax.swing.JFrame {
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(t_idDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(t_urgensi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(j_urgensi))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(j_diterima)
-                    .addComponent(t_diterima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(t_urgensi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(j_urgensi))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(j_diterima)
+                            .addComponent(t_diterima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(21, 21, 21)
+                        .addComponent(j_formDisposisi)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(j_noSurat)
+                            .addComponent(t_noSurat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(j_instansi)
+                            .addComponent(t_instansi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(j_perihal)
+                            .addComponent(t_perihal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(j_tanggalDisposisi))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(www)
+                            .addComponent(t_tglSurat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(t_batasWaktu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(j_batasWaktu))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(b_download)
+                            .addComponent(jLabel3)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addComponent(j_instruksi))))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(66, 66, 66)
                         .addComponent(j_formDisposisi4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(j_tujuanDisposisi)
-                            .addComponent(t_tujuanDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(t_tujuanDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(j_tujuanDisposisi))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(j_pesanDisposisi)
                             .addComponent(t_pesanDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(79, 79, 79)
-                        .addComponent(t_instruksi, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(j_instruksi)
-                        .addGroup(jPanel6Layout.createSequentialGroup()
-                            .addComponent(j_formDisposisi)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(j_noSurat)
-                                .addComponent(t_noSurat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(j_instansi)
-                                .addComponent(t_instansi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(j_perihal)
-                                .addComponent(t_perihal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(j_tanggalDisposisi)
-                                .addComponent(t_tanggalDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(www)
-                                .addComponent(t_tglSurat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(t_batasWaktu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(j_batasWaktu))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(b_download)
-                                .addComponent(jLabel3)))))
-                .addGap(34, 34, 34)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(t_tanggalDisposisi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(65, 65, 65)
+                        .addComponent(t_instruksi, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(j_formDisposisi5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -659,14 +676,13 @@ public class detailSurat extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1291, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -677,15 +693,15 @@ public class detailSurat extends javax.swing.JFrame {
     }//GEN-LAST:event_t_tujuanDisposisiActionPerformed
 
     private void b_downloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_downloadActionPerformed
-        String mail_received_id =t_idSurat.getText();
+        String mail_received_id = t_idSurat.getText();
 
-        if(mail_received_id != null){
+        if (mail_received_id != null) {
             try {
                 bukaFile(mail_received_id);
             } catch (IOException ex) {
                 Logger.getLogger(detailSurat.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else{
+        } else {
             JOptionPane.showMessageDialog(null, "Mail ID Tidak Ditemukan");
         }
     }//GEN-LAST:event_b_downloadActionPerformed
