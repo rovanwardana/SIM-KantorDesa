@@ -5,7 +5,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import javax.swing.JPanel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableColumn;
 import sim.kantordesa.config.koneksi;
 
 /**
@@ -13,7 +14,8 @@ import sim.kantordesa.config.koneksi;
  * @author rika
  */
 public class ValidationPages extends javax.swing.JFrame {
-    Object[] tableContent = new Object[9];
+
+    Object[] tableContent = new Object[10];
     private final javax.swing.table.DefaultTableModel model;
 
     /**
@@ -22,7 +24,6 @@ public class ValidationPages extends javax.swing.JFrame {
     public ValidationPages() {
         initComponents();
         setExtendedState(MAXIMIZED_BOTH);
-
 
         model = new javax.swing.table.DefaultTableModel() {
             @Override
@@ -35,7 +36,6 @@ public class ValidationPages extends javax.swing.JFrame {
 
         // "No", "Status", "Diterima tgl.", "Nama Pemohon", "Perihal", "Val. Sekdes",
         // "Val. Kades", "Aksi"
-
         model.addColumn("No.");
         model.addColumn("Nomor Surat");
         model.addColumn("Nama Pemohon");
@@ -44,11 +44,20 @@ public class ValidationPages extends javax.swing.JFrame {
         model.addColumn("Status Validasi Sekdes");
         model.addColumn("Status Validasi Kades");
         model.addColumn("Aksi");
-        
+        model.addColumn("mail_comment");
+        model.addColumn("mail_id");
+
         loadData();
-        
+
+        TableColumnModel columnModel = jTable1.getColumnModel();
+        TableColumn mailCommentCol = columnModel.getColumn(jTable1.convertColumnIndexToView(8));
+        TableColumn mailIdCol = columnModel.getColumn(jTable1.convertColumnIndexToView(9));
+
+        columnModel.removeColumn(mailCommentCol);
+        columnModel.removeColumn(mailIdCol);
+
     }
-    
+
     public JPanel getContentPanel() {
         return (JPanel) this.getContentPane();
     }
@@ -60,45 +69,35 @@ public class ValidationPages extends javax.swing.JFrame {
         try {
             Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
-            String sql = "select mail_id, mail_number, applicant_name, created_at, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            String sql = "select mail_id, mail_number, applicant_name, created_at, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id ORDER BY mail_id";
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()) {
-                model.addRow(new Object[]{//crate row on table and get data from db
-                i++,
-                r.getString("mail_number"),
-                r.getString("applicant_name"),
-                r.getString("created_at"),
-                r.getString("type_name"),
-                r.getBoolean("status_validation") == false ? "Reject" : "Accept",
-                r.getBoolean("status_lead") == false ? "Reject" : "Accept",
-                r.getString("mail_comment"),
-                r.getString("mail_id"),
-              });
+                tableContent[0] = i++;
+                tableContent[1] = r.getString("mail_number");
+                tableContent[2] = r.getString("applicant_name");
+                tableContent[3] = r.getString("created_at");
+                tableContent[4] = r.getString("type_name");
+                tableContent[5] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
+                tableContent[6] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
+                tableContent[7] = "Periksa";
+                tableContent[8] = r.getString("mail_comment");
+                tableContent[9] = r.getString("mail_id");
+                model.addRow(tableContent);
+
             }
-//                tableContent[0] = i;
-//                tableContent[1] = r.getString("mail_number");
-//                tableContent[2] = r.getString("applicant_name");
-//                tableContent[3] = r.getString("created_at");
-//                tableContent[4] = r.getString("type_name");
-//                tableContent[5] = r.getBoolean("status_validation") == false ? "Reject" : "Accept";
-//                tableContent[6] = r.getBoolean("status_lead") == false ? "Reject" : "Accept";
-//                i++;
-//                model.addRow(tableContent);
-//                r.getString("mail_comment");
-//                r.getString("mail_id");
-//                
-//            }
             r.close();
             s.close();
             jTable1.getColumn("Status Validasi Sekdes").setCellRenderer(new StatusCellRenderer());
             jTable1.getColumn("Status Validasi Kades").setCellRenderer(new StatusCellRenderer());
             jTable1.getColumn("Aksi").setCellRenderer(new ButtonRenderer());
             jTable1.getColumn("Aksi").setCellEditor(new ButtonEditor(jTable1));
+
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -106,7 +105,8 @@ public class ValidationPages extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
@@ -122,19 +122,19 @@ public class ValidationPages extends javax.swing.JFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][] {
-                {null, null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "No", "Status", "Diterima tgl.", "Nama Pemohon", "Perihal", "Val. Sekdes", "Val. Kades", "Aksi"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                new Object[][] {
+                        { null, null, null, null, null, null, null, null }
+                },
+                new String[] {
+                        "No", "Status", "Diterima tgl.", "Nama Pemohon", "Perihal", "Val. Sekdes", "Val. Kades", "Aksi"
+                }) {
+            Class[] types = new Class[] {
+                    java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,
+                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                return types[columnIndex];
             }
         });
         jTable1.setRowHeight(30);
@@ -167,60 +167,65 @@ public class ValidationPages extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 972, Short.MAX_VALUE)
-                .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1016, Short.MAX_VALUE)
-                    .addContainerGap()))
-        );
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 972,
+                                        Short.MAX_VALUE)
+                                .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 82,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1016,
+                                                Short.MAX_VALUE)
+                                        .addContainerGap())));
         jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(586, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addGap(45, 45, 45)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
-                    .addContainerGap()))
-        );
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel3)
+                                        .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 34,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(586, Short.MAX_VALUE))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGap(45, 45, 45)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 764,
+                                                Short.MAX_VALUE)
+                                        .addContainerGap())));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshActionPerformed
+    private void refreshActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshActionPerformed
         // TODO add your handling code here:
         loadData();
-    }//GEN-LAST:event_refreshActionPerformed
+    }// GEN-LAST:event_refreshActionPerformed
 
     private void historybtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_historybtnActionPerformed
         // TODO add your handling code here:

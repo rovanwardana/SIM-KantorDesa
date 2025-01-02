@@ -70,7 +70,7 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
         try {
             Connection c = koneksi.getConnection();
             Statement s = c.createStatement();
-            String sql = "SELECT m.applicant_name, m.mail_number, t.type_name, m.mail_date, m.status_validation, m.status_lead, m.created_at, m.no_ktp, c.nama, c.tempat_tanggal_lahir, c.warga_negara, c.agama, c.jenis_kelamin, c.pekerjaan, c.alamat, c.gol_darah FROM mail_content AS m JOIN civil_registry AS c ON m.no_ktp = c.no_ktp JOIN mail_type AS t ON m.mail_type_id = t.mail_type_id WHERE mail_number = \"" + value + "\";";
+            String sql = "SELECT m.applicant_name, m.mail_number, t.type_name, m.mail_date, m.status_validation, m.status_lead, m.created_at, m.no_ktp, c.nama, c.tempat_tanggal_lahir, c.warga_negara, c.agama, c.jenis_kelamin, c.pekerjaan, c.alamat, c.gol_darah FROM mail_content AS m JOIN civil_registry AS c ON m.no_ktp = c.no_ktp JOIN mail_type AS t ON m.mail_type_id = t.mail_type_id WHERE mail_id = \"" + value + "\";";
             ResultSet r = s.executeQuery(sql);
             
             while (r.next()) {

@@ -132,7 +132,7 @@ public class templateselector extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_nextActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_nextActionPerformed
-        String applicantName = nama_pengaju.getText().trim();
+        String applicantName = text_namapengaju.getText().trim();
         String templateName = (String) box_template_surat.getSelectedItem();
 
         // Validasi input
