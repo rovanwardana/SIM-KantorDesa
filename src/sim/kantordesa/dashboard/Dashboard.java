@@ -67,7 +67,6 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     private void setSidebarVisibility(Set<String> userAccess) {
-        Set<String> u = userAccess;
 
         JLabel[] buttons = {
             Beranda,
