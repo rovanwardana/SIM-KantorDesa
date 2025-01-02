@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import javax.swing.JPanel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableColumn;
 import sim.kantordesa.config.koneksi;

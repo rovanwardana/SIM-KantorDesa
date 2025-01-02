@@ -33,6 +33,7 @@ public class Dashboard extends javax.swing.JFrame {
         this.currentUser = currentUser;
 
         initComponents();
+        setExtendedState(MAXIMIZED_BOTH);
 
         this.buttonLocation = new int[][] {
                 { Beranda.getX(), Beranda.getY() },
