@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableColumn;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.dashboard.Dashboard;
 
 /**
  *
@@ -230,8 +231,7 @@ public class ValidationPages extends javax.swing.JFrame {
 
     private void historybtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_historybtnActionPerformed
         // TODO add your handling code here:
-        HistoryPage.main(null);
-        dispose();
+        Dashboard.switchPanel("History Surat Keluar");
     }// GEN-LAST:event_historybtnActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
