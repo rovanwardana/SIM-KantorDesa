@@ -67,7 +67,7 @@ public class Dashboard extends javax.swing.JFrame {
         Card.add(new ValidationPages().getContentPanel(), "Validasi");
         Card.add(new PelaporanSuratPages().getContentPanel(), "Pelaporan");
 
-        switchPanel(Card, "Beranda");
+        switchPanel("Beranda");
 
         Sidebar.removeAll();
         Sidebar.add(Beranda);
@@ -85,9 +85,9 @@ public class Dashboard extends javax.swing.JFrame {
 
     }
 
-    private static void switchPanel(JPanel content, String cardName) {
-        CardLayout layout = (CardLayout) content.getLayout();
-        layout.show(content, cardName);
+    public void switchPanel(String cardName) {
+        CardLayout layout = (CardLayout) Card.getLayout();
+        layout.show(Card, cardName);
     }
 
     private void setSidebarVisibility(Set<String> userAccess) {
@@ -467,15 +467,15 @@ public class Dashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AksesRoleMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_AksesRoleMouseClicked
-        switchPanel(Card, "Akses Role"); // Menampilkan panel Akses Role
+        switchPanel("Akses Role"); // Menampilkan panel Akses Role
     }// GEN-LAST:event_AksesRoleMouseClicked
 
     private void BerandaMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_BerandaMouseClicked
-        switchPanel(Card, "Beranda"); // Menampilkan panel Beranda
+        switchPanel("Beranda"); // Menampilkan panel Beranda
     }// GEN-LAST:event_BerandaMouseClicked
 
     private void DaftarAkunMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_DaftarAkunMouseClicked
-        switchPanel(Card, "Daftar Akun");
+        switchPanel("Daftar Akun");
     }// GEN-LAST:event_DaftarAkunMouseClicked
 
     private void KeluarMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_KeluarMouseClicked
@@ -493,31 +493,31 @@ public class Dashboard extends javax.swing.JFrame {
     }// GEN-LAST:event_KeluarMouseClicked
 
     private void FormSuratKeluarMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_FormSuratKeluarMouseClicked
-        switchPanel(Card, "Form Surat Keluar");
+        switchPanel("Form Surat Keluar");
     }// GEN-LAST:event_FormSuratKeluarMouseClicked
 
     private void FormSuratMasukMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_FormSuratMasukMouseClicked
-        switchPanel(Card, "Form Surat Masuk");
+        switchPanel("Form Surat Masuk");
     }// GEN-LAST:event_FormSuratMasukMouseClicked
 
     private void HistorySuratMasukMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_HistorySuratMasukMouseClicked
-        switchPanel(Card, "History Surat Masuk");
+        switchPanel("History Surat Masuk");
     }// GEN-LAST:event_HistorySuratMasukMouseClicked
 
     private void HistorySuratKeluarMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_HistorySuratKeluarMouseClicked
-        switchPanel(Card, "History Surat Keluar");
+        switchPanel("History Surat Keluar");
     }// GEN-LAST:event_HistorySuratKeluarMouseClicked
 
     private void DisposisiMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_DisposisiMouseClicked
-        switchPanel(Card, "Disposisi");
+        switchPanel("Disposisi");
     }// GEN-LAST:event_DisposisiMouseClicked
 
     private void ValidasiMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_ValidasiMouseClicked
-        switchPanel(Card, "Validasi");
+        switchPanel("Validasi");
     }// GEN-LAST:event_ValidasiMouseClicked
 
     private void PelaporanMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_PelaporanMouseClicked
-        switchPanel(Card, "Pelaporan");
+        switchPanel("Pelaporan");
     }// GEN-LAST:event_PelaporanMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
