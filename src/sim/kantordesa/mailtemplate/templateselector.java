@@ -5,7 +5,9 @@
 package sim.kantordesa.mailtemplate;
 
 import java.sql.*;
+import javax.swing.JPanel;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.dashboard.Dashboard;
 
 /**
  *
@@ -16,6 +18,10 @@ public class templateselector extends javax.swing.JFrame {
     public templateselector() {
         initComponents();
         loadTemplateSurat(); // Panggil metode untuk memuat data ke dropdown
+    }
+    
+    public JPanel getContentPanel() {
+        return (JPanel) this.getContentPane();
     }
 
     @SuppressWarnings("unchecked")
@@ -166,9 +172,8 @@ public class templateselector extends javax.swing.JFrame {
         }
 
         // Buka form berikutnya
-        mailform nextForm = new mailform(templateName, mailTypeId);
-        nextForm.setVisible(true);
-        this.dispose();
+        Dashboard.card.add(new mailform(templateName, mailTypeId).getContentPanel(), templateName);
+        Dashboard.switchPanel(templateName);
     }// GEN-LAST:event_btn_nextActionPerformed
 
     public static void main(String args[]) {

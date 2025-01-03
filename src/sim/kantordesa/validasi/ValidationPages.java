@@ -8,7 +8,9 @@ import java.sql.ResultSet;
 import javax.swing.JPanel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableColumn;
+import sim.kantordesa.config.User;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.dashboard.Dashboard;
 
 /**
  *
@@ -18,13 +20,17 @@ public class ValidationPages extends javax.swing.JFrame {
 
     Object[] tableContent = new Object[10];
     private final javax.swing.table.DefaultTableModel model;
+    private User currentUser;
 
     /**
      * Creates new form sekdes
      */
-    public ValidationPages() {
+    
+    public ValidationPages(User currentUser) {
         initComponents();
         setExtendedState(MAXIMIZED_BOTH);
+        
+        this.currentUser = currentUser;
 
         model = new javax.swing.table.DefaultTableModel() {
             @Override
@@ -84,15 +90,22 @@ public class ValidationPages extends javax.swing.JFrame {
                 tableContent[7] = "Periksa";
                 tableContent[8] = r.getString("mail_comment");
                 tableContent[9] = r.getString("mail_id");
-                model.addRow(tableContent);
-
+                
+                if (currentUser.getIdRole() == 1 && (r.getBoolean("status_validation") == true && r.getBoolean("status_lead") == false)) {
+                    model.addRow(tableContent);
+                } else if (currentUser.getIdRole() == 2 && (r.getBoolean("status_validation") == false && r.getBoolean("status_lead") == false)) {
+                    model.addRow(tableContent);
+                }
+                
+                
+ 
             }
             r.close();
             s.close();
             jTable1.getColumn("Status Validasi Sekdes").setCellRenderer(new StatusCellRenderer());
             jTable1.getColumn("Status Validasi Kades").setCellRenderer(new StatusCellRenderer());
             jTable1.getColumn("Aksi").setCellRenderer(new ButtonRenderer());
-            jTable1.getColumn("Aksi").setCellEditor(new ButtonEditor(jTable1));
+            jTable1.getColumn("Aksi").setCellEditor(new ButtonEditor(jTable1, currentUser));
 
         } catch (SQLException e) {
             System.out.println("Error, " + e);
@@ -107,7 +120,7 @@ public class ValidationPages extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
@@ -123,19 +136,19 @@ public class ValidationPages extends javax.swing.JFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {
-                        { null, null, null, null, null, null, null, null }
-                },
-                new String[] {
-                        "No", "Status", "Diterima tgl.", "Nama Pemohon", "Perihal", "Val. Sekdes", "Val. Kades", "Aksi"
-                }) {
-            Class[] types = new Class[] {
-                    java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,
-                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            new Object[][] {
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "No", "Status", "Diterima tgl.", "Nama Pemohon", "Perihal", "Val. Sekdes", "Val. Kades", "Aksi"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
+                return types [columnIndex];
             }
         });
         jTable1.setRowHeight(30);
@@ -168,56 +181,51 @@ public class ValidationPages extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 972,
-                                        Short.MAX_VALUE)
-                                .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 82,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1016,
-                                                Short.MAX_VALUE)
-                                        .addContainerGap())));
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 972, Short.MAX_VALUE)
+                .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1016, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
         jPanel3Layout.setVerticalGroup(
-                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel3)
-                                        .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 34,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(586, Short.MAX_VALUE))
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGap(45, 45, 45)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 764,
-                                                Short.MAX_VALUE)
-                                        .addContainerGap())));
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(historybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(586, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGap(45, 45, 45)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         pack();
         setLocationRelativeTo(null);
@@ -230,8 +238,7 @@ public class ValidationPages extends javax.swing.JFrame {
 
     private void historybtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_historybtnActionPerformed
         // TODO add your handling code here:
-        HistoryPage.main(null);
-        dispose();
+        Dashboard.switchPanel("History Surat Keluar");
     }// GEN-LAST:event_historybtnActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
@@ -261,11 +268,11 @@ public class ValidationPages extends javax.swing.JFrame {
         FlatLightLaf.setup();
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ValidationPages().setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new ValidationPages().setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

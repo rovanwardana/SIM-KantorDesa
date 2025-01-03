@@ -221,7 +221,7 @@ public class login extends javax.swing.JFrame {
                             while (resultSet.next()) {
                                 userAccess.add(resultSet.getString("access_name"));
                             }
-
+                            
                             Dashboard dashboardFrame = new Dashboard(currentUser, userAccess);
                             dashboardFrame.setVisible(true);
                             this.dispose();

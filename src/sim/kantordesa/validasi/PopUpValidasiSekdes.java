@@ -19,6 +19,7 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
     private int roleId;
     JDialog popup;
     boolean allChecked = false;
+    String role;
     JCheckBox[] checkboxes = {
         new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox(), new JCheckBox()
     };
@@ -32,8 +33,9 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
      * Creates new form PopUpValidasiSekdes
      * @param value
      */
-    public PopUpValidasiSekdes(String value) {
+    public PopUpValidasiSekdes(String value, String role) {
         this.roleId = roleId;
+        this.role = role;
         initComponents();
         
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -835,7 +837,7 @@ public final class PopUpValidasiSekdes extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PopUpValidasiSekdes(args[0]).setVisible(true);
+                new PopUpValidasiSekdes(args[0], args[1]).setVisible(true);
             }
         });
     }

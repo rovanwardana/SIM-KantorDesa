@@ -35,6 +35,7 @@ import org.apache.tika.parser.microsoft.rtf.RTFParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.dashboard.Dashboard;
 
 /**
  *
@@ -584,9 +585,7 @@ public class mailform extends javax.swing.JFrame {
     }
 
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {
-        templateselector Template = new templateselector();
-        Template.setVisible(true);
-        this.dispose();
+        Dashboard.switchPanel("Template Selector");
     }
 
     public final void updateTitle(String title) {

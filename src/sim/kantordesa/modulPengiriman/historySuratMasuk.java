@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.dashboard.Dashboard;
 
 public class historySuratMasuk extends javax.swing.JFrame {
 
@@ -230,11 +231,7 @@ public class historySuratMasuk extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_tambahSuratActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahSuratActionPerformed
-        this.dispose();
-        jPanel1.add(new registrasiNaskah().getContentPanel(), "Form Surat Masuk");
-        switchPanel(jPanel1, "Form Surat Masuk");
-//        registrasiNaskah detail = new registrasiNaskah();
-//        detail.setVisible(true);
+        Dashboard.switchPanel("Form Surat Masuk");
     }//GEN-LAST:event_btn_tambahSuratActionPerformed
 
     private void tbl_historySuratMasukMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_historySuratMasukMouseClicked
@@ -242,7 +239,8 @@ public class historySuratMasuk extends javax.swing.JFrame {
         String mail_received_id = tbl_historySuratMasuk.getValueAt(selectedRow, 0).toString();
 
         detailSurat detail = new detailSurat(mail_received_id);
-        detail.setVisible(true);
+        Dashboard.card.add(detail.getContentPanel(), mail_received_id);
+        Dashboard.switchPanel(mail_received_id);
     }//GEN-LAST:event_tbl_historySuratMasukMouseClicked
 
     /**
