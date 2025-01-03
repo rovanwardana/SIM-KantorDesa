@@ -1,5 +1,6 @@
 package sim.kantordesa.dashboard;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.CardLayout;
 import java.awt.Cursor;
 import java.awt.Point;
@@ -39,6 +40,8 @@ public class Dashboard extends javax.swing.JFrame {
         // int yPosition = location.y; // mendapatkan nilai Y
         this.currentUser = currentUser;
         this.userAccess = userAccess;
+        
+        FlatLightLaf.setup();
 
         initComponents();
         setExtendedState(MAXIMIZED_BOTH);
@@ -91,6 +94,8 @@ public class Dashboard extends javax.swing.JFrame {
         Sidebar.add(Keluar);
 
         setSidebarVisibility(userAccess);
+        
+        
         
     }
     
