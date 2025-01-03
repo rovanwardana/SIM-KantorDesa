@@ -24,6 +24,7 @@ public class ValidationPages extends javax.swing.JFrame {
 
     /**
      * Creates new form sekdes
+     * @param currentUser
      */
     
     public ValidationPages(User currentUser) {

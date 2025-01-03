@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.dashboard.Dashboard;
 
 public class suratMasukDisposisi extends javax.swing.JFrame {
 
@@ -184,8 +185,8 @@ public class suratMasukDisposisi extends javax.swing.JFrame {
         String mail_received_id = tbl_historySuratMasuk.getValueAt(selectedRow, 0).toString();
 
         detailSurat detail = new detailSurat(mail_received_id);
-        detail.setVisible(true);
-        this.dispose();
+        Dashboard.card.add(detail.getContentPanel(), mail_received_id);
+        Dashboard.switchPanel(mail_received_id);
     }//GEN-LAST:event_tbl_historySuratMasukMouseClicked
 
     /**

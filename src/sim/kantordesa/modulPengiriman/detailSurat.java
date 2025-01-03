@@ -746,15 +746,15 @@ public class detailSurat extends javax.swing.JFrame {
     private void btn_penyelesaianDisposisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_penyelesaianDisposisiActionPerformed
         String mail_received_id = t_idSurat.getText();
         replyStaff detail = new replyStaff(mail_received_id);
-        detail.setVisible(true);
-        this.dispose();
+        Dashboard.card.add(detail.getContentPanel(), mail_received_id + "penyelesaian");
+        Dashboard.switchPanel(mail_received_id + "penyelesaian");
     }//GEN-LAST:event_btn_penyelesaianDisposisiActionPerformed
 
     private void btn_disposisi1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_disposisi1ActionPerformed
         String mail_received_id = t_idSurat.getText();
         tampilanDisposisi detail = new tampilanDisposisi(mail_received_id);
-        detail.setVisible(true);
-        this.dispose();
+        Dashboard.card.add(detail.getContentPanel(), mail_received_id + "disposisi");
+        Dashboard.switchPanel(mail_received_id + "disposisi");
     }//GEN-LAST:event_btn_disposisi1ActionPerformed
 
     /**

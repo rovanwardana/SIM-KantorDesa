@@ -109,11 +109,6 @@ public class historySuratMasuk extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error membuka file: " + ex.getMessage());
         }
     }
-    
-    private static void switchPanel(JPanel content, String cardName) {
-        CardLayout layout = (CardLayout) content.getLayout();
-        layout.show(content, cardName);
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
