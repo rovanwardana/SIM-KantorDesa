@@ -96,6 +96,8 @@ public class ValidationPages extends javax.swing.JFrame {
                     model.addRow(tableContent);
                 } else if (currentUser.getIdRole() == 2 && (r.getBoolean("status_validation") == false && r.getBoolean("status_lead") == false)) {
                     model.addRow(tableContent);
+                }else{
+                    model.addRow(tableContent);
                 }
                 
                 
