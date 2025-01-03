@@ -21,6 +21,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.dashboard.Dashboard;
 
 public class registrasiNaskah extends javax.swing.JFrame {
 
@@ -98,7 +99,6 @@ public class registrasiNaskah extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(32767, 32767));
-        setPreferredSize(new java.awt.Dimension(1300, 640));
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -347,8 +347,7 @@ public class registrasiNaskah extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void b_kembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_kembaliActionPerformed
-        historySuratMasuk detail = new historySuratMasuk();
-        detail.setVisible(true);
+        Dashboard.switchPanel("History Surat Masuk");
     }//GEN-LAST:event_b_kembaliActionPerformed
 
     private void b_kirimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_kirimActionPerformed

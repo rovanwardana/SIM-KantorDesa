@@ -1,7 +1,11 @@
 package sim.kantordesa.dashboard;
 
 import java.awt.CardLayout;
+import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.sql.Connection;
 import java.util.Set;
 import javax.swing.JLabel;
@@ -12,6 +16,7 @@ import sim.kantordesa.config.koneksi;
 import sim.kantordesa.master.Create_acc;
 import sim.kantordesa.auth.login;
 import sim.kantordesa.mailtemplate.mailform;
+import sim.kantordesa.mailtemplate.templateselector;
 import sim.kantordesa.master.Akses_role;
 import sim.kantordesa.modulPengiriman.detailSurat;
 import sim.kantordesa.modulPengiriman.historySuratMasuk;
@@ -27,7 +32,7 @@ public class Dashboard extends javax.swing.JFrame {
     private User currentUser;
     private Set<String> userAccess;
     private final int[][] buttonLocation;
-    private static JPanel card;
+    public static JPanel card;
 
     public Dashboard(User currentUser, Set<String> userAccess) {
         // this.location = FormSuratMasuk.getLocation();
@@ -51,6 +56,7 @@ public class Dashboard extends javax.swing.JFrame {
                 { DaftarAkun.getX(), DaftarAkun.getY() },
                 { AksesRole.getX(), AksesRole.getY() }
         };
+        
 
         conn = koneksi.getConnection();
 
@@ -66,8 +72,9 @@ public class Dashboard extends javax.swing.JFrame {
         card.add(new HistoryPage().getContentPanel(), "History Surat Keluar");
         card.add(new mailform().getContentPanel(), "Form Surat Keluar");
         card.add(new suratMasukDisposisi().getContentPanel(), "Disposisi");
-        card.add(new ValidationPages().getContentPanel(), "Validasi");
+        card.add(new ValidationPages(currentUser).getContentPanel(), "Validasi");
         card.add(new PelaporanSuratPages().getContentPanel(), "Pelaporan");
+        card.add(new templateselector().getContentPanel(), "Template Selector");
 
         switchPanel("Beranda");
 
@@ -103,19 +110,25 @@ public class Dashboard extends javax.swing.JFrame {
                 Disposisi,
                 Validasi,
                 DaftarAkun,
-                AksesRole
+                AksesRole,
+                Keluar
         };
 
         int visibleIndex = 1;
 
         for (JLabel button : buttons) {
             String buttonLabel = button.getText();
-
-            if (button == Beranda) {
-                button.setLocation(buttonLocation[0][0], buttonLocation[0][1]);
-                Sidebar.add(button);
-                continue;
-            }
+            
+            button.addMouseMotionListener(new MouseMotionListener() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                }
+                
+                @Override
+                public void mouseDragged(MouseEvent e) {}
+            });
+            if (button == Beranda || button == Keluar) continue;
 
             if (userAccess.contains(buttonLabel)) {
                 button.setLocation(button.getX(), buttonLocation[visibleIndex][1]);

@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.dashboard.Dashboard;
 
 public class detailSurat extends javax.swing.JFrame {
 
@@ -739,9 +740,7 @@ public class detailSurat extends javax.swing.JFrame {
     }//GEN-LAST:event_t_noSuratActionPerformed
 
     private void btn_kembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_kembaliActionPerformed
-        historySuratMasuk detail = new historySuratMasuk();
-        detail.setVisible(true);
-        this.dispose();
+        Dashboard.switchPanel("History Surat Masuk");
     }//GEN-LAST:event_btn_kembaliActionPerformed
 
     private void btn_penyelesaianDisposisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_penyelesaianDisposisiActionPerformed

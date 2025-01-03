@@ -7,6 +7,7 @@ package sim.kantordesa.validasi;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import javax.swing.JTable;
+import sim.kantordesa.config.User;
 
 /**
  *
@@ -17,9 +18,11 @@ public class ButtonEditor extends javax.swing.AbstractCellEditor implements java
     private String label;
     private boolean isPushed;
     private javax.swing.JTable table;
+    private User currentUser;
     
-    public ButtonEditor(javax.swing.JTable table) {
+    public ButtonEditor(javax.swing.JTable table, User currentUser) {
         this.table = table;
+        this.currentUser = currentUser;
         button = new javax.swing.JButton();
         button.setOpaque(true);
         button.addActionListener(new ActionListenerImpl());
@@ -60,7 +63,7 @@ public class ButtonEditor extends javax.swing.AbstractCellEditor implements java
             fireEditingStopped();
             int row = table.getSelectedRow();
             Object value = table.getModel().getValueAt(row, 9);
-            PopUpValidasiSekdes.main(new String[] { value.toString() });
+            PopUpValidasiSekdes.main(new String[] { value.toString(), currentUser.getRole() });
         }
     }
     
