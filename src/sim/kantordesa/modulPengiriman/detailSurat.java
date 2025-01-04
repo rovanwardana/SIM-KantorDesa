@@ -14,14 +14,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import sim.kantordesa.config.AppContext;
 import sim.kantordesa.config.koneksi;
 import sim.kantordesa.dashboard.Dashboard;
 
 public class detailSurat extends javax.swing.JFrame {
 
     Connection conn;
+    String mail_received_id;
 
     public detailSurat(String mail_received_id) {
+        this.mail_received_id = mail_received_id;
         initComponents();
         conn = koneksi.getConnection();
 
@@ -35,17 +38,22 @@ public class detailSurat extends javax.swing.JFrame {
         model.addColumn("Tujuan");
         model.addColumn("Pesan/Instruksi");
 
-        System.out.println("mail_received_id: " + mail_received_id);
-        loadTabel(mail_received_id);
-        String disposition_id = getMailDispositionId(mail_received_id);
+        System.out.println("mail_received_id: " + this.mail_received_id);
+        loadTabel(this.mail_received_id);
+        String disposition_id = getMailDispositionId(this.mail_received_id);
         if (disposition_id == null || disposition_id.isEmpty()) {
             btn_penyelesaianDisposisi.setEnabled(false);
-            getDataMail(mail_received_id);
+            getDataMail(this.mail_received_id);
         } else {
-            getDataDisposition(mail_received_id);
+            getDataDisposition(this.mail_received_id);
             btn_disposisi1.setEnabled(false);
-            hidePenyelesaianDisposisi(mail_received_id);
+            hidePenyelesaianDisposisi(this.mail_received_id);
         }
+    }
+    
+    public void updateData() {
+        String mail_received_id = (String) AppContext.get("historymasuk_mailRcvId");
+        this.mail_received_id = mail_received_id != null ? mail_received_id : "";
     }
 
     public Container getContentPanel() {
@@ -110,8 +118,6 @@ public class detailSurat extends javax.swing.JFrame {
                 t_tglSurat.setText(rs.getString("mail_date"));
                 t_statusSurat.setText(rs.getString("status_name"));
 
-            } else {
-                JOptionPane.showMessageDialog(null, "Data tidak ditemukan");
             }
 
         } catch (SQLException e) {

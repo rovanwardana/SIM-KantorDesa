@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+import sim.kantordesa.config.AppContext;
 import sim.kantordesa.config.koneksi;
 import sim.kantordesa.dashboard.Dashboard;
 
@@ -234,8 +235,11 @@ public class historySuratMasuk extends javax.swing.JFrame {
         String mail_received_id = tbl_historySuratMasuk.getValueAt(selectedRow, 0).toString();
 
         detailSurat detail = new detailSurat(mail_received_id);
-        Dashboard.card.add(detail.getContentPanel(), mail_received_id);
-        Dashboard.switchPanel(mail_received_id);
+        AppContext.put("historymasuk_mailRcvId", mail_received_id);
+        detail.updateData();
+        Dashboard.card.revalidate();
+        Dashboard.card.repaint();
+        Dashboard.switchPanel("Detail Surat");
     }//GEN-LAST:event_tbl_historySuratMasukMouseClicked
 
     /**

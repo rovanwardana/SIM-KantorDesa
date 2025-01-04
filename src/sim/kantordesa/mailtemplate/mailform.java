@@ -34,8 +34,13 @@ import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.microsoft.rtf.RTFParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
+import sim.kantordesa.config.AppContext;
 import sim.kantordesa.config.koneksi;
 import sim.kantordesa.dashboard.Dashboard;
+import com.itextpdf.layout.element.TabStop;
+import com.itextpdf.layout.properties.TabAlignment;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -43,10 +48,12 @@ import sim.kantordesa.dashboard.Dashboard;
  */
 public class mailform extends javax.swing.JFrame {
 
-    private int mailTypeId;
+    public int mailTypeId;
+    public String title;
 
     public mailform(String title, int mailTypeId) {
         this.mailTypeId = mailTypeId;
+        this.title = title;
         initComponents();
         updateTitle(title);
     }
@@ -57,6 +64,14 @@ public class mailform extends javax.swing.JFrame {
 
     public JPanel getContentPanel() {
         return (JPanel) this.getContentPane();
+    }
+    
+    public void updateData() {
+        String mailform_templateName = (String) AppContext.get("mailform_templateName");
+        Integer mailform_mailTypeId = (Integer) AppContext.get("mailform_mailTypeId");
+        this.title = mailform_templateName != null ? mailform_templateName : "MAIL FORM";
+        this.mailTypeId = mailform_mailTypeId != null ? mailform_mailTypeId : 0;
+        updateTitle(this.title);
     }
 
     /**
@@ -581,7 +596,7 @@ public class mailform extends javax.swing.JFrame {
         }
 
         saveData();
-        generatePDF(mailTypeId, conn, title);
+        generatePDF(this.mailTypeId, conn, title);
     }
 
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {
@@ -687,7 +702,7 @@ public class mailform extends javax.swing.JFrame {
         try {
             Connection conn = koneksi.getConnection();
             PreparedStatement stmt = conn.prepareStatement("SELECT mail_type FROM mail_type WHERE mail_type_id = ?");
-            stmt.setInt(1, mailTypeId);
+            stmt.setInt(1, this.mailTypeId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return rs.getString("mail_type");
@@ -789,19 +804,23 @@ public class mailform extends javax.swing.JFrame {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String dariTanggal = sdf.format(daritanggal.getDate());
                     String sampaiTanggal = sdf.format(sampaitanggal.getDate());
+                    
+                    List<TabStop> tabStops = new ArrayList<>();
+                    tabStops.add(new TabStop(200, TabAlignment.LEFT));
+                    tabStops.add(new TabStop(400, TabAlignment.LEFT));
 
                     // Main Content
-                    Paragraph mainContent = new Paragraph()
-                            .add(new Text("Nama                     : "
+                    Paragraph mainContent = new Paragraph().addTabStops(tabStops)
+                            .add(new Text("Nama\t\t\t\t\t\t\t: "
                                     + (text_nama.getText() != null ? text_nama.getText() : "")).setFontSize(12))
-                            .add(new Text("\nTempat/tanggal lahir   : "
+                            .add(new Text("\nTempat/tanggal lahir\t : "
                                     + (text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : ""))
                                     .setFontSize(12))
-                            .add(new Text("\nUsia                   : "
+                            .add(new Text("\nUsia\t\t\t\t\t\t\t: "
                                     + (jUmur.getValue() != null ? jUmur.getValue().toString() : "")).setFontSize(12))
-                            .add(new Text("\nWarga negara           : " + (wni.isSelected() ? "WNI" : "WNA"))
+                            .add(new Text("\nWarga negara\t\t\t\t\t: " + (wni.isSelected() ? "WNI" : "WNA"))
                                     .setFontSize(12))
-                            .add(new Text("\nAgama                  : "
+                            .add(new Text("\nAgama\t\t\t\t\t\t: "
                                     + (box_agama.getSelectedItem() != null ? box_agama.getSelectedItem().toString()
                                             : ""))
                                     .setFontSize(12))
@@ -876,7 +895,7 @@ public class mailform extends javax.swing.JFrame {
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, mailNumber);
             stmt.setString(2, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            stmt.setInt(3, mailTypeId);
+            stmt.setInt(3, this.mailTypeId);
             stmt.executeUpdate();
         }
     }
