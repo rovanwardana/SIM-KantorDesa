@@ -113,10 +113,10 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="DaftarAkun" max="32767" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="AksesRole" max="32767" attributes="0"/>
-                  <EmptySpace pref="67" max="32767" attributes="0"/>
+                  <Component id="AksesRole" pref="29" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="182" max="-2" attributes="0"/>
                   <Component id="Keluar" max="-2" attributes="0"/>
-                  <EmptySpace pref="147" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
