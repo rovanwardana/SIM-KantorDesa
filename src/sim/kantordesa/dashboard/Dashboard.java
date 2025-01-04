@@ -36,30 +36,28 @@ public class Dashboard extends javax.swing.JFrame {
     public static JPanel card;
 
     public Dashboard(User currentUser, Set<String> userAccess) {
-        // this.location = FormSuratMasuk.getLocation();
-        // int yPosition = location.y; // mendapatkan nilai Y
         this.currentUser = currentUser;
         this.userAccess = userAccess;
-        
+
         FlatLightLaf.setup();
 
         initComponents();
         setExtendedState(MAXIMIZED_BOTH);
 
         card = this.Card;
-        
-        this.buttonLocation = new int[][] {
-                { Beranda.getX(), Beranda.getY() },
-                { FormSuratMasuk.getX(), FormSuratMasuk.getY() },
-                { FormSuratKeluar.getX(), FormSuratKeluar.getY() },
-                { HistorySuratMasuk.getX(), HistorySuratMasuk.getY() },
-                { HistorySuratKeluar.getX(), HistorySuratKeluar.getY() },
-                { Disposisi.getX(), Disposisi.getY() },
-                { Validasi.getX(), Validasi.getY() },
-                { DaftarAkun.getX(), DaftarAkun.getY() },
-                { AksesRole.getX(), AksesRole.getY() }
+
+        this.buttonLocation = new int[][]{
+            {Beranda.getX(), Beranda.getY()},
+            {FormSuratMasuk.getX(), FormSuratMasuk.getY()},
+            {FormSuratKeluar.getX(), FormSuratKeluar.getY()},
+            {HistorySuratMasuk.getX(), HistorySuratMasuk.getY()},
+            {HistorySuratKeluar.getX(), HistorySuratKeluar.getY()},
+            {Disposisi.getX(), Disposisi.getY()},
+            {Validasi.getX(), Validasi.getY()},
+            {Pelaporan.getX(), Pelaporan.getY()},
+            {DaftarAkun.getX(), DaftarAkun.getY()},
+            {AksesRole.getX(), AksesRole.getY()}
         };
-        
 
         conn = koneksi.getConnection();
 
@@ -89,16 +87,15 @@ public class Dashboard extends javax.swing.JFrame {
         Sidebar.add(HistorySuratKeluar);
         Sidebar.add(Disposisi);
         Sidebar.add(Validasi);
+        Sidebar.add(Pelaporan);
         Sidebar.add(DaftarAkun);
         Sidebar.add(AksesRole);
         Sidebar.add(Keluar);
 
         setSidebarVisibility(userAccess);
-        
-        
-        
+
     }
-    
+
     public static void switchPanel(String cardName) {
         CardLayout layout = (CardLayout) card.getLayout();
         layout.show(card, cardName);
@@ -107,33 +104,37 @@ public class Dashboard extends javax.swing.JFrame {
     private void setSidebarVisibility(Set<String> userAccess) {
 
         JLabel[] buttons = {
-                Beranda,
-                FormSuratMasuk,
-                FormSuratKeluar,
-                HistorySuratMasuk,
-                HistorySuratKeluar,
-                Disposisi,
-                Validasi,
-                DaftarAkun,
-                AksesRole,
-                Keluar
+            Beranda,
+            FormSuratMasuk,
+            FormSuratKeluar,
+            HistorySuratMasuk,
+            HistorySuratKeluar,
+            Disposisi,
+            Validasi,
+            Pelaporan,
+            DaftarAkun,
+            AksesRole,
+            Keluar
         };
 
         int visibleIndex = 1;
 
         for (JLabel button : buttons) {
             String buttonLabel = button.getText();
-            
+
             button.addMouseMotionListener(new MouseMotionListener() {
                 @Override
                 public void mouseMoved(MouseEvent e) {
                     button.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 }
-                
+
                 @Override
-                public void mouseDragged(MouseEvent e) {}
+                public void mouseDragged(MouseEvent e) {
+                }
             });
-            if (button == Beranda || button == Keluar) continue;
+            if (button == Beranda || button == Keluar) {
+                continue;
+            }
 
             if (userAccess.contains(buttonLabel)) {
                 button.setLocation(button.getX(), buttonLocation[visibleIndex][1]);
@@ -334,10 +335,10 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(DaftarAkun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(AksesRole, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addComponent(AksesRole, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                .addGap(182, 182, 182)
                 .addComponent(Keluar)
-                .addContainerGap(147, Short.MAX_VALUE))
+                .addGap(17, 17, 17))
         );
 
         Disposisi.getAccessibleContext().setAccessibleDescription("");
