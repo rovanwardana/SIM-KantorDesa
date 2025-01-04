@@ -8,6 +8,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -16,6 +18,7 @@ import sim.kantordesa.config.User;
 import sim.kantordesa.config.koneksi;
 import sim.kantordesa.master.Create_acc;
 import sim.kantordesa.auth.login;
+import sim.kantordesa.config.AppContext;
 import sim.kantordesa.mailtemplate.mailform;
 import sim.kantordesa.mailtemplate.templateselector;
 import sim.kantordesa.master.Akses_role;
@@ -34,6 +37,7 @@ public class Dashboard extends javax.swing.JFrame {
     private Set<String> userAccess;
     private final int[][] buttonLocation;
     public static JPanel card;
+    private static Map<String, Object> pageMap = new HashMap<>();
 
     public Dashboard(User currentUser, Set<String> userAccess) {
         // this.location = FormSuratMasuk.getLocation();
@@ -66,18 +70,23 @@ public class Dashboard extends javax.swing.JFrame {
         NamaUser.setText(currentUser.getFullName());
 
         Role.setText(currentUser.getRole());
+        
+        String mailform_templateName = (String) AppContext.get("mailform_templateName");
+        Integer mailform_mailTypeId = (Integer) AppContext.get("mailform_mailTypeId");
+        String historymasuk_mailrcvid = (String) AppContext.get("historymasuk_mailRcvId");
 
-        card.add(new Beranda().getContentPanel(), "Beranda");
-        card.add(new Akses_role().getContentPanel(), "Akses Role");
-        card.add(new Create_acc().getContentPanel(), "Daftar Akun");
-        card.add(new registrasiNaskah().getContentPanel(), "Form Surat Masuk");
-        card.add(new historySuratMasuk().getContentPanel(), "History Surat Masuk");
-        card.add(new HistoryPage().getContentPanel(), "History Surat Keluar");
-        card.add(new mailform().getContentPanel(), "Form Surat Keluar");
-        card.add(new suratMasukDisposisi().getContentPanel(), "Disposisi");
-        card.add(new ValidationPages(currentUser).getContentPanel(), "Validasi");
-        card.add(new PelaporanSuratPages().getContentPanel(), "Pelaporan");
-        card.add(new templateselector().getContentPanel(), "Template Selector");
+        Dashboard.addPage(new Beranda(), "Beranda");
+        Dashboard.addPage(new Akses_role(), "Akses Role");
+        Dashboard.addPage(new Create_acc(), "Daftar Akun");
+        Dashboard.addPage(new registrasiNaskah(), "Form Surat Masuk");
+        Dashboard.addPage(new historySuratMasuk(), "History Surat Masuk");
+        Dashboard.addPage(new HistoryPage(), "History Surat Keluar");
+        Dashboard.addPage(new mailform(mailform_templateName != null ? mailform_templateName : "MAIL FORM", mailform_mailTypeId != null ? mailform_mailTypeId : 0), "Form Surat Keluar");
+        Dashboard.addPage(new suratMasukDisposisi(), "Disposisi");
+        Dashboard.addPage(new ValidationPages(currentUser), "Validasi");
+        Dashboard.addPage(new PelaporanSuratPages(), "Pelaporan");
+        Dashboard.addPage(new templateselector(), "Template Selector");
+        Dashboard.addPage(new detailSurat(historymasuk_mailrcvid != null ? historymasuk_mailrcvid : ""), "Detail Surat");
 
         switchPanel("Beranda");
 
@@ -101,7 +110,28 @@ public class Dashboard extends javax.swing.JFrame {
     
     public static void switchPanel(String cardName) {
         CardLayout layout = (CardLayout) card.getLayout();
+        card.revalidate();
+        card.repaint();
         layout.show(card, cardName);
+    }
+    
+    public static void addPage(Object page, String key) {
+        if (page instanceof JPanel jPanel) {
+            pageMap.put(key, page);
+            card.add(jPanel, key);
+        } else {
+            try {
+                JPanel contentPanel = (JPanel) page.getClass().getMethod("getContentPanel").invoke(page);
+                pageMap.put(key, page);
+                card.add(contentPanel, key);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Page must either be a JPanel or have a getContentPanel method.", e);
+            }
+        }
+    }
+    
+    public static Object getPage(String key) {
+        return pageMap.get(key);
     }
 
     private void setSidebarVisibility(Set<String> userAccess) {
@@ -469,7 +499,7 @@ public class Dashboard extends javax.swing.JFrame {
     }// GEN-LAST:event_KeluarMouseClicked
 
     private void FormSuratKeluarMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_FormSuratKeluarMouseClicked
-        switchPanel("Form Surat Keluar");
+        switchPanel("Template Selector");
     }// GEN-LAST:event_FormSuratKeluarMouseClicked
 
     private void FormSuratMasukMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_FormSuratMasukMouseClicked
