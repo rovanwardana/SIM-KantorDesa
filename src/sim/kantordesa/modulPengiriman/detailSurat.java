@@ -52,8 +52,19 @@ public class detailSurat extends javax.swing.JFrame {
     }
     
     public void updateData() {
-        String mail_received_id = (String) AppContext.get("historymasuk_mailRcvId");
-        this.mail_received_id = mail_received_id != null ? mail_received_id : "";
+        String mailrcvid = (String) AppContext.get("historymasuk_mailRcvId");
+        this.mail_received_id = mailrcvid != null ? mailrcvid : "";
+        System.out.println("New ID: " + this.mail_received_id);
+        loadTabel(this.mail_received_id);
+        String disposition_id = getMailDispositionId(this.mail_received_id);
+        if (disposition_id == null || disposition_id.isEmpty()) {
+            btn_penyelesaianDisposisi.setEnabled(false);
+            getDataMail(this.mail_received_id);
+        } else {
+            getDataDisposition(this.mail_received_id);
+            btn_disposisi1.setEnabled(false);
+            hidePenyelesaianDisposisi(this.mail_received_id);
+        }
     }
 
     public Container getContentPanel() {

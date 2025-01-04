@@ -234,7 +234,7 @@ public class historySuratMasuk extends javax.swing.JFrame {
         int selectedRow = tbl_historySuratMasuk.getSelectedRow();
         String mail_received_id = tbl_historySuratMasuk.getValueAt(selectedRow, 0).toString();
 
-        detailSurat detail = new detailSurat(mail_received_id);
+        detailSurat detail = (detailSurat) Dashboard.getPage("Detail Surat");
         AppContext.put("historymasuk_mailRcvId", mail_received_id);
         detail.updateData();
         Dashboard.card.revalidate();
