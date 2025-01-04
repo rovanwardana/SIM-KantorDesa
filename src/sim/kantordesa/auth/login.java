@@ -4,6 +4,7 @@
  */
 package sim.kantordesa.auth;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +20,7 @@ public class login extends javax.swing.JFrame {
      * Creates new form login
      */
     public login() {
+        FlatLightLaf.setup();
         initComponents();
         showpass.setVisible(false);
     }
@@ -221,7 +223,7 @@ public class login extends javax.swing.JFrame {
                             while (resultSet.next()) {
                                 userAccess.add(resultSet.getString("access_name"));
                             }
-
+                            
                             Dashboard dashboardFrame = new Dashboard(currentUser, userAccess);
                             dashboardFrame.setVisible(true);
                             this.dispose();
