@@ -4,10 +4,14 @@
  */
 package sim.kantordesa.mailtemplate;
 
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Div;
+import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Text;
@@ -38,7 +42,9 @@ import sim.kantordesa.config.AppContext;
 import sim.kantordesa.config.koneksi;
 import sim.kantordesa.dashboard.Dashboard;
 import com.itextpdf.layout.element.TabStop;
+import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TabAlignment;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +71,7 @@ public class mailform extends javax.swing.JFrame {
     public JPanel getContentPanel() {
         return (JPanel) this.getContentPane();
     }
-    
+
     public void updateData() {
         String mailform_templateName = (String) AppContext.get("mailform_templateName");
         Integer mailform_mailTypeId = (Integer) AppContext.get("mailform_mailTypeId");
@@ -596,7 +602,7 @@ public class mailform extends javax.swing.JFrame {
         }
 
         saveData();
-        generatePDF(this.mailTypeId, conn, title);
+        generatePDF(this.mailTypeId, conn, title, false);
     }
 
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {
@@ -614,8 +620,7 @@ public class mailform extends javax.swing.JFrame {
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String queryUpdateMailContent = "UPDATE mail_content SET no_ktp = ?, mulai_berlaku = ?, tgl_akhir = ? "
                 + "WHERE mail_id = (SELECT mail_id FROM mail_content ORDER BY mail_id DESC LIMIT 1)";
-        try (PreparedStatement stmt1 = conn.prepareStatement(queryCivilRegistry);
-                PreparedStatement stmt2 = conn.prepareStatement(queryUpdateMailContent)) {
+        try (PreparedStatement stmt1 = conn.prepareStatement(queryCivilRegistry); PreparedStatement stmt2 = conn.prepareStatement(queryUpdateMailContent)) {
             stmt1.setString(1, text_nama.getText());
             stmt1.setString(2, text_noktp.getText());
             stmt1.setString(3, text_nokk.getText());
@@ -671,26 +676,26 @@ public class mailform extends javax.swing.JFrame {
         return villageData;
     }
 
-    private String replacePlaceholders(String content, Map<String, String> villageData) {
+    private String replacePlaceholders(String content, Map<String, String> villageData, Map<String, String> mailData) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String dariTanggal = sdf.format(daritanggal.getDate());
-        String sampaiTanggal = sdf.format(sampaitanggal.getDate());
+        String dariTanggal = daritanggal.getDate() != null ? sdf.format(daritanggal.getDate()) : "";
+        String sampaiTanggal = sampaitanggal.getDate() != null ? sdf.format(sampaitanggal.getDate()) : "";
 
-        return content.replace("[nama]", text_nama.getText() != null ? text_nama.getText() : "")
-                .replace("[ttl]", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : "")
-                .replace("[usia]", jUmur.getValue() != null ? jUmur.getValue().toString() : "")
-                .replace("[warga_negara]", wni.isSelected() ? "WNI" : "WNA")
-                .replace("[agama]", box_agama.getSelectedItem() != null ? box_agama.getSelectedItem().toString() : "")
-                .replace("[sex]", lakilaki.isSelected() ? "Laki-laki" : "Perempuan")
-                .replace("[pekerjaan]", text_pekerjaan.getText() != null ? text_pekerjaan.getText() : "")
-                .replace("[alamat]", text_ttinggal.getText() != null ? text_ttinggal.getText() : "")
-                .replace("[no_ktp]", text_noktp.getText() != null ? text_noktp.getText() : "")
-                .replace("[no_kk]", text_nokk.getText() != null ? text_nokk.getText() : "")
-                .replace("[keperluan]", text_keperluan.getText() != null ? text_keperluan.getText() : "")
-                .replace("[mulai_berlaku]", dariTanggal)
-                .replace("[tgl_akhir]", sampaiTanggal)
+        return content.replace("[nama]", mailData.getOrDefault("nama", text_nama.getText() != null ? text_nama.getText() : ""))
+                .replace("[ttl]", mailData.getOrDefault("ttl", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : ""))
+                .replace("[usia]", mailData.getOrDefault("umur", jUmur.getValue() != null ? jUmur.getValue().toString() : ""))
+                .replace("[warga_negara]", mailData.getOrDefault("warga_negara", wni.isSelected() ? "WNI" : "WNA"))
+                .replace("[agama]", mailData.getOrDefault("agama", box_agama.getSelectedItem() != null ? box_agama.getSelectedItem().toString() : ""))
+                .replace("[sex]", mailData.getOrDefault("sex", lakilaki.isSelected() ? "Laki-laki" : "Perempuan"))
+                .replace("[pekerjaan]", mailData.getOrDefault("pekerjaan", text_pekerjaan.getText() != null ? text_pekerjaan.getText() : ""))
+                .replace("[alamat]", mailData.getOrDefault("alamat", text_ttinggal.getText() != null ? text_ttinggal.getText() : ""))
+                .replace("[no_ktp]", mailData.getOrDefault("no_ktp", text_noktp.getText() != null ? text_noktp.getText() : ""))
+                .replace("[no_kk]", mailData.getOrDefault("no_kk", text_nokk.getText() != null ? text_nokk.getText() : ""))
+                .replace("[keperluan]", mailData.getOrDefault("keperlan", text_keperluan.getText() != null ? text_keperluan.getText() : ""))
+                .replace("[mulai_berlaku]", mailData.getOrDefault("mulai_berlaku", dariTanggal))
+                .replace("[tgl_akhir]", mailData.getOrDefault("tgl_akhir", sampaiTanggal))
                 .replace("[gol_darah]",
-                        box_goldar.getSelectedItem() != null ? box_goldar.getSelectedItem().toString() : "")
+                        mailData.getOrDefault("gol_darah", box_goldar.getSelectedItem() != null ? box_goldar.getSelectedItem().toString() : ""))
                 .replace("[nama_kab]", villageData.getOrDefault("nama_kab", ""))
                 .replace("[nama_kec]", villageData.getOrDefault("nama_kec", ""))
                 .replace("[nama_des]", villageData.getOrDefault("nama_des", ""))
@@ -698,11 +703,11 @@ public class mailform extends javax.swing.JFrame {
                 .replace("[kode_des]", villageData.getOrDefault("kode_des", ""));
     }
 
-    private String loadRTFTemplate() {
+    private String loadRTFTemplate(Integer mail_type_id) {
         try {
             Connection conn = koneksi.getConnection();
             PreparedStatement stmt = conn.prepareStatement("SELECT mail_type FROM mail_type WHERE mail_type_id = ?");
-            stmt.setInt(1, this.mailTypeId);
+            stmt.setInt(1, mail_type_id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return rs.getString("mail_type");
@@ -718,10 +723,15 @@ public class mailform extends javax.swing.JFrame {
         return mailTypeId + "/" + tahun;
     }
 
-    private void generatePDF(int mailTypeId, Connection conn, String title) {
+    public void generatePDF(int mailTypeId, Connection conn, String title, boolean isValidated) {
+        String ttdKadesPath = isValidated ? "src/sim/kantordesa/mailtemplate/ttd/ttd_kades.png" : "";
+        String ttdSekdesPath = isValidated ? "src/sim/kantordesa/mailtemplate/ttd/ttd_sekdes.png" : "";
+
+        File fileTtdKades = new File(ttdKadesPath);
+        File fileTtdSekdes = new File(ttdSekdesPath);
 
         try {
-            String rtfPath = loadRTFTemplate();
+            String rtfPath = loadRTFTemplate(mailTypeId);
             if (rtfPath == null || rtfPath.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "RTF Template not found.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -734,10 +744,10 @@ public class mailform extends javax.swing.JFrame {
             Map<String, String> villageData = getVillageData();
 
             // Replace Placeholders
-            String processedContent = replacePlaceholders(handler.toString(), villageData);
+            String processedContent = replacePlaceholders(handler.toString(), villageData, MailData.getMap());
 
             // Ambil data pemegang surat dari placeholders
-            String pemegangSurat = replacePlaceholders("[nama]", villageData);
+            String pemegangSurat = replacePlaceholders("[nama]", villageData, MailData.getMap());
 
             // Ambil mail_id dan type_name
             String query = "SELECT mail_id, type_name FROM mail_content mc "
@@ -765,9 +775,7 @@ public class mailform extends javax.swing.JFrame {
                 String outputDir = fileChooser.getSelectedFile().getAbsolutePath();
                 String pdfPath = outputDir + "/" + fileName;
 
-                try (PdfWriter writer = new PdfWriter(pdfPath);
-                        PdfDocument pdf = new PdfDocument(writer);
-                        Document document = new Document(pdf)) {
+                try (PdfWriter writer = new PdfWriter(pdfPath); PdfDocument pdf = new PdfDocument(writer); Document document = new Document(pdf)) {
 
                     // Header
                     Paragraph header = new Paragraph("PEMERINTAH " + villageData.get("nama_kab"))
@@ -778,7 +786,7 @@ public class mailform extends javax.swing.JFrame {
                     document.add(header);
 
                     // Kode Desa dan Kode Surat
-                    Table kodeTable = new Table(UnitValue.createPercentArray(new float[] { 1, 1 }));
+                    Table kodeTable = new Table(UnitValue.createPercentArray(new float[]{1, 1}));
                     kodeTable.setWidth(UnitValue.createPercentValue(100));
                     kodeTable.setBorder(Border.NO_BORDER);
                     kodeTable.addCell(
@@ -796,7 +804,7 @@ public class mailform extends javax.swing.JFrame {
                     document.add(suratTitle);
 
                     // Nomor Surat
-                    String noSurat = generateNomorSurat(mailTypeId);
+                    String noSurat = MailData.getMap().getOrDefault("mail_number", generateNomorSurat(mailTypeId));
                     Paragraph nomorSurat = new Paragraph("Nomor: " + noSurat)
                             .setTextAlignment(TextAlignment.CENTER).setFontSize(12).setMarginBottom(20);
                     document.add(nomorSurat);
@@ -804,7 +812,7 @@ public class mailform extends javax.swing.JFrame {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String dariTanggal = sdf.format(daritanggal.getDate());
                     String sampaiTanggal = sdf.format(sampaitanggal.getDate());
-                    
+
                     List<TabStop> tabStops = new ArrayList<>();
                     tabStops.add(new TabStop(200, TabAlignment.LEFT));
                     tabStops.add(new TabStop(400, TabAlignment.LEFT));
@@ -822,7 +830,7 @@ public class mailform extends javax.swing.JFrame {
                                     .setFontSize(12))
                             .add(new Text("\nAgama\t\t\t\t\t\t: "
                                     + (box_agama.getSelectedItem() != null ? box_agama.getSelectedItem().toString()
-                                            : ""))
+                                    : ""))
                                     .setFontSize(12))
                             .add(new Text(
                                     "\nJenis Kelamin          : " + (lakilaki.isSelected() ? "Laki-laki" : "Perempuan"))
@@ -844,7 +852,7 @@ public class mailform extends javax.swing.JFrame {
                                     .setFontSize(12))
                             .add(new Text("\nGolongan Darah         : "
                                     + (box_goldar.getSelectedItem() != null ? box_goldar.getSelectedItem().toString()
-                                            : ""))
+                                    : ""))
                                     .setFontSize(12))
                             .add(new Text(
                                     "\n\nDemikian Surat ini dibuat, untuk dipergunakan sebagaimana mestinya.\n\n\n\n")
@@ -853,23 +861,53 @@ public class mailform extends javax.swing.JFrame {
                     document.add(mainContent);
 
                     // Signature Table
-                    Table signatureTable = new Table(UnitValue.createPercentArray(new float[] { 1, 1, 1 }));
+                    Table signatureTable = new Table(UnitValue.createPercentArray(new float[]{1, 1, 1}));
                     signatureTable.setWidth(UnitValue.createPercentValue(100));
                     signatureTable.setBorder(Border.NO_BORDER);
 
-                    signatureTable.addCell(new Paragraph("Pemegang Surat\n\n\n\n\n" + pemegangSurat)
-                            .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
-                            .setBorder(Border.NO_BORDER);
-                    signatureTable.addCell(
-                            new Paragraph("Mengetahui,\nCamat " + villageData.get("nama_kec") + "\n\n\n\nI Gede Camat")
-                                    .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
-                            .setBorder(Border.NO_BORDER);
-                    signatureTable
-                            .addCell(new Paragraph(villageData.get("nama_des") + ", "
-                                    + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) +
-                                    "\nJabatan " + villageData.get("nama_des") + "\n\n\n\nI Kadek Bendesa")
-                                    .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
-                            .setBorder(Border.NO_BORDER);
+                    if (isValidated) {
+                        if (!fileTtdKades.exists() && !fileTtdSekdes.exists()) {
+                            System.out.println("File ttd tidak ditemukan");
+                        }
+                        Image ttdKades = new Image(ImageDataFactory.create(ttdKadesPath)).scaleToFit(100, 50);
+                        Image ttdSekdes = new Image(ImageDataFactory.create(ttdSekdesPath)).scaleToFit(100, 50);
+
+                        // Pemegang Surat
+                        signatureTable.addCell(new Cell()
+                                .add(new Paragraph("Pemegang Surat\n\n\n\n\n" + pemegangSurat)
+                                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
+                                .setBorder(Border.NO_BORDER));
+
+                        signatureTable.addCell(new Cell()
+                                .add(new Paragraph("Mengetahui,\nCamat " + villageData.get("nama_kec") + "\n")
+                                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
+                                .add(ttdKades.setHorizontalAlignment(HorizontalAlignment.CENTER))
+                                .add(new Paragraph("I Gede Camat").setTextAlignment(TextAlignment.CENTER).setFontSize(12))
+                                .setBorder(Border.NO_BORDER));
+
+                        signatureTable.addCell(new Cell()
+                                .add(new Paragraph(villageData.get("nama_des") + ", "
+                                        + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
+                                        + "\nJabatan " + villageData.get("nama_des") + "\n")
+                                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
+                                .add(ttdSekdes.setHorizontalAlignment(HorizontalAlignment.CENTER))
+                                .add(new Paragraph("I Kadek Bendesa").setTextAlignment(TextAlignment.CENTER).setFontSize(12))
+                                .setBorder(Border.NO_BORDER));
+                    } else {
+                        signatureTable.addCell(new Paragraph("Pemegang Surat\n\n\n\n\n" + pemegangSurat)
+                                .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
+                                .setBorder(Border.NO_BORDER);
+                        signatureTable.addCell(
+                                new Paragraph("Mengetahui,\nCamat " + villageData.get("nama_kec") + "\n\n\n\nI Gede Camat")
+                                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
+                                .setBorder(Border.NO_BORDER);
+                        signatureTable
+                                .addCell(new Paragraph(villageData.get("nama_des") + ", "
+                                        + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
+                                        + "\nJabatan " + villageData.get("nama_des") + "\n\n\n\nI Kadek Bendesa")
+                                        .setTextAlignment(TextAlignment.CENTER).setFontSize(12))
+                                .setBorder(Border.NO_BORDER);
+                    }
 
                     document.add(signatureTable);
                 } catch (IOException ex) {

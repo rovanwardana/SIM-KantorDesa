@@ -29,6 +29,8 @@ import java.awt.GridBagLayout;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import sim.kantordesa.mailtemplate.MailData;
+import sim.kantordesa.mailtemplate.mailform;
 
 /**
  *
@@ -291,6 +293,51 @@ public class HistoryPage extends javax.swing.JFrame {
 
         private void handleDownloadButtonAction() {
             System.out.println("Download Button diklik");
+            mailform mf = new mailform();
+            
+            int row = table.getSelectedRow();
+            String mailTypeString = (String) table.getValueAt(row, 4);
+            Integer mailTypeId = null;
+            
+           try {
+            Connection conn = koneksi.getConnection();
+            
+            String getMailTypeIdQuery = "SELECT mail_type_id FROM `mail_type` where type_name = \"" + mailTypeString + "\";";
+            Statement s = conn.createStatement();
+            ResultSet r = s.executeQuery(getMailTypeIdQuery);
+            while (r.next()) {
+                mailTypeId = r.getInt("mail_type_id");
+            }
+            
+            s.close();
+            r.close();
+            
+            System.out.println(mailTypeId);
+            
+            String getMailDataQuery = "select mail_number, created_at, applicant_name, mail_comment, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id ORDER BY mail_id";
+            
+            MailData.put("nama", mailTypeString);
+            MailData.put("ttl", mailTypeString);
+            MailData.put("umur", mailTypeString);
+            MailData.put("warga_negara", mailTypeString);
+            MailData.put("agama", mailTypeString);
+            MailData.put("sex", mailTypeString);
+            MailData.put("pekerjaan", mailTypeString);
+            MailData.put("alamat", mailTypeString);
+            MailData.put("no_ktp", mailTypeString);
+            MailData.put("no_kk", mailTypeString);
+            MailData.put("keperluan", mailTypeString);
+            MailData.put("mulai_berlaku", mailTypeString);
+            MailData.put("tgl_akhir", mailTypeString);
+            MailData.put("gol_darah", mailTypeString);
+            MailData.put("mail_number", mailTypeString);
+            
+            mf.generatePDF(mailTypeId, conn, mailTypeString, true);
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
+            
+            
         }
 
         @Override //make can't edit table value
