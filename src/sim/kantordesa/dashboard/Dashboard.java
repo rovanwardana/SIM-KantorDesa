@@ -3,8 +3,6 @@ package sim.kantordesa.dashboard;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.CardLayout;
 import java.awt.Cursor;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.sql.Connection;
@@ -16,10 +14,8 @@ import sim.kantordesa.config.User;
 import sim.kantordesa.config.koneksi;
 import sim.kantordesa.master.Create_acc;
 import sim.kantordesa.auth.login;
-import sim.kantordesa.mailtemplate.mailform;
 import sim.kantordesa.mailtemplate.templateselector;
 import sim.kantordesa.master.Akses_role;
-import sim.kantordesa.modulPengiriman.detailSurat;
 import sim.kantordesa.modulPengiriman.historySuratMasuk;
 import sim.kantordesa.modulPengiriman.registrasiNaskah;
 import sim.kantordesa.modulPengiriman.suratMasukDisposisi;
@@ -73,11 +69,10 @@ public class Dashboard extends javax.swing.JFrame {
         card.add(new registrasiNaskah().getContentPanel(), "Form Surat Masuk");
         card.add(new historySuratMasuk().getContentPanel(), "History Surat Masuk");
         card.add(new HistoryPage().getContentPanel(), "History Surat Keluar");
-        card.add(new mailform().getContentPanel(), "Form Surat Keluar");
+        card.add(new templateselector().getContentPanel(), "Form Surat Keluar");
         card.add(new suratMasukDisposisi().getContentPanel(), "Disposisi");
         card.add(new ValidationPages(currentUser).getContentPanel(), "Validasi");
         card.add(new PelaporanSuratPages().getContentPanel(), "Pelaporan");
-        card.add(new templateselector().getContentPanel(), "Template Selector");
 
         switchPanel("Beranda");
 
