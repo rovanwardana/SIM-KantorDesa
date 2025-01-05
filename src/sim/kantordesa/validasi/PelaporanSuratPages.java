@@ -1,6 +1,20 @@
 package sim.kantordesa.validasi;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -21,10 +35,16 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import sim.kantordesa.config.koneksi;
 import java.awt.HeadlessException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+//import javax.swing.text.Document;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
@@ -55,14 +75,8 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         tbHistory.setModel(model);
 
         model.addColumn("No.");
-        model.addColumn("Nomor Surat");
-        model.addColumn("Nama Pemohon");
-        model.addColumn("Tanggal Pengajuan");
-        model.addColumn("Perihal");
-        model.addColumn("Status Validasi Sekdes");
-        model.addColumn("Status Validasi Kades");
-        model.addColumn("Comment");
-        model.addColumn("Aksi");
+        model.addColumn("Tipe Surat");
+        model.addColumn("Total Pengajuan");
 
         setTableAction();
         adjustColumnWidths(tbHistory);
@@ -73,7 +87,7 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         return (JPanel) this.getContentPane();
     }
 
-    private void showLineChart() {
+    private JFreeChart showLineChart() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         try {
@@ -87,7 +101,6 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
                 dataset.addValue(jumlahSurat, "Jumlah Surat", bulan);
             }
 
-//            System.out.println(dataset.getValue(0, 0));
             r.close();
             s.close();
         } catch (SQLException e) {
@@ -100,8 +113,7 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
                 "Surat Masuk per Bulan",
                 "Bulan",
                 "Jumlah Surat",
-                dataset
-        );
+                dataset);
 
         CategoryPlot plot = lineChart.getCategoryPlot();
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
@@ -114,9 +126,11 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         chartPanel1.add(chartPanel, BorderLayout.CENTER);
         chartPanel1.revalidate();
         chartPanel1.repaint();
+
+        return lineChart;
     }
 
-    private void createPieChart() {
+    private JFreeChart createPieChart() {
         DefaultPieDataset dataset = new DefaultPieDataset();
 
         // Mengambil data dari database
@@ -156,6 +170,8 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         chartPanel2.add(chartPanel, BorderLayout.CENTER);
         chartPanel2.revalidate();
         chartPanel2.repaint();
+        
+        return pieChart;
     }
 
     public void setTableAction() {
@@ -164,21 +180,19 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
 
         try {
             Statement s = c.createStatement();
-            String sql = "select mail_id, mail_number, created_at, applicant_name, mail_comment, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id;";
+            String sql = "SELECT mail_type.type_name, COUNT(mail_content.mail_id) AS total_pengajuan " +
+                    "FROM mail_content " +
+                    "INNER JOIN mail_type ON mail_content.mail_type_id = mail_type.mail_type_id " +
+                    "GROUP BY mail_type.type_name " +
+                    "ORDER BY mail_type.type_name ASC;";
             ResultSet r = s.executeQuery(sql);
             int i = 1;
             while (r.next()) {
-
-                model.addRow(new Object[]{
-                    i++,
-                    r.getString("mail_number"),
-                    r.getString("applicant_name"),
-                    r.getString("created_at"),
-                    r.getString("type_name"),
-                    r.getBoolean("status_validation") == false ? "Reject" : "Accept",
-                    r.getBoolean("status_lead") == false ? "Reject" : "Accept",
-                    r.getString("mail_comment"),
-                    r.getString("mail_id"),});
+                model.addRow(new Object[] {
+                        i++,
+                        r.getString("type_name"),
+                        r.getInt("total_pengajuan")
+                });
 
             }
             r.close();
@@ -186,10 +200,10 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         } catch (SQLException e) {
             System.out.println("Error, " + e);
         }
-        tbHistory.getColumn("Status Validasi Sekdes").setCellRenderer(new StatusCellRenderer());
-        tbHistory.getColumn("Status Validasi Kades").setCellRenderer(new StatusCellRenderer());
-        tbHistory.getColumn("Aksi").setCellRenderer(new ButtonPanelRenderer());
-        tbHistory.getColumn("Aksi").setCellEditor(new ButtonPanelEditor(tbHistory));
+        tbHistory.getColumnModel().getColumn(0).setHeaderValue("No");
+        tbHistory.getColumnModel().getColumn(1).setHeaderValue("Tipe Surat");
+        tbHistory.getColumnModel().getColumn(2).setHeaderValue("Total Pengajuan");
+
     }
 
     public static void adjustColumnWidths(JTable table) {
@@ -206,17 +220,47 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
 
         // Get the width of the column header
         TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
-        Component comp = headerRenderer.getTableCellRendererComponent(table, tableColumn.getHeaderValue(), false, false, 0, column);
+        Component comp = headerRenderer.getTableCellRendererComponent(table, tableColumn.getHeaderValue(), false, false,
+                0, column);
         maxWidth = Math.max(comp.getPreferredSize().width, maxWidth);
 
         // Get the width of the column content
         for (int row = 0; row < table.getRowCount(); row++) {
             TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
-            comp = cellRenderer.getTableCellRendererComponent(table, table.getValueAt(row, column), false, false, row, column);
+            comp = cellRenderer.getTableCellRendererComponent(table, table.getValueAt(row, column), false, false, row,
+                    column);
             maxWidth = Math.max(comp.getPreferredSize().width, maxWidth);
         }
 
-        return maxWidth + 10; // Add some margin
+        return maxWidth + 10;
+    }
+
+    public void addJTableToPDF(JTable table, Document document) {
+        try {
+            // Membuat tabel PDF dengan jumlah kolom sesuai JTable
+            PdfPTable pdfTable = new PdfPTable(table.getColumnCount());
+            pdfTable.setWidthPercentage(100);
+
+            // Menambahkan header dari JTable
+            for (int i = 0; i < table.getColumnCount(); i++) {
+                PdfPCell cell = new PdfPCell(new Phrase(table.getColumnName(i)));
+                cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                pdfTable.addCell(cell);
+            }
+
+            // Menambahkan isi tabel dari JTable
+            for (int row = 0; row < table.getRowCount(); row++) {
+                for (int col = 0; col < table.getColumnCount(); col++) {
+                    Object value = table.getValueAt(row, col);
+                    pdfTable.addCell(value != null ? value.toString() : "");
+                }
+            }
+
+            // Menambahkan tabel ke dokumen PDF
+            document.add(pdfTable);
+        } catch (DocumentException e) {
+            System.out.println("Error saat menambahkan JTable ke PDF: " + e.getMessage());
+        }
     }
 
     class ButtonPanelRenderer extends ButtonPanel implements TableCellRenderer {
@@ -232,9 +276,12 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
             boolean statusValidation = "Accept".equals(table.getValueAt(row, 5));
             boolean statusLead = "Accept".equals(table.getValueAt(row, 6));
             Object mailComment = table.getValueAt(row, 7);
-            boolean hasMailComment = (mailComment != null && !mailComment.toString().isEmpty() && statusValidation && statusLead);
+            boolean hasMailComment = (mailComment != null && !mailComment.toString().isEmpty() && statusValidation
+                    && statusLead);
 
-//              boolean hasMailComment = ((table.getValueAt(row, 7) != null) && (table.getValueAt(row, 5) != false) && (table.getValueAt(row, 6) != false); // Assuming mail_comment is at index 7
+            // boolean hasMailComment = ((table.getValueAt(row, 7) != null) &&
+            // (table.getValueAt(row, 5) != false) && (table.getValueAt(row, 6) != false);
+            // // Assuming mail_comment is at index 7
             downloadButton.setVisible(hasMailComment);
             if (isSelected) {
                 setBackground(table.getSelectionBackground());
@@ -253,7 +300,8 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         ButtonPanel panel;
         JTable table;
 
-//        public ButtonPanelEditor(JButton editButton, JButton deleteButton, JButton downloadButton) {
+        // public ButtonPanelEditor(JButton editButton, JButton deleteButton, JButton
+        // downloadButton) {
         public ButtonPanelEditor(JTable table) {
             this.table = table;
             panel = new ButtonPanel();
@@ -282,8 +330,7 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
                     null,
                     "Apakah anda yakin ingin menghapus pengajuan surat ini?",
                     "Konfirmasi Hapus",
-                    JOptionPane.YES_NO_OPTION
-            );
+                    JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
                 String query = "DELETE FROM mail_content WHERE mail_id = ?";
@@ -317,14 +364,16 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
             boolean statusLead = "Accept".equals(table.getValueAt(row, 6));
             Object mailComment = table.getValueAt(row, 7);
 
-            boolean hasMailComment = (mailComment != null && !mailComment.toString().isEmpty() && statusValidation && statusLead);
+            boolean hasMailComment = (mailComment != null && !mailComment.toString().isEmpty() && statusValidation
+                    && statusLead);
             panel.downloadButton.setVisible(hasMailComment);
             return panel;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                           // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
         @Override
@@ -358,12 +407,22 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         setTableAction();
     }
 
+    private void exportChartAsImage(JFreeChart chart, File file) {
+        try {
+            ChartUtilities.saveChartAsPNG(file, chart, 800, 600);
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat menyimpan grafik: " + e.getMessage());
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -375,6 +434,7 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         refresh = new javax.swing.JButton();
         chartPanel1 = new javax.swing.JPanel();
         chartPanel2 = new javax.swing.JPanel();
+        UnduhLaporan = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1291, 634));
@@ -458,6 +518,16 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
 
         chartPanel2.setLayout(new java.awt.BorderLayout());
 
+        UnduhLaporan.setBackground(new java.awt.Color(19, 128, 97));
+        UnduhLaporan.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        UnduhLaporan.setForeground(new java.awt.Color(255, 255, 255));
+        UnduhLaporan.setText("Unduh");
+        UnduhLaporan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UnduhLaporanActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelTbLayout = new javax.swing.GroupLayout(panelTb);
         panelTb.setLayout(panelTbLayout);
         panelTbLayout.setHorizontalGroup(
@@ -468,6 +538,8 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
                     .addGroup(panelTbLayout.createSequentialGroup()
                         .addComponent(labelHistory)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(UnduhLaporan, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
                     .addGroup(panelTbLayout.createSequentialGroup()
@@ -487,8 +559,9 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelHistory))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(labelHistory)
+                    .addComponent(UnduhLaporan, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(52, 52, 52)
                 .addGroup(panelTbLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(chartPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
                     .addComponent(chartPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -515,32 +588,97 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-//    private void initComponents() {
-//        chartContainer = new javax.swing.JPanel();
-//        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-//        setTitle("Line Chart");
-//        
-//        chartContainer.setLayout(new java.awt.BorderLayout());
-//        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-//        getContentPane().setLayout(layout);
-//        layout.setHorizontalGroup(
-//            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                .addComponent(chartContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//        );
-//        layout.setVerticalGroup(
-//            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                .addComponent(chartContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//        );
-//        
-//        pack();
-//    }
 
-//    public static void main(String args[]) {
-//        java.awt.EventQueue.invokeLater(() -> {
-//            new PelaporanSuratPages().setVisible(true);
-//        });
-//    }
-//    
+    private void UnduhLaporanActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_UnduhLaporanActionPerformed
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Simpan Laporan Sebagai");
+            fileChooser.setSelectedFile(new File("LaporanSurat.pdf"));
+            int userSelection = fileChooser.showSaveDialog(this);
+
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                String filePath = fileToSave.getAbsolutePath();
+
+                com.itextpdf.text.Document document = new com.itextpdf.text.Document(PageSize.A4.rotate());
+                PdfWriter.getInstance(document, new FileOutputStream(filePath));
+                document.open();
+
+                Font tittleFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+                Paragraph title = new Paragraph("Laporan Surat Masuk", tittleFont);
+                title.setAlignment(Element.ALIGN_CENTER);
+                document.add(title);
+                document.add(new Paragraph("\n"));
+
+                // Ekspor Line Chart sebagai gambar
+                File lineChartFile = new File("line_chart_temp.png");
+                exportChartAsImage(showLineChart(), lineChartFile);
+
+                File pieChartFile = new File("pie_chart_temp.png");
+                exportChartAsImage(createPieChart(), pieChartFile);
+
+                // Tambahkan grafik Line Chart ke PDF dengan ukuran disesuaikan
+                Image lineChartImage = Image.getInstance(lineChartFile.getAbsolutePath());
+                lineChartImage.scaleToFit(675, 475);
+                lineChartImage.setAlignment(Element.ALIGN_CENTER);
+                document.add(lineChartImage);
+
+                document.newPage(); // Jarak antar grafik
+
+                // Tambahkan grafik Pie Chart ke PDF dengan ukuran disesuaikan
+                Image pieChartImage = Image.getInstance(pieChartFile.getAbsolutePath());
+                pieChartImage.scaleToFit(700, 500);
+                pieChartImage.setAlignment(Element.ALIGN_CENTER);
+                document.add(pieChartImage);
+
+                document.newPage(); // Jarak antar elemen
+
+                // Menyisipkan tabel dari JTable ke PDF
+                addJTableToPDF(tbHistory, document);
+
+                document.close();
+
+                // Hapus file sementara
+                lineChartFile.delete();
+                pieChartFile.delete();
+
+                JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di " + filePath);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat membuat laporan: " + e.getMessage());
+        } // TODO add your handling code here:
+    }// GEN-LAST:event_UnduhLaporanActionPerformed
+    // private void initComponents() {
+    // chartContainer = new javax.swing.JPanel();
+    // setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    // setTitle("Line Chart");
+    //
+    // chartContainer.setLayout(new java.awt.BorderLayout());
+    // javax.swing.GroupLayout layout = new
+    // javax.swing.GroupLayout(getContentPane());
+    // getContentPane().setLayout(layout);
+    // layout.setHorizontalGroup(
+    // layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+    // .addComponent(chartContainer, javax.swing.GroupLayout.DEFAULT_SIZE,
+    // javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    // );
+    // layout.setVerticalGroup(
+    // layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+    // .addComponent(chartContainer, javax.swing.GroupLayout.DEFAULT_SIZE,
+    // javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    // );
+    //
+    // pack();
+    // }
+
+    // public static void main(String args[]) {
+    // java.awt.EventQueue.invokeLater(() -> {
+    // new PelaporanSuratPages().setVisible(true);
+    // });
+    // }
+    //
     private javax.swing.JPanel chartContainer;
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton6ActionPerformed
@@ -580,6 +718,7 @@ public class PelaporanSuratPages extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton UnduhLaporan;
     private javax.swing.JPanel chartPanel1;
     private javax.swing.JPanel chartPanel2;
     private javax.swing.JLabel labelHistory;

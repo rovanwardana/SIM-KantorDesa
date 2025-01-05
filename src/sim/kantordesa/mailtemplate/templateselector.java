@@ -6,6 +6,7 @@ package sim.kantordesa.mailtemplate;
 
 import java.sql.*;
 import javax.swing.JPanel;
+import sim.kantordesa.config.AppContext;
 import sim.kantordesa.config.koneksi;
 import sim.kantordesa.dashboard.Dashboard;
 
@@ -172,8 +173,17 @@ public class templateselector extends javax.swing.JFrame {
         }
 
         // Buka form berikutnya
-        Dashboard.card.add(new mailform(templateName, mailTypeId).getContentPanel(), templateName);
-        Dashboard.switchPanel(templateName);
+//        mailform content = new mailform(templateName, mailTypeId);
+//        Dashboard.card.add(content.getContentPane(), templateName);
+//        Dashboard.card.revalidate();
+//        Dashboard.card.repaint();
+        AppContext.put("mailform_templateName", templateName);
+        AppContext.put("mailform_mailTypeId", mailTypeId);
+        mailform mailPage = (mailform) Dashboard.getPage("Form Surat Keluar");
+        mailPage.updateData();
+        Dashboard.card.revalidate();
+        Dashboard.card.repaint();
+        Dashboard.switchPanel("Form Surat Keluar");
     }// GEN-LAST:event_btn_nextActionPerformed
 
     public static void main(String args[]) {

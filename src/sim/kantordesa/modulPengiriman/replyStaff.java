@@ -12,7 +12,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import sim.kantordesa.config.AppContext;
 import sim.kantordesa.config.koneksi;
+import sim.kantordesa.dashboard.Dashboard;
 
 public class replyStaff extends javax.swing.JFrame {
 
@@ -229,8 +231,11 @@ public final void updateStatus(String mail_received_id) {
 
     private void b_kembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_kembaliActionPerformed
         detailSurat detail = new detailSurat(mail_received_id);
-        detail.setVisible(true);
-        this.dispose();
+        AppContext.put("historymasuk_mailRcvId", mail_received_id);
+        detail.updateData();
+        Dashboard.card.revalidate();
+        Dashboard.card.repaint();
+        Dashboard.switchPanel("Detail Surat");
     }//GEN-LAST:event_b_kembaliActionPerformed
 
     private void btn_kirimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_kirimActionPerformed
