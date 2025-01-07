@@ -312,7 +312,8 @@ public class HistoryPage extends javax.swing.JFrame {
             System.out.println(mailTypeId);
             
             String getMailDataQuery = "SELECT c.applicant_name, c.mulai_berlaku, c.tgl_akhir, c.mail_number, c.keperluan, cr.tempat_tanggal_lahir, cr.usia, cr.warga_negara, cr.agama, cr.jenis_kelamin, cr.pekerjaan, cr.alamat, cr.no_ktp, cr.no_kk, cr.gol_darah, t.mail_type_id  FROM mail_content as c INNER JOIN civil_registry cr ON c.no_ktp = cr.no_ktp INNER JOIN mail_type t ON c.mail_type_id = t.mail_type_id WHERE mail_id = \"" + mailTypeId + "\";";
-                ResultSet h = s.executeQuery(getMailDataQuery);
+            ResultSet h = s.executeQuery(getMailDataQuery);
+            
             while (h.next()) {
                 mailTypeId = h.getInt("mail_type_id");
                     MailData.put("nama", h.getString("applicant_name"));
