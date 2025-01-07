@@ -678,12 +678,14 @@ public class mailform extends javax.swing.JFrame {
         return villageData;
     }
 
-    private String replacePlaceholders(String content, Map<String, String> villageData, Map<String, String> mailData) {
+    private String replacePlaceholders(String content, Map<String, String> villageData) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dariTanggal = daritanggal.getDate() != null ? sdf.format(daritanggal.getDate()) : "";
         String sampaiTanggal = sampaitanggal.getDate() != null ? sdf.format(sampaitanggal.getDate()) : "";
         
-        System.out.println(sampaitanggal.getDate());
+        Map<String, String> mailData = MailData.getMap();
+        
+        System.out.println("nama : " + mailData.getOrDefault("nama", text_nama.getText() != null ? text_nama.getText() : ""));
 
         return content.replace("[nama]", mailData.getOrDefault("nama", text_nama.getText() != null ? text_nama.getText() : ""))
                 .replace("[ttl]", mailData.getOrDefault("ttl", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : ""))
@@ -748,10 +750,10 @@ public class mailform extends javax.swing.JFrame {
             Map<String, String> villageData = getVillageData();
 
             // Replace Placeholders
-            String processedContent = replacePlaceholders(handler.toString(), villageData, MailData.getMap());
+            String processedContent = replacePlaceholders(handler.toString(), villageData);
 
             // Ambil data pemegang surat dari placeholders
-            String pemegangSurat = replacePlaceholders("[nama]", villageData, MailData.getMap());
+            String pemegangSurat = replacePlaceholders("[nama]", villageData);
 
             // Ambil mail_id dan type_name
             String query = "SELECT mail_id, type_name FROM mail_content mc "
@@ -820,43 +822,45 @@ public class mailform extends javax.swing.JFrame {
                     List<TabStop> tabStops = new ArrayList<>();
                     tabStops.add(new TabStop(200, TabAlignment.LEFT));
                     tabStops.add(new TabStop(400, TabAlignment.LEFT));
+                    
+                    Map<String, String> mailData = MailData.getMap();
 
                     // Main Content
                     Paragraph mainContent = new Paragraph().addTabStops(tabStops)
                             .add(new Text("Nama\t\t\t\t\t\t\t: "
-                                    + (text_nama.getText() != null ? text_nama.getText() : "")).setFontSize(12))
+                                    + (mailData.getOrDefault("nama", text_nama.getText() != null ? text_nama.getText() : ""))).setFontSize(12))
                             .add(new Text("\nTempat/tanggal lahir\t : "
-                                    + (text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : ""))
+                                    + (mailData.getOrDefault("ttl", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : "")))
                                     .setFontSize(12))
-                            .add(new Text("\nUsia\t\t\t\t\t\t\t: "
-                                    + (jUmur.getValue() != null ? jUmur.getValue().toString() : "")).setFontSize(12))
-                            .add(new Text("\nWarga negara\t\t\t\t\t: " + (wni.isSelected() ? "WNI" : "WNA"))
+                            .add(new Text("\nUsia\t\t\t\t\t\t\t\t: "
+                                    + (mailData.getOrDefault("umur", jUmur.getValue() != null ? jUmur.getValue().toString() : ""))).setFontSize(12))
+                            .add(new Text("\nWarga negara\t\t\t\t\t: " + (mailData.getOrDefault("warga_negara", wni.isSelected() ? "WNI" : "WNA")))
                                     .setFontSize(12))
                             .add(new Text("\nAgama\t\t\t\t\t\t: "
-                                    + (box_agama.getSelectedItem() != null ? box_agama.getSelectedItem().toString()
-                                    : ""))
+                                    + (mailData.getOrDefault("agama", box_agama.getSelectedItem() != null ? box_agama.getSelectedItem().toString()
+                                    : "")))
                                     .setFontSize(12))
                             .add(new Text(
-                                    "\nJenis Kelamin          : " + (lakilaki.isSelected() ? "Laki-laki" : "Perempuan"))
+                                    "\nJenis Kelamin          : " + (mailData.getOrDefault("sex", lakilaki.isSelected() ? "Laki-laki" : "Perempuan")))
                                     .setFontSize(12))
                             .add(new Text("\nPekerjaan              : "
-                                    + (text_pekerjaan.getText() != null ? text_pekerjaan.getText() : ""))
+                                    + (mailData.getOrDefault("pekerjaan", text_pekerjaan.getText() != null ? text_pekerjaan.getText() : "")))
                                     .setFontSize(12))
                             .add(new Text("\nTempat Tinggal         : "
-                                    + (text_ttinggal.getText() != null ? text_ttinggal.getText() : "")).setFontSize(12))
+                                    + (mailData.getOrDefault("alamat", text_ttinggal.getText() != null ? text_ttinggal.getText() : ""))).setFontSize(12))
                             .add(new Text("\n\nSurat bukti diri").setFontSize(12))
                             .add(new Text("\nKTP                    : "
-                                    + (text_noktp.getText() != null ? text_noktp.getText() : "")).setFontSize(12))
+                                    + (mailData.getOrDefault("no_ktp", text_noktp.getText() != null ? text_noktp.getText() : ""))).setFontSize(12))
                             .add(new Text("\nKK                     : "
-                                    + (text_nokk.getText() != null ? text_nokk.getText() : "")).setFontSize(12))
+                                    + (mailData.getOrDefault("no_kk", text_nokk.getText() != null ? text_nokk.getText() : ""))).setFontSize(12))
                             .add(new Text("\nKeperluan              :"
-                                    + (text_keperluan.getText() != null ? text_keperluan.getText() : ""))
+                                    + (mailData.getOrDefault("keperluan", text_keperluan.getText() != null ? text_keperluan.getText() : "")))
                                     .setFontSize(12))
                             .add(new Text("\nBerlaku                : " + dariTanggal + " s/d " + sampaiTanggal)
                                     .setFontSize(12))
                             .add(new Text("\nGolongan Darah         : "
-                                    + (box_goldar.getSelectedItem() != null ? box_goldar.getSelectedItem().toString()
-                                    : ""))
+                                    + (mailData.getOrDefault("gol_darah", box_goldar.getSelectedItem() != null ? box_goldar.getSelectedItem().toString()
+                                    : "")))
                                     .setFontSize(12))
                             .add(new Text(
                                     "\n\nDemikian Surat ini dibuat, untuk dipergunakan sebagaimana mestinya.\n\n\n\n")
