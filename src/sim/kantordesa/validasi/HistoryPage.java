@@ -29,6 +29,8 @@ import java.awt.GridBagLayout;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import sim.kantordesa.mailtemplate.MailData;
+import sim.kantordesa.mailtemplate.mailform;
 
 /**
  *
@@ -291,6 +293,60 @@ public class HistoryPage extends javax.swing.JFrame {
 
         private void handleDownloadButtonAction() {
             System.out.println("Download Button diklik");
+            mailform mf = new mailform();
+
+            int row = table.getSelectedRow();
+            String mailTypeString = (String) table.getValueAt(row, 4);
+            String mailId = (String) table.getValueAt(row, 8);
+            Integer mailTypeId = null;
+            
+            System.out.println(mailId);
+
+            try {
+                Connection conn = koneksi.getConnection();
+
+                String getMailTypeIdQuery = "SELECT mail_type_id FROM `mail_type` where type_name = \"" + mailTypeString + "\";";
+                Statement s = conn.createStatement();
+                ResultSet rs1 = s.executeQuery(getMailTypeIdQuery);
+                while (rs1.next()) {
+                    mailTypeId = rs1.getInt("mail_type_id");
+                }
+
+
+                String getMailDataQuery = "SELECT c.applicant_name, c.mulai_berlaku, c.tgl_akhir, c.mail_number, c.keperluan, cr.tempat_tanggal_lahir, cr.usia, cr.warga_negara, cr.agama, cr.jenis_kelamin, cr.pekerjaan, cr.alamat, cr.no_ktp, cr.no_kk, cr.gol_darah, t.mail_type_id  FROM mail_content as c INNER JOIN civil_registry cr ON c.no_ktp = cr.no_ktp INNER JOIN mail_type t ON c.mail_type_id = t.mail_type_id WHERE mail_id = \"" + mailId + "\";";
+                ResultSet rs2 = s.executeQuery(getMailDataQuery);
+
+                while (rs2.next()) {
+//                    System.out.println("hello world");
+//                    System.out.println("nama pemohon : " + rs2.getString("applicant_name"));
+                    MailData.put("nama", rs2.getString("applicant_name"));
+                    MailData.put("ttl", rs2.getString("tempat_tanggal_lahir"));
+                    MailData.put("umur", rs2.getString("usia"));
+                    MailData.put("warga_negara", rs2.getString("warga_negara"));
+                    MailData.put("agama", rs2.getString("agama"));
+                    MailData.put("sex", rs2.getString("jenis_kelamin"));
+                    MailData.put("pekerjaan", rs2.getString("pekerjaan"));
+                    MailData.put("alamat", rs2.getString("alamat"));
+                    MailData.put("no_ktp", rs2.getString("no_ktp"));
+                    MailData.put("no_kk", rs2.getString("no_kk"));
+                    MailData.put("keperluan", rs2.getString("keperluan"));
+                    MailData.put("mulai_berlaku", rs2.getString("mulai_berlaku"));
+                    MailData.put("tgl_akhir", rs2.getString("tgl_akhir"));
+                    MailData.put("gol_darah", rs2.getString("gol_darah"));
+                    MailData.put("mail_number", rs2.getString("mail_number"));
+                }
+                
+                System.out.println(mailTypeId + " 2");
+
+                mf.generatePDF(mailTypeId, conn, mailTypeString, true);
+                
+                rs1.close();
+                rs2.close();
+                s.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
         }
 
         @Override //make can't edit table value

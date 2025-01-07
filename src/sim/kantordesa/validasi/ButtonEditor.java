@@ -63,7 +63,7 @@ public class ButtonEditor extends javax.swing.AbstractCellEditor implements java
             fireEditingStopped();
             int row = table.getSelectedRow();
             Object value = table.getModel().getValueAt(row, 9);
-            PopUpValidasiSekdes.main(new String[] { value.toString(), currentUser.getRole() });
+            PopUpValidasiSekdes.main(new String[] { value.toString(), String.valueOf(currentUser.getIdRole()) });
         }
     }
     
