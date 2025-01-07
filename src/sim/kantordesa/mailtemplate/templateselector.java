@@ -20,7 +20,7 @@ public class templateselector extends javax.swing.JFrame {
         initComponents();
         loadTemplateSurat(); // Panggil metode untuk memuat data ke dropdown
     }
-    
+
     public JPanel getContentPanel() {
         return (JPanel) this.getContentPane();
     }
@@ -167,16 +167,14 @@ public class templateselector extends javax.swing.JFrame {
         Connection conn = koneksi.getConnection();
         try {
             saveApplicantData(conn, applicantName, mailTypeId);
+
         } catch (SQLException ex) {
+            ex.printStackTrace();
             javax.swing.JOptionPane.showMessageDialog(this, "Gagal menyimpan data ke database!", "Error",
                     javax.swing.JOptionPane.ERROR_MESSAGE);
         }
 
         // Buka form berikutnya
-//        mailform content = new mailform(templateName, mailTypeId);
-//        Dashboard.card.add(content.getContentPane(), templateName);
-//        Dashboard.card.revalidate();
-//        Dashboard.card.repaint();
         AppContext.put("mailform_templateName", templateName);
         AppContext.put("mailform_mailTypeId", mailTypeId);
         mailform mailPage = (mailform) Dashboard.getPage("Form Surat Keluar");
@@ -208,7 +206,7 @@ public class templateselector extends javax.swing.JFrame {
                     null, ex);
         }
         // </editor-fold>
-        
+
         // </editor-fold>
 
         /* Create and display the form */
@@ -263,8 +261,7 @@ public class templateselector extends javax.swing.JFrame {
         try {
             Connection conn = koneksi.getConnection();
             String query = "SELECT type_name FROM mail_type";
-            try (PreparedStatement ps = conn.prepareStatement(query);
-                    ResultSet rs = ps.executeQuery()) {
+            try (PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
                 box_template_surat.removeAllItems();
                 while (rs.next()) {
                     box_template_surat.addItem(rs.getString("type_name"));

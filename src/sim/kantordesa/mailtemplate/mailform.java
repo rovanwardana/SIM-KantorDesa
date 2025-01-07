@@ -616,9 +616,9 @@ public class mailform extends javax.swing.JFrame {
 
     private void saveData() {
         Connection conn = koneksi.getConnection();
-        String queryCivilRegistry = "INSERT INTO civil_registry (nama, no_ktp, no_kk, tempat_tanggal_lahir, warga_negara, agama, jenis_kelamin, pekerjaan, alamat, gol_darah) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String queryUpdateMailContent = "UPDATE mail_content SET no_ktp = ?, mulai_berlaku = ?, tgl_akhir = ? "
+        String queryCivilRegistry = "INSERT INTO civil_registry (nama, no_ktp, no_kk, tempat_tanggal_lahir, warga_negara, agama, jenis_kelamin, pekerjaan, alamat, gol_darah, usia) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String queryUpdateMailContent = "UPDATE mail_content SET no_ktp = ?, mulai_berlaku = ?, tgl_akhir = ?, keperluan = ? "
                 + "WHERE mail_id = (SELECT mail_id FROM mail_content ORDER BY mail_id DESC LIMIT 1)";
         try (PreparedStatement stmt1 = conn.prepareStatement(queryCivilRegistry); PreparedStatement stmt2 = conn.prepareStatement(queryUpdateMailContent)) {
             stmt1.setString(1, text_nama.getText());
@@ -631,6 +631,7 @@ public class mailform extends javax.swing.JFrame {
             stmt1.setString(8, text_pekerjaan.getText());
             stmt1.setString(9, text_ttinggal.getText());
             stmt1.setString(10, box_goldar.getSelectedItem().toString());
+            stmt1.setString(11, jUmur.getValue().toString());
             int rowsInserted = stmt1.executeUpdate();
             Logger.getLogger(mailform.class.getName()).log(Level.INFO, "Baris dimasukkan ke civil_registry: {0}",
                     rowsInserted);
@@ -642,6 +643,7 @@ public class mailform extends javax.swing.JFrame {
             stmt2.setString(1, text_noktp.getText());
             stmt2.setString(2, mulaiBerlaku);
             stmt2.setString(3, tglAkhir);
+             stmt2.setString(4, text_keperluan.getText());
             int rowsUpdated = stmt2.executeUpdate();
             Logger.getLogger(mailform.class.getName()).log(Level.INFO, "Baris diperbarui di mail_content: {0}",
                     rowsUpdated);
@@ -680,6 +682,8 @@ public class mailform extends javax.swing.JFrame {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dariTanggal = daritanggal.getDate() != null ? sdf.format(daritanggal.getDate()) : "";
         String sampaiTanggal = sampaitanggal.getDate() != null ? sdf.format(sampaitanggal.getDate()) : "";
+        
+        System.out.println(sampaitanggal.getDate());
 
         return content.replace("[nama]", mailData.getOrDefault("nama", text_nama.getText() != null ? text_nama.getText() : ""))
                 .replace("[ttl]", mailData.getOrDefault("ttl", text_tgl_lahir.getText() != null ? text_tgl_lahir.getText() : ""))
@@ -810,8 +814,8 @@ public class mailform extends javax.swing.JFrame {
                     document.add(nomorSurat);
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    String dariTanggal = sdf.format(daritanggal.getDate());
-                    String sampaiTanggal = sdf.format(sampaitanggal.getDate());
+                    String dariTanggal = MailData.getMap().getOrDefault("mulai_berlaku", daritanggal.getDate() != null ? sdf.format(daritanggal.getDate()) : "");
+                    String sampaiTanggal = MailData.getMap().getOrDefault("tgl_akhir", sampaitanggal.getDate() != null ? sdf.format(sampaitanggal.getDate()) : "");
 
                     List<TabStop> tabStops = new ArrayList<>();
                     tabStops.add(new TabStop(200, TabAlignment.LEFT));
@@ -845,7 +849,7 @@ public class mailform extends javax.swing.JFrame {
                                     + (text_noktp.getText() != null ? text_noktp.getText() : "")).setFontSize(12))
                             .add(new Text("\nKK                     : "
                                     + (text_nokk.getText() != null ? text_nokk.getText() : "")).setFontSize(12))
-                            .add(new Text("\nKeperluan              : Mohon keterangan yang akan dipergunakan untuk "
+                            .add(new Text("\nKeperluan              :"
                                     + (text_keperluan.getText() != null ? text_keperluan.getText() : ""))
                                     .setFontSize(12))
                             .add(new Text("\nBerlaku                : " + dariTanggal + " s/d " + sampaiTanggal)

@@ -309,30 +309,33 @@ public class HistoryPage extends javax.swing.JFrame {
                 mailTypeId = r.getInt("mail_type_id");
             }
             
-            s.close();
-            r.close();
-            
             System.out.println(mailTypeId);
             
-            String getMailDataQuery = "select mail_number, created_at, applicant_name, mail_comment, status_validation, status_lead, mail_comment, mail_type.type_name from mail_content inner join mail_type on mail_content.mail_type_id = mail_type.mail_type_id ORDER BY mail_id";
-            
-            MailData.put("nama", mailTypeString);
-            MailData.put("ttl", mailTypeString);
-            MailData.put("umur", mailTypeString);
-            MailData.put("warga_negara", mailTypeString);
-            MailData.put("agama", mailTypeString);
-            MailData.put("sex", mailTypeString);
-            MailData.put("pekerjaan", mailTypeString);
-            MailData.put("alamat", mailTypeString);
-            MailData.put("no_ktp", mailTypeString);
-            MailData.put("no_kk", mailTypeString);
-            MailData.put("keperluan", mailTypeString);
-            MailData.put("mulai_berlaku", mailTypeString);
-            MailData.put("tgl_akhir", mailTypeString);
-            MailData.put("gol_darah", mailTypeString);
-            MailData.put("mail_number", mailTypeString);
+            String getMailDataQuery = "SELECT c.applicant_name, c.mulai_berlaku, c.tgl_akhir, c.mail_number, c.keperluan, cr.tempat_tanggal_lahir, cr.usia, cr.warga_negara, cr.agama, cr.jenis_kelamin, cr.pekerjaan, cr.alamat, cr.no_ktp, cr.no_kk, cr.gol_darah, t.mail_type_id  FROM mail_content as c INNER JOIN civil_registry cr ON c.no_ktp = cr.no_ktp INNER JOIN mail_type t ON c.mail_type_id = t.mail_type_id WHERE mail_id = \"" + mailTypeId + "\";";
+                ResultSet h = s.executeQuery(getMailDataQuery);
+            while (h.next()) {
+                mailTypeId = h.getInt("mail_type_id");
+                    MailData.put("nama", h.getString("applicant_name"));
+                    MailData.put("ttl", h.getString("tempat_tanggal_lahir"));
+                    MailData.put("umur", h.getString("usia"));
+                    MailData.put("warga_negara", h.getString("warga_negara"));
+                    MailData.put("agama", h.getString("agama"));
+                    MailData.put("sex", h.getString("jenis_kelamin"));
+                    MailData.put("pekerjaan", h.getString("pekerjaan"));
+                    MailData.put("alamat", h.getString("alamat"));
+                    MailData.put("no_ktp", h.getString("no_ktp"));
+                    MailData.put("no_kk", h.getString("no_kk"));
+                    MailData.put("keperluan", h.getString("keperluan"));
+                    MailData.put("mulai_berlaku", h.getString("mulai_berlaku"));
+                    MailData.put("tgl_akhir", h.getString("tgl_akhir"));
+                    MailData.put("gol_darah", h.getString("gol_darah"));
+                    MailData.put("mail_number", h.getString("mail_number"));
+            }
             
             mf.generatePDF(mailTypeId, conn, mailTypeString, true);
+            
+            s.close();
+            r.close();
            } catch (SQLException e) {
                e.printStackTrace();
            }
