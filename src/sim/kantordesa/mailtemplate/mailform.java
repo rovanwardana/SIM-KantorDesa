@@ -749,9 +749,6 @@ public class mailform extends javax.swing.JFrame {
             // Ambil data desa
             Map<String, String> villageData = getVillageData();
 
-            // Replace Placeholders
-            String processedContent = replacePlaceholders(handler.toString(), villageData);
-
             // Ambil data pemegang surat dari placeholders
             String pemegangSurat = replacePlaceholders("[nama]", villageData);
 
